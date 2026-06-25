@@ -1708,34 +1708,34 @@
 
     <!-- ══ VENTAS: ARTICULOS ══ -->
     <div class="view" id="view-articulos">
-      <div class="page-header"><div><div class="page-title">Maestro de Artículos</div></div><div class="btn-group"><button class="btn btn-secondary">↓ Exportar Excel</button><button class="btn btn-primary">+ Nuevo ▾</button></div></div>
+      <div class="page-header"><div><div class="page-title">Maestro de Artículos</div></div><div class="btn-group"><button class="btn btn-secondary" onclick="showToast('Exportando a Excel...')">↓ Exportar Excel</button><button class="btn btn-primary" onclick="openPanel('nuevo-articulo')">+ Nuevo</button></div></div>
       <div class="filter-bar"><div class="filter-group" style="flex:1"><input type="text" class="filter-input" placeholder="Buscar código o descripción..." style="width:100%"></div><div class="filter-group" style="flex:1"><select class="filter-select" style="width:100%"><option>Categorías</option></select></div><div class="filter-actions"><button class="btn btn-primary">Filtrar</button></div></div>
       <div class="table-card"><table><thead><tr><th>Código</th><th>Descripción</th><th>Categoría</th><th>Stock</th><th>Precio Venta</th><th>Activo</th><th>Acciones</th></tr></thead><tbody><tr><td colspan="7"><div class="empty-state" style="padding:40px"><div class="empty-icon">📦</div><div class="empty-title">Sin artículos registrados</div></div></td></tr></tbody></table></div>
     </div>
 
     <!-- ══ VENTAS: SERVICIOS ══ -->
     <div class="view" id="view-servicios">
-      <div class="page-header"><div><div class="page-title">Maestro de Servicios</div></div><button class="btn btn-primary">+ Nuevo</button></div>
+      <div class="page-header"><div><div class="page-title">Maestro de Servicios</div></div><button class="btn btn-primary" onclick="openPanel('nuevo-servicio')">+ Nuevo</button></div>
       <div class="table-card"><table><thead><tr><th>Código</th><th>Descripción</th><th>Categoría</th><th>Precio Venta</th><th>Activo</th><th>Acciones</th></tr></thead><tbody><tr><td>2</td><td>GASTOS COMUNES</td><td class="td-muted">Servicios sin categoría</td><td class="td-mono">0</td><td><span style="color:var(--accent2)">✓</span></td><td><button class="btn-icon" style="width:28px;height:28px">⋮</button></td></tr></tbody></table></div>
     </div>
 
     <!-- ══ VENTAS: CLIENTES ══ -->
     <div class="view" id="view-clientes">
-      <div class="page-header"><div><div class="page-title">Clientes</div></div><button class="btn btn-primary">+ Nuevo Cliente</button></div>
+      <div class="page-header"><div><div class="page-title">Clientes</div></div><button class="btn btn-primary" onclick="openPanel('nuevo-cliente')">+ Nuevo Cliente</button></div>
       <div class="filter-bar"><div class="filter-group"><input type="text" class="filter-input" placeholder="RUT" style="width:130px"></div><div class="filter-group"><input type="text" class="filter-input" placeholder="Nombre" style="width:180px"></div><div class="filter-group"><select class="filter-select" style="width:110px"><option>Todos</option><option>Activo</option><option>Inactivo</option></select></div><div class="filter-actions"><button class="btn btn-primary">Filtrar</button></div></div>
       <div class="table-card"><table><thead><tr><th>Código</th><th>RUT</th><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Estado</th><th>Acciones</th></tr></thead><tbody><tr><td>01</td><td class="td-mono">12.345.678-9</td><td>Heriberto Carrasco Aravena</td><td class="td-muted">—</td><td class="td-muted">—</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn btn-secondary" style="padding:4px 10px;font-size:11px">Editar</button></td></tr></tbody></table></div>
     </div>
 
     <!-- ══ VENTAS: GUIA DESPACHO ══ -->
     <div class="view" id="view-guiadespacho">
-      <div class="page-header"><div><div class="page-title">Guía de Despacho</div></div><div class="btn-group"><button class="btn btn-secondary">Facturación múltiple</button><button class="btn btn-primary">+ Nuevo</button></div></div>
+      <div class="page-header"><div><div class="page-title">Guía de Despacho</div></div><div class="btn-group"><button class="btn btn-secondary">Facturación múltiple</button><button class="btn btn-primary" onclick="openPanel('nueva-guia')">+ Nuevo</button></div></div>
       <div class="filter-bar"><div class="filter-group"><input type="text" class="filter-input" placeholder="Documento" style="width:130px"></div><div class="filter-group"><input type="text" class="filter-input" placeholder="Cliente" style="width:150px"></div><div class="filter-group"><input type="text" class="filter-input" placeholder="Fecha" style="width:120px"></div><div class="filter-actions"><button class="btn btn-primary">Filtrar</button></div></div>
       <div class="table-card"><table><thead><tr><th><input type="checkbox"></th><th>Documento</th><th>Número</th><th>Cliente</th><th>Fecha</th><th>Estado DTE</th><th>Total</th></tr></thead><tbody><tr><td colspan="7"><div class="empty-state" style="padding:40px"><div class="empty-icon">🚚</div><div class="empty-title">Sin guías de despacho</div></div></td></tr></tbody></table></div>
     </div>
 
     <!-- ══ VENTAS: DOCUMENTOS ══ -->
     <div class="view" id="view-ventasdocs">
-      <div class="page-header"><div><div class="page-title">Documentos de Ventas</div><div class="page-subtitle">Lista de documentos — Chile</div></div><div class="btn-group"><button class="btn btn-secondary">Mi Tienda 🏪</button><button class="btn btn-primary">+ Nuevo</button></div></div>
+      <div class="page-header"><div><div class="page-title">Documentos de Ventas</div><div class="page-subtitle">Lista de documentos — Chile</div></div><div class="btn-group"><button class="btn btn-secondary">Mi Tienda 🏪</button><button class="btn btn-primary" onclick="openPanel('nuevo-venta')">+ Nuevo</button></div></div>
       <div class="filter-bar">
         <div class="filter-group"><input type="text" class="filter-input" placeholder="Documento" style="width:130px"></div>
         <div class="filter-group"><input type="text" class="filter-input" placeholder="Cliente" style="width:150px"></div>
@@ -1796,14 +1796,14 @@
 
     <!-- ══ COMPRAS: PROVEEDORES ══ -->
     <div class="view" id="view-proveedores">
-      <div class="page-header"><div><div class="page-title">Proveedores</div></div><button class="btn btn-primary">+ Nuevo Proveedor</button></div>
+      <div class="page-header"><div><div class="page-title">Proveedores</div></div><button class="btn btn-primary" onclick="openPanel('nuevo-proveedor')">+ Nuevo Proveedor</button></div>
       <div class="filter-bar"><div class="filter-group"><input type="text" class="filter-input" placeholder="RUT" style="width:130px"></div><div class="filter-group"><input type="text" class="filter-input" placeholder="Nombre proveedor" style="width:180px"></div><div class="filter-group"><select class="filter-select" style="width:110px"><option>Todos</option><option>Activo</option></select></div><div class="filter-actions"><button class="btn btn-primary">Filtrar</button><button class="btn btn-secondary">↓ Exportar</button></div></div>
       <div class="table-card"><table><thead><tr><th>Código</th><th>RUT</th><th>Nombre / Razón Social</th><th>Email</th><th>Teléfono</th><th>Condición Pago</th><th>Estado</th><th>Acciones</th></tr></thead><tbody><tr><td colspan="8"><div class="empty-state" style="padding:40px"><div class="empty-icon">🏢</div><div class="empty-title">Sin proveedores registrados</div></div></td></tr></tbody></table></div>
     </div>
 
     <!-- ══ COMPRAS: DOCUMENTOS ══ -->
     <div class="view" id="view-comprasdocs">
-      <div class="page-header"><div><div class="page-title">Documentos de Compras</div></div><div class="btn-group"><button class="btn btn-secondary">🔄 Recargar</button><button class="btn btn-primary">+ Nuevo</button></div></div>
+      <div class="page-header"><div><div class="page-title">Documentos de Compras</div></div><div class="btn-group"><button class="btn btn-secondary" onclick="showToast('Recargando...')">🔄 Recargar</button><button class="btn btn-primary" onclick="openPanel('nuevo-compra')">+ Nuevo</button></div></div>
       <div class="tabs"><div class="tab active">Ingresados</div><div class="tab">Pendientes</div></div>
       <div class="filter-bar">
         <div class="filter-group" style="flex:2"><div class="filter-label">RUT o Nombre Proveedor</div><select class="filter-select" style="width:100%"><option>Seleccione</option></select></div>
@@ -2055,8 +2055,378 @@
     });
   }
 
+
+  // ── GUARDAR FUNCIONES ──
+  function showToast(msg, tipo) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.background = tipo === 'error' ? '#DC2626' : '#1F2937';
+    t.style.display = 'block';
+    setTimeout(() => t.style.display = 'none', 3000);
+  }
+
+  function guardarArticulo() {
+    showToast('✅ Artículo guardado correctamente');
+    closePanel('nuevo-articulo');
+  }
+  function guardarServicio() {
+    showToast('✅ Servicio guardado correctamente');
+    closePanel('nuevo-servicio');
+  }
+  function guardarCliente() {
+    showToast('✅ Cliente guardado correctamente');
+    closePanel('nuevo-cliente');
+  }
+  function guardarProveedor() {
+    showToast('✅ Proveedor guardado correctamente');
+    closePanel('nuevo-proveedor');
+  }
+
+  // ── MENÚ ACCIONES ══
+  let _menuTarget = null;
+  function toggleAcciones(btn, tipo) {
+    event.stopPropagation();
+    const menu = document.getElementById('menu-acciones');
+    const rect = btn.getBoundingClientRect();
+    _menuTarget = tipo;
+    if (menu.style.display === 'block') {
+      menu.style.display = 'none';
+    } else {
+      menu.style.display = 'block';
+      menu.style.top = (rect.bottom + 4) + 'px';
+      menu.style.right = (window.innerWidth - rect.right) + 'px';
+    }
+  }
+  document.addEventListener('click', () => {
+    document.getElementById('menu-acciones').style.display = 'none';
+  });
+  function accionEditar() {
+    showToast('✏️ Modo edición activado');
+    document.getElementById('menu-acciones').style.display = 'none';
+  }
+  function accionDuplicar() {
+    showToast('📋 Registro duplicado');
+    document.getElementById('menu-acciones').style.display = 'none';
+  }
+  function accionEliminar() {
+    if (confirm('¿Estás segura de que deseas eliminar este registro?')) {
+      showToast('🗑️ Registro eliminado');
+    }
+    document.getElementById('menu-acciones').style.display = 'none';
+  }
+
   document.getElementById('group-contabilidad').style.display = 'block';
   document.querySelector('[onclick="toggleGroup(\'contabilidad\')"]').classList.add('open');
 </script>
+
+<!-- ══ PANEL: NUEVO ARTÍCULO ══ -->
+<div class="panel-overlay" id="panel-nuevo-articulo">
+  <div class="side-panel">
+    <div class="panel-header">
+      <div class="panel-title">Nuevo Artículo</div>
+      <button class="btn-icon" onclick="closePanel('nuevo-articulo')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="panel-body">
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Código *</div><input type="text" class="form-input" placeholder="Ej: ART-001"></div>
+        <div class="form-group"><div class="form-label">Categoría</div><select class="form-select"><option>Sin categoría</option></select></div>
+      </div>
+      <div class="form-row single">
+        <div class="form-group"><div class="form-label">Descripción *</div><input type="text" class="form-input" placeholder="Nombre del artículo"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Precio de Venta</div><input type="number" class="form-input" placeholder="0"></div>
+        <div class="form-group"><div class="form-label">Costo Unitario</div><input type="number" class="form-input" placeholder="0"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Stock Inicial</div><input type="number" class="form-input" placeholder="0"></div>
+        <div class="form-group"><div class="form-label">Unidad de Medida</div><select class="form-select"><option>Unidad</option><option>Kg</option><option>Lt</option><option>Caja</option><option>Metro</option></select></div>
+      </div>
+      <div class="form-divider"></div>
+      <div class="form-row">
+        <div class="form-group" style="flex-direction:row;align-items:center;gap:10px">
+          <input type="checkbox" id="chk-activo" checked>
+          <label for="chk-activo" style="font-size:13px">Activo</label>
+        </div>
+        <div class="form-group" style="flex-direction:row;align-items:center;gap:10px">
+          <input type="checkbox" id="chk-venta" checked>
+          <label for="chk-venta" style="font-size:13px">Disponible para la venta</label>
+        </div>
+      </div>
+      <div class="form-row single">
+        <div class="form-group"><div class="form-label">Descripción adicional</div><textarea class="form-textarea" placeholder="Observaciones..."></textarea></div>
+      </div>
+    </div>
+    <div class="panel-footer">
+      <button class="btn btn-secondary" onclick="closePanel('nuevo-articulo')">Cancelar</button>
+      <button class="btn btn-primary" onclick="guardarArticulo()">Guardar Artículo</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PANEL: NUEVO SERVICIO ══ -->
+<div class="panel-overlay" id="panel-nuevo-servicio">
+  <div class="side-panel">
+    <div class="panel-header">
+      <div class="panel-title">Nuevo Servicio</div>
+      <button class="btn-icon" onclick="closePanel('nuevo-servicio')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="panel-body">
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Código *</div><input type="text" class="form-input" placeholder="Ej: SRV-001"></div>
+        <div class="form-group"><div class="form-label">Categoría</div><select class="form-select"><option>Servicios sin categoría</option></select></div>
+      </div>
+      <div class="form-row single">
+        <div class="form-group"><div class="form-label">Descripción *</div><input type="text" class="form-input" placeholder="Nombre del servicio"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Precio de Venta</div><input type="number" class="form-input" placeholder="0"></div>
+        <div class="form-group"><div class="form-label">Costo Unitario</div><input type="number" class="form-input" placeholder="0"></div>
+      </div>
+      <div class="form-row single">
+        <div class="form-group"><div class="form-label">Descripción adicional</div><textarea class="form-textarea" placeholder="Observaciones..."></textarea></div>
+      </div>
+    </div>
+    <div class="panel-footer">
+      <button class="btn btn-secondary" onclick="closePanel('nuevo-servicio')">Cancelar</button>
+      <button class="btn btn-primary" onclick="guardarServicio()">Guardar Servicio</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PANEL: NUEVO CLIENTE ══ -->
+<div class="panel-overlay" id="panel-nuevo-cliente">
+  <div class="side-panel">
+    <div class="panel-header">
+      <div class="panel-title">Nuevo Cliente</div>
+      <button class="btn-icon" onclick="closePanel('nuevo-cliente')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="panel-body">
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">RUT *</div><input type="text" class="form-input" placeholder="12.345.678-9"></div>
+        <div class="form-group"><div class="form-label">Código</div><input type="text" class="form-input" placeholder="Auto"></div>
+      </div>
+      <div class="form-row single">
+        <div class="form-group"><div class="form-label">Nombre / Razón Social *</div><input type="text" class="form-input" placeholder="Nombre completo o razón social"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Email</div><input type="email" class="form-input" placeholder="email@ejemplo.cl"></div>
+        <div class="form-group"><div class="form-label">Teléfono</div><input type="text" class="form-input" placeholder="+56 9 ..."></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Giro</div><input type="text" class="form-input" placeholder="Actividad comercial"></div>
+        <div class="form-group"><div class="form-label">Condición de Pago</div><select class="form-select"><option>Contado</option><option>30 días</option><option>60 días</option><option>90 días</option></select></div>
+      </div>
+      <div class="form-row single">
+        <div class="form-group"><div class="form-label">Dirección</div><input type="text" class="form-input" placeholder="Dirección completa"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Ciudad</div><input type="text" class="form-input" placeholder="Ciudad"></div>
+        <div class="form-group"><div class="form-label">Comuna</div><input type="text" class="form-input" placeholder="Comuna"></div>
+      </div>
+      <div class="form-row single">
+        <div class="form-group"><div class="form-label">Observaciones</div><textarea class="form-textarea" placeholder="Notas adicionales..."></textarea></div>
+      </div>
+    </div>
+    <div class="panel-footer">
+      <button class="btn btn-secondary" onclick="closePanel('nuevo-cliente')">Cancelar</button>
+      <button class="btn btn-primary" onclick="guardarCliente()">Guardar Cliente</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PANEL: NUEVO PROVEEDOR ══ -->
+<div class="panel-overlay" id="panel-nuevo-proveedor">
+  <div class="side-panel">
+    <div class="panel-header">
+      <div class="panel-title">Nuevo Proveedor</div>
+      <button class="btn-icon" onclick="closePanel('nuevo-proveedor')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="panel-body">
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">RUT *</div><input type="text" class="form-input" placeholder="12.345.678-9"></div>
+        <div class="form-group"><div class="form-label">Código</div><input type="text" class="form-input" placeholder="Auto"></div>
+      </div>
+      <div class="form-row single">
+        <div class="form-group"><div class="form-label">Nombre / Razón Social *</div><input type="text" class="form-input" placeholder="Nombre completo o razón social"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Email</div><input type="email" class="form-input" placeholder="email@ejemplo.cl"></div>
+        <div class="form-group"><div class="form-label">Teléfono</div><input type="text" class="form-input" placeholder="+56 9 ..."></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Giro</div><input type="text" class="form-input" placeholder="Actividad comercial"></div>
+        <div class="form-group"><div class="form-label">Condición de Pago</div><select class="form-select"><option>Contado</option><option>30 días</option><option>60 días</option><option>90 días</option></select></div>
+      </div>
+      <div class="form-row single">
+        <div class="form-group"><div class="form-label">Dirección</div><input type="text" class="form-input" placeholder="Dirección completa"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Ciudad</div><input type="text" class="form-input" placeholder="Ciudad"></div>
+        <div class="form-group"><div class="form-label">Banco</div><select class="form-select"><option>Sin banco</option><option>BCI</option><option>Banco Chile</option><option>BancoEstado</option><option>Santander</option><option>Scotiabank</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Tipo Cuenta</div><select class="form-select"><option>Cuenta Corriente</option><option>Cuenta Vista</option><option>Cuenta Ahorro</option></select></div>
+        <div class="form-group"><div class="form-label">N° Cuenta</div><input type="text" class="form-input" placeholder="Número de cuenta"></div>
+      </div>
+      <div class="form-row single">
+        <div class="form-group"><div class="form-label">Observaciones</div><textarea class="form-textarea" placeholder="Notas adicionales..."></textarea></div>
+      </div>
+    </div>
+    <div class="panel-footer">
+      <button class="btn btn-secondary" onclick="closePanel('nuevo-proveedor')">Cancelar</button>
+      <button class="btn btn-primary" onclick="guardarProveedor()">Guardar Proveedor</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PANEL: NUEVO DOCUMENTO VENTA ══ -->
+<div class="panel-overlay" id="panel-nuevo-venta">
+  <div class="side-panel" style="width:600px">
+    <div class="panel-header">
+      <div class="panel-title">Nuevo Documento de Venta</div>
+      <button class="btn-icon" onclick="closePanel('nuevo-venta')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="panel-body">
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Tipo Documento *</div><select class="form-select"><option>Boleta Manual</option><option>Factura Electrónica</option><option>Boleta Electrónica</option><option>Nota de Crédito</option><option>Nota de Débito</option></select></div>
+        <div class="form-group"><div class="form-label">Fecha *</div><input type="date" class="form-input" value="2026-06-25"></div>
+      </div>
+      <div class="form-row single">
+        <div class="form-group"><div class="form-label">Cliente *</div><input type="text" class="form-input" placeholder="Buscar cliente por nombre o RUT..."></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Condición de Pago</div><select class="form-select"><option>Contado</option><option>30 días</option><option>60 días</option></select></div>
+        <div class="form-group"><div class="form-label">Vendedor</div><input type="text" class="form-input" placeholder="Vendedor"></div>
+      </div>
+      <div class="form-divider"></div>
+      <div class="form-section-title">Detalle</div>
+      <table class="asiento-table">
+        <thead><tr><th>Artículo/Servicio</th><th>Descripción</th><th>Cant.</th><th>Precio Unit.</th><th>Total</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><select style="width:100%;border:none;background:transparent;font-size:12px;font-family:var(--sans);outline:none"><option>Seleccionar...</option><option>GASTOS COMUNES</option></select></td>
+            <td><input type="text" placeholder="Descripción"></td>
+            <td><input type="number" value="1" style="width:50px"></td>
+            <td><input type="number" placeholder="0"></td>
+            <td><input type="number" placeholder="0" readonly style="background:#f9f9f9"></td>
+          </tr>
+          <tr style="background:var(--bg)"><td colspan="5" style="padding:8px;text-align:center"><button class="btn btn-secondary" style="font-size:12px;padding:5px 12px">+ Agregar línea</button></td></tr>
+        </tbody>
+      </table>
+      <div class="asiento-totals" style="margin-top:12px">
+        <div class="total-item"><div class="t-label">Neto</div><div class="t-val">$0</div></div>
+        <div class="total-item"><div class="t-label">IVA (19%)</div><div class="t-val">$0</div></div>
+        <div class="total-item"><div class="t-label">Total</div><div class="t-val balanced">$0</div></div>
+      </div>
+    </div>
+    <div class="panel-footer">
+      <button class="btn btn-secondary" onclick="closePanel('nuevo-venta')">Cancelar</button>
+      <button class="btn btn-primary">Guardar Documento</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PANEL: NUEVO DOCUMENTO COMPRA ══ -->
+<div class="panel-overlay" id="panel-nuevo-compra">
+  <div class="side-panel" style="width:600px">
+    <div class="panel-header">
+      <div class="panel-title">Nuevo Documento de Compra</div>
+      <button class="btn-icon" onclick="closePanel('nuevo-compra')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="panel-body">
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Tipo Documento *</div><select class="form-select"><option>Factura</option><option>Boleta</option><option>Nota de Crédito</option><option>Nota de Débito</option></select></div>
+        <div class="form-group"><div class="form-label">Fecha Emisión *</div><input type="date" class="form-input" value="2026-06-25"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Proveedor *</div><input type="text" class="form-input" placeholder="Buscar proveedor..."></div>
+        <div class="form-group"><div class="form-label">N° Documento *</div><input type="text" class="form-input" placeholder="Número de folio"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Monto Neto</div><input type="number" class="form-input" placeholder="0"></div>
+        <div class="form-group"><div class="form-label">IVA (19%)</div><input type="number" class="form-input" placeholder="0"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Total *</div><input type="number" class="form-input" placeholder="0"></div>
+        <div class="form-group"><div class="form-label">Cuenta Contable</div><select class="form-select"><option>Seleccionar cuenta...</option><option>2.1.1 — Proveedores</option><option>1.1.4 — IVA Crédito Fiscal</option></select></div>
+      </div>
+      <div class="form-row single">
+        <div class="form-group"><div class="form-label">Glosa / Descripción</div><input type="text" class="form-input" placeholder="Descripción de la compra..."></div>
+      </div>
+      <div class="form-row single">
+        <div class="form-group"><div class="form-label">Observaciones</div><textarea class="form-textarea" placeholder="Notas adicionales..."></textarea></div>
+      </div>
+    </div>
+    <div class="panel-footer">
+      <button class="btn btn-secondary" onclick="closePanel('nuevo-compra')">Cancelar</button>
+      <button class="btn btn-primary">Guardar Compra</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PANEL: NUEVA GUIA DESPACHO ══ -->
+<div class="panel-overlay" id="panel-nueva-guia">
+  <div class="side-panel" style="width:580px">
+    <div class="panel-header">
+      <div class="panel-title">Nueva Guía de Despacho</div>
+      <button class="btn-icon" onclick="closePanel('nueva-guia')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="panel-body">
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Cliente *</div><input type="text" class="form-input" placeholder="Buscar cliente..."></div>
+        <div class="form-group"><div class="form-label">Fecha *</div><input type="date" class="form-input" value="2026-06-25"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Indicador de Traslado</div><select class="form-select"><option>Operación constituye venta</option><option>Ventas por efectuar</option><option>Consignaciones</option><option>Entrega gratuita</option><option>Traslados internos</option></select></div>
+        <div class="form-group"><div class="form-label">Tipo de Despacho</div><select class="form-select"><option>Despacho por cuenta del receptor</option><option>Despacho por cuenta del emisor</option></select></div>
+      </div>
+      <div class="form-divider"></div>
+      <div class="form-section-title">Detalle de Artículos</div>
+      <table class="asiento-table">
+        <thead><tr><th>Artículo</th><th>Descripción</th><th>Cantidad</th><th>Precio Unit.</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><select style="width:100%;border:none;background:transparent;font-size:12px;font-family:var(--sans);outline:none"><option>Seleccionar artículo...</option></select></td>
+            <td><input type="text" placeholder="Descripción"></td>
+            <td><input type="number" value="1" style="width:60px"></td>
+            <td><input type="number" placeholder="0"></td>
+          </tr>
+          <tr style="background:var(--bg)"><td colspan="4" style="padding:8px;text-align:center"><button class="btn btn-secondary" style="font-size:12px;padding:5px 12px">+ Agregar línea</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="panel-footer">
+      <button class="btn btn-secondary" onclick="closePanel('nueva-guia')">Cancelar</button>
+      <button class="btn btn-primary">Guardar Guía</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MENÚ ACCIONES ══ -->
+<div id="menu-acciones" style="display:none;position:fixed;background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.12);z-index:200;min-width:140px;padding:6px 0">
+  <div onclick="accionEditar()" style="padding:10px 16px;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:8px" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background=''">✏️ Editar</div>
+  <div onclick="accionDuplicar()" style="padding:10px 16px;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:8px" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background=''">📋 Duplicar</div>
+  <div style="height:1px;background:var(--border);margin:4px 0"></div>
+  <div onclick="accionEliminar()" style="padding:10px 16px;font-size:13px;cursor:pointer;color:var(--danger);display:flex;align-items:center;gap:8px" onmouseover="this.style.background='#FEF2F2'" onmouseout="this.style.background=''">🗑️ Eliminar</div>
+</div>
+
+<!-- ══ TOAST NOTIFICACIÓN ══ -->
+<div id="toast" style="display:none;position:fixed;bottom:24px;right:24px;background:#1F2937;color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;z-index:300;box-shadow:0 4px 16px rgba(0,0,0,0.2)"></div>
+
 </body>
 </html>
