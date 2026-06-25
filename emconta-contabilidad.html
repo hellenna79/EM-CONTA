@@ -367,12 +367,32 @@
   <nav class="nav-section">
     <div class="nav-label">Módulos</div>
 
-    <div class="nav-group-toggle" onclick="toggleGroup('ventas')">
+<div class="nav-group-toggle" onclick="toggleGroup('ventas2')">
       <div class="left">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
         Ventas
       </div>
       <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+    <div class="nav-submenu" id="group-ventas2" style="display:none">
+      <div style="padding:6px 20px 4px 44px;font-size:10px;font-weight:600;color:#4A6080;text-transform:uppercase;letter-spacing:1px">Clientes y Productos</div>
+      <div class="nav-item" onclick="setView('articulos')">Artículos</div>
+      <div class="nav-item" onclick="setView('servicios')">Servicios</div>
+      <div class="nav-item" onclick="setView('clientes')">Clientes</div>
+      <div style="padding:6px 20px 4px 44px;font-size:10px;font-weight:600;color:#4A6080;text-transform:uppercase;letter-spacing:1px;margin-top:4px">Guía de Despacho</div>
+      <div class="nav-item" onclick="setView('guiadespacho')">Listado de Documentos</div>
+      <div class="nav-item" onclick="setView('guiamasiva')">Guía Despacho Masiva</div>
+      <div style="padding:6px 20px 4px 44px;font-size:10px;font-weight:600;color:#4A6080;text-transform:uppercase;letter-spacing:1px;margin-top:4px">Ventas</div>
+      <div class="nav-item" onclick="setView('ventasdocs')">Listado de Documentos</div>
+      <div class="nav-item" onclick="setView('facturadorrecurrente')">Facturador Recurrente</div>
+      <div class="nav-item" onclick="setView('facturadormasivo')">Facturador Masivo</div>
+      <div class="nav-item" onclick="setView('informesventasnuevo')">Informes de Ventas (Nuevo)</div>
+      <div class="nav-item" onclick="setView('informesventas')">Informes de Ventas</div>
+      <div class="nav-item" onclick="setView('infoelectronica')">Información Electrónica</div>
+      <div style="padding:6px 20px 4px 44px;font-size:10px;font-weight:600;color:#4A6080;text-transform:uppercase;letter-spacing:1px;margin-top:4px">Otros</div>
+      <div class="nav-item" onclick="setView('sawu')">SAWU: Abastecimiento B2B</div>
+      <div class="nav-item" onclick="setView('ecommerce')">Plugins Ecommerce</div>
+      <div class="nav-item" onclick="setView('listaprecios')">Lista de Precios</div>
     </div>
 
     <div class="nav-group-toggle" onclick="toggleGroup('compras')">
@@ -1089,16 +1109,7 @@
         <div class="table-card" style="padding:20px"><div style="font-weight:600;margin-bottom:12px">Clasificadores Contables</div><div style="font-size:13px;color:var(--muted)">Agrupa cuentas por clasificadores personalizados</div><button class="btn btn-secondary" style="margin-top:14px">Configurar</button></div>
       </div>
     </div>
-    <div class="view" id="view-dashboard">
-      <div class="page-header"><div><div class="page-title">Panel Operacional</div><div class="page-subtitle">Resumen general de em.conta</div></div></div>
-      <div class="stats-row">
-        <div class="stat-card"><div class="stat-label">Ingresos del Mes</div><div class="stat-value green">$12.480.000</div><div class="stat-sub">Junio 2026</div></div>
-        <div class="stat-card"><div class="stat-label">Egresos del Mes</div><div class="stat-value red">$8.230.000</div><div class="stat-sub">Junio 2026</div></div>
-        <div class="stat-card"><div class="stat-label">Resultado</div><div class="stat-value blue">$4.250.000</div><div class="stat-sub">Utilidad del período</div></div>
-        <div class="stat-card"><div class="stat-label">Comprobantes</div><div class="stat-value orange">128</div><div class="stat-sub">Año 2026</div></div>
-      </div>
-      <div class="table-card"><div class="empty-state"><div class="empty-icon">📈</div><div class="empty-title">Panel en construcción</div><div class="empty-sub">Aquí se mostrarán gráficos y resúmenes en tiempo real</div></div></div>
-    </div>
+
 
 <!-- ══ VIEW: TESORERIA CONCILIACION ══ -->
 <div class="view" id="view-conciliacion">
