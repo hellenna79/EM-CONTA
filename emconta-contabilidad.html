@@ -367,29 +367,29 @@
   <nav class="nav-section">
     <div class="nav-label">Módulos</div>
 
-<div class="nav-group-toggle" onclick="toggleGroup('ventas2')">
+    <div class="nav-group-toggle" onclick="toggleGroup('ventas')">
       <div class="left">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
         Ventas
       </div>
       <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
     </div>
-    <div class="nav-submenu" id="group-ventas2" style="display:none">
-      <div style="padding:6px 20px 4px 44px;font-size:10px;font-weight:600;color:#4A6080;text-transform:uppercase;letter-spacing:1px">Clientes y Productos</div>
+    <div class="nav-submenu" id="group-ventas" style="display:none">
+      <div style="padding:6px 20px 4px 44px;font-size:10px;font-weight:600;color:#4A6080;text-transform:uppercase">Clientes y Productos</div>
       <div class="nav-item" onclick="setView('articulos')">Artículos</div>
       <div class="nav-item" onclick="setView('servicios')">Servicios</div>
       <div class="nav-item" onclick="setView('clientes')">Clientes</div>
-      <div style="padding:6px 20px 4px 44px;font-size:10px;font-weight:600;color:#4A6080;text-transform:uppercase;letter-spacing:1px;margin-top:4px">Guía de Despacho</div>
+      <div style="padding:6px 20px 4px 44px;font-size:10px;font-weight:600;color:#4A6080;text-transform:uppercase;margin-top:4px">Guía de Despacho</div>
       <div class="nav-item" onclick="setView('guiadespacho')">Listado de Documentos</div>
       <div class="nav-item" onclick="setView('guiamasiva')">Guía Despacho Masiva</div>
-      <div style="padding:6px 20px 4px 44px;font-size:10px;font-weight:600;color:#4A6080;text-transform:uppercase;letter-spacing:1px;margin-top:4px">Ventas</div>
+      <div style="padding:6px 20px 4px 44px;font-size:10px;font-weight:600;color:#4A6080;text-transform:uppercase;margin-top:4px">Ventas</div>
       <div class="nav-item" onclick="setView('ventasdocs')">Listado de Documentos</div>
       <div class="nav-item" onclick="setView('facturadorrecurrente')">Facturador Recurrente</div>
       <div class="nav-item" onclick="setView('facturadormasivo')">Facturador Masivo</div>
       <div class="nav-item" onclick="setView('informesventasnuevo')">Informes de Ventas (Nuevo)</div>
       <div class="nav-item" onclick="setView('informesventas')">Informes de Ventas</div>
       <div class="nav-item" onclick="setView('infoelectronica')">Información Electrónica</div>
-      <div style="padding:6px 20px 4px 44px;font-size:10px;font-weight:600;color:#4A6080;text-transform:uppercase;letter-spacing:1px;margin-top:4px">Otros</div>
+      <div style="padding:6px 20px 4px 44px;font-size:10px;font-weight:600;color:#4A6080;text-transform:uppercase;margin-top:4px">Otros</div>
       <div class="nav-item" onclick="setView('sawu')">SAWU: Abastecimiento B2B</div>
       <div class="nav-item" onclick="setView('ecommerce')">Plugins Ecommerce</div>
       <div class="nav-item" onclick="setView('listaprecios')">Lista de Precios</div>
@@ -403,7 +403,6 @@
       <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
     </div>
     <div class="nav-submenu" id="group-compras" style="display:none">
-      <div style="padding:6px 20px 4px 44px;font-size:10px;font-weight:600;color:#4A6080;text-transform:uppercase;letter-spacing:1px">Compras</div>
       <div class="nav-item" onclick="setView('proveedores')">Proveedores</div>
       <div class="nav-item" onclick="setView('comprasdocs')">Listado de Documentos</div>
       <div class="nav-item" onclick="setView('comprasinfoelec')">Información Electrónica</div>
@@ -1672,6 +1671,189 @@
   </div>
 </div>
 
+
+
+    <!-- ══ VIEW: PANEL OPERACIONAL ══ -->
+    <div class="view" id="view-dashboard">
+      <div class="page-header"><div><div class="page-title">Panel Operacional</div><div class="page-subtitle">¡Bienvenida a tu espacio de trabajo em.conta!</div></div></div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px">
+        <div class="stat-card" style="text-align:center;cursor:pointer" onclick="setView('ventasdocs')"><div style="font-size:32px;margin-bottom:8px">🛍️</div><div style="font-weight:700;font-size:15px">Ventas</div></div>
+        <div class="stat-card" style="text-align:center;cursor:pointer" onclick="setView('comprasdocs')"><div style="font-size:32px;margin-bottom:8px">🛒</div><div style="font-weight:700;font-size:15px">Compras</div></div>
+        <div class="stat-card" style="text-align:center;cursor:pointer" onclick="setView('comprobantes')"><div style="font-size:32px;margin-bottom:8px">📒</div><div style="font-weight:700;font-size:15px">Contabilidad</div></div>
+        <div class="stat-card" style="text-align:center;cursor:pointer" onclick="setView('conciliacion')"><div style="font-size:32px;margin-bottom:8px">💰</div><div style="font-weight:700;font-size:15px">Tesorería</div></div>
+        <div class="stat-card" style="text-align:center;cursor:pointer" onclick="setView('inventarioarticulos')"><div style="font-size:32px;margin-bottom:8px">📦</div><div style="font-weight:700;font-size:15px">Inventario</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div class="table-card" style="padding:24px">
+          <div style="font-weight:700;font-size:15px;margin-bottom:16px">Gestión de Ventas</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+            <div style="text-align:center;padding:14px;border:1px solid var(--border);border-radius:10px;cursor:pointer" onclick="setView('clientes')"><div style="font-size:22px;margin-bottom:6px">👥</div><div style="font-size:12px;font-weight:600">Clientes</div></div>
+            <div style="text-align:center;padding:14px;border:1px solid var(--border);border-radius:10px;cursor:pointer" onclick="setView('articulos')"><div style="font-size:22px;margin-bottom:6px">📦</div><div style="font-size:12px;font-weight:600">Productos</div></div>
+            <div style="text-align:center;padding:14px;border:1px solid var(--border);border-radius:10px;cursor:pointer" onclick="setView('ventasdocs')"><div style="font-size:22px;margin-bottom:6px">🛍️</div><div style="font-size:12px;font-weight:600">Vender</div></div>
+            <div style="text-align:center;padding:14px;border:1px solid var(--border);border-radius:10px;cursor:pointer" onclick="setView('informesventas')"><div style="font-size:22px;margin-bottom:6px">📊</div><div style="font-size:12px;font-weight:600">Informes</div></div>
+            <div style="text-align:center;padding:14px;border:1px solid var(--border);border-radius:10px;cursor:pointer" onclick="setView('proveedores')"><div style="font-size:22px;margin-bottom:6px">🏢</div><div style="font-size:12px;font-weight:600">Proveedores</div></div>
+            <div style="text-align:center;padding:14px;border:1px solid var(--border);border-radius:10px;cursor:pointer" onclick="setView('comprasdocs')"><div style="font-size:22px;margin-bottom:6px">🛒</div><div style="font-size:12px;font-weight:600">Compras</div></div>
+          </div>
+        </div>
+        <div class="table-card" style="padding:24px">
+          <div style="font-weight:700;font-size:15px;margin-bottom:8px">Resumen — Junio 2026</div>
+          <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--bg);border-radius:8px"><span style="font-size:13px">Ingresos del mes</span><span style="font-family:var(--mono);font-weight:700;color:var(--accent2)">$12.480.000</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--bg);border-radius:8px"><span style="font-size:13px">Egresos del mes</span><span style="font-family:var(--mono);font-weight:700;color:var(--danger)">$8.230.000</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:#EFF6FF;border-radius:8px"><span style="font-size:13px;font-weight:600">Resultado</span><span style="font-family:var(--mono);font-weight:700;color:var(--accent)">$4.250.000</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ VENTAS: ARTICULOS ══ -->
+    <div class="view" id="view-articulos">
+      <div class="page-header"><div><div class="page-title">Maestro de Artículos</div></div><div class="btn-group"><button class="btn btn-secondary">↓ Exportar Excel</button><button class="btn btn-primary">+ Nuevo ▾</button></div></div>
+      <div class="filter-bar"><div class="filter-group" style="flex:1"><input type="text" class="filter-input" placeholder="Buscar código o descripción..." style="width:100%"></div><div class="filter-group" style="flex:1"><select class="filter-select" style="width:100%"><option>Categorías</option></select></div><div class="filter-actions"><button class="btn btn-primary">Filtrar</button></div></div>
+      <div class="table-card"><table><thead><tr><th>Código</th><th>Descripción</th><th>Categoría</th><th>Stock</th><th>Precio Venta</th><th>Activo</th><th>Acciones</th></tr></thead><tbody><tr><td colspan="7"><div class="empty-state" style="padding:40px"><div class="empty-icon">📦</div><div class="empty-title">Sin artículos registrados</div></div></td></tr></tbody></table></div>
+    </div>
+
+    <!-- ══ VENTAS: SERVICIOS ══ -->
+    <div class="view" id="view-servicios">
+      <div class="page-header"><div><div class="page-title">Maestro de Servicios</div></div><button class="btn btn-primary">+ Nuevo</button></div>
+      <div class="table-card"><table><thead><tr><th>Código</th><th>Descripción</th><th>Categoría</th><th>Precio Venta</th><th>Activo</th><th>Acciones</th></tr></thead><tbody><tr><td>2</td><td>GASTOS COMUNES</td><td class="td-muted">Servicios sin categoría</td><td class="td-mono">0</td><td><span style="color:var(--accent2)">✓</span></td><td><button class="btn-icon" style="width:28px;height:28px">⋮</button></td></tr></tbody></table></div>
+    </div>
+
+    <!-- ══ VENTAS: CLIENTES ══ -->
+    <div class="view" id="view-clientes">
+      <div class="page-header"><div><div class="page-title">Clientes</div></div><button class="btn btn-primary">+ Nuevo Cliente</button></div>
+      <div class="filter-bar"><div class="filter-group"><input type="text" class="filter-input" placeholder="RUT" style="width:130px"></div><div class="filter-group"><input type="text" class="filter-input" placeholder="Nombre" style="width:180px"></div><div class="filter-group"><select class="filter-select" style="width:110px"><option>Todos</option><option>Activo</option><option>Inactivo</option></select></div><div class="filter-actions"><button class="btn btn-primary">Filtrar</button></div></div>
+      <div class="table-card"><table><thead><tr><th>Código</th><th>RUT</th><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Estado</th><th>Acciones</th></tr></thead><tbody><tr><td>01</td><td class="td-mono">12.345.678-9</td><td>Heriberto Carrasco Aravena</td><td class="td-muted">—</td><td class="td-muted">—</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn btn-secondary" style="padding:4px 10px;font-size:11px">Editar</button></td></tr></tbody></table></div>
+    </div>
+
+    <!-- ══ VENTAS: GUIA DESPACHO ══ -->
+    <div class="view" id="view-guiadespacho">
+      <div class="page-header"><div><div class="page-title">Guía de Despacho</div></div><div class="btn-group"><button class="btn btn-secondary">Facturación múltiple</button><button class="btn btn-primary">+ Nuevo</button></div></div>
+      <div class="filter-bar"><div class="filter-group"><input type="text" class="filter-input" placeholder="Documento" style="width:130px"></div><div class="filter-group"><input type="text" class="filter-input" placeholder="Cliente" style="width:150px"></div><div class="filter-group"><input type="text" class="filter-input" placeholder="Fecha" style="width:120px"></div><div class="filter-actions"><button class="btn btn-primary">Filtrar</button></div></div>
+      <div class="table-card"><table><thead><tr><th><input type="checkbox"></th><th>Documento</th><th>Número</th><th>Cliente</th><th>Fecha</th><th>Estado DTE</th><th>Total</th></tr></thead><tbody><tr><td colspan="7"><div class="empty-state" style="padding:40px"><div class="empty-icon">🚚</div><div class="empty-title">Sin guías de despacho</div></div></td></tr></tbody></table></div>
+    </div>
+
+    <!-- ══ VENTAS: DOCUMENTOS ══ -->
+    <div class="view" id="view-ventasdocs">
+      <div class="page-header"><div><div class="page-title">Documentos de Ventas</div><div class="page-subtitle">Lista de documentos — Chile</div></div><div class="btn-group"><button class="btn btn-secondary">Mi Tienda 🏪</button><button class="btn btn-primary">+ Nuevo</button></div></div>
+      <div class="filter-bar">
+        <div class="filter-group"><input type="text" class="filter-input" placeholder="Documento" style="width:130px"></div>
+        <div class="filter-group"><input type="text" class="filter-input" placeholder="Cliente" style="width:150px"></div>
+        <div class="filter-group"><input type="text" class="filter-input" placeholder="Vendedor" style="width:130px"></div>
+        <div class="filter-group"><input type="text" class="filter-input" placeholder="Fecha" style="width:120px"></div>
+        <div class="filter-group"><input type="text" class="filter-input" placeholder="N° Desde" style="width:90px"></div>
+        <div class="filter-group"><input type="text" class="filter-input" placeholder="N° Hasta" style="width:90px"></div>
+      </div>
+      <div class="table-card">
+        <table><thead><tr><th><input type="checkbox"></th><th>Documento</th><th>Folio</th><th>Cliente</th><th>Vendedor</th><th>Fecha</th><th>SII</th><th>Total</th><th>Opciones</th></tr></thead>
+        <tbody><tr><td><input type="checkbox"></td><td><span style="color:var(--accent);font-size:12px">🔗 (35) Boleta Manual</span></td><td class="td-mono">1-1</td><td>HERIBERTO CARRASCO ARAVENA</td><td class="td-muted">CONDOMINIO LAS ARAUCARIAS</td><td>2026-04-24</td><td class="td-muted">-</td><td class="td-mono" style="color:var(--accent)">$49.000</td><td><button class="btn-icon" style="width:28px;height:28px">⋮</button></td></tr></tbody></table>
+      </div>
+    </div>
+
+    <!-- ══ VENTAS: FACTURADOR RECURRENTE ══ -->
+    <div class="view" id="view-facturadorrecurrente">
+      <div class="page-header"><div><div class="page-title">Facturador Recurrente</div></div><button class="btn btn-primary">+ Agregar documento</button></div>
+      <div class="tabs"><div class="tab active">Documentos programados</div><div class="tab">Documentos por emitir</div></div>
+      <div class="table-card"><div class="empty-state" style="padding:48px"><div class="empty-icon">🔄</div><div class="empty-title">Sin documentos programados</div></div></div>
+    </div>
+
+    <!-- ══ VENTAS: FACTURADOR MASIVO ══ -->
+    <div class="view" id="view-facturadormasivo">
+      <div class="page-header"><div><div class="page-title">Facturador Masivo — Chile</div></div><button class="btn btn-secondary">⚙️ Configurar</button></div>
+      <div class="tabs"><div class="tab active">Documentos importados</div><div class="tab">Documentos exitosos</div></div>
+      <div class="table-card">
+        <div class="table-header"><div class="table-title">Listado por Procesar</div><div style="display:flex;gap:8px"><button class="btn btn-secondary" style="font-size:12px;padding:5px 10px">🔍 Validar</button><button class="btn btn-secondary" style="font-size:12px;padding:5px 10px">✅ Emitir</button><button class="btn btn-secondary" style="font-size:12px;padding:5px 10px">🗑 Eliminar</button><button class="btn btn-secondary" style="font-size:12px;padding:5px 10px">🔄 Actualizar</button></div></div>
+        <div class="empty-state" style="padding:48px"><div class="empty-icon">📋</div><div class="empty-title">Sin documentos por procesar</div></div>
+      </div>
+    </div>
+
+    <!-- ══ VENTAS: INFORMES NUEVO ══ -->
+    <div class="view" id="view-informesventasnuevo">
+      <div class="page-header"><div><div class="page-title">Informes de Ventas (Nuevo)</div></div><button class="btn btn-primary">📊 Generar Informe</button></div>
+      <div class="table-card" style="padding:24px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div class="form-group"><div class="form-label">Tipo de Informe</div><select class="form-select"><option>Consolidado</option><option>Por vendedor</option></select></div>
+          <div class="form-group"><div class="form-label">Medios de pago</div><select class="form-select"><option>Ninguno</option><option>Efectivo</option><option>Transferencia</option></select></div>
+          <div><div style="font-weight:600;margin-bottom:10px">Detalle</div><label style="display:flex;align-items:center;gap:8px;font-size:13px;margin-bottom:8px"><input type="radio" name="det" checked> Resumido</label><label style="display:flex;align-items:center;gap:8px;font-size:13px"><input type="radio" name="det"> Detallado</label><label style="display:flex;align-items:center;gap:8px;font-size:13px;margin-top:8px"><input type="checkbox"> Agrupar por mes</label></div>
+          <div><div style="font-weight:600;margin-bottom:10px">Período</div><div class="form-group"><div class="form-label">Rango de fechas</div><input type="text" class="form-input" value="01-06-2026 — 25-06-2026"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ VENTAS: INFORMES ══ -->
+    <div class="view" id="view-informesventas">
+      <div class="page-header"><div><div class="page-title">Informes de Ventas</div></div></div>
+      <div class="ifrs-tabs" style="flex-wrap:wrap"><div class="ifrs-tab active">Ranking</div><div class="ifrs-tab">Comisiones</div><div class="ifrs-tab">Cuentas por Cobrar</div><div class="ifrs-tab">Análisis por Cliente</div><div class="ifrs-tab">Estado de Clientes</div><div class="ifrs-tab">Libro de Ventas y Guías</div><div class="ifrs-tab">Lista de Precios</div></div>
+      <div class="table-card"><div class="empty-state" style="padding:48px"><div class="empty-icon">📊</div><div class="empty-title">Selecciona un informe para generar</div></div></div>
+    </div>
+
+    <!-- ══ VENTAS: OTROS ══ -->
+    <div class="view" id="view-infoelectronica"><div class="page-header"><div><div class="page-title">Información Electrónica</div></div></div><div class="table-card"><div class="empty-state" style="padding:48px"><div class="empty-icon">📡</div><div class="empty-title">Documentos tributarios electrónicos</div></div></div></div>
+    <div class="view" id="view-guiamasiva"><div class="page-header"><div><div class="page-title">Guía Despacho Masiva</div></div><button class="btn btn-primary">+ Nueva</button></div><div class="table-card"><div class="empty-state" style="padding:48px"><div class="empty-icon">🚚</div><div class="empty-title">Sin guías masivas</div></div></div></div>
+    <div class="view" id="view-sawu"><div class="page-header"><div><div class="page-title">SAWU: Abastecimiento B2B</div></div></div><div class="table-card"><div class="empty-state" style="padding:48px"><div class="empty-icon">🏭</div><div class="empty-title">Módulo B2B</div></div></div></div>
+    <div class="view" id="view-ecommerce"><div class="page-header"><div><div class="page-title">Plugins Ecommerce</div></div></div><div class="table-card"><div class="empty-state" style="padding:48px"><div class="empty-icon">🛒</div><div class="empty-title">Plugins de comercio electrónico</div></div></div></div>
+    <div class="view" id="view-listaprecios"><div class="page-header"><div><div class="page-title">Lista de Precios</div></div><button class="btn btn-primary">+ Nueva Lista</button></div><div class="table-card"><div class="empty-state" style="padding:48px"><div class="empty-icon">💲</div><div class="empty-title">Sin listas de precios</div></div></div></div>
+
+    <!-- ══ COMPRAS: PROVEEDORES ══ -->
+    <div class="view" id="view-proveedores">
+      <div class="page-header"><div><div class="page-title">Proveedores</div></div><button class="btn btn-primary">+ Nuevo Proveedor</button></div>
+      <div class="filter-bar"><div class="filter-group"><input type="text" class="filter-input" placeholder="RUT" style="width:130px"></div><div class="filter-group"><input type="text" class="filter-input" placeholder="Nombre proveedor" style="width:180px"></div><div class="filter-group"><select class="filter-select" style="width:110px"><option>Todos</option><option>Activo</option></select></div><div class="filter-actions"><button class="btn btn-primary">Filtrar</button><button class="btn btn-secondary">↓ Exportar</button></div></div>
+      <div class="table-card"><table><thead><tr><th>Código</th><th>RUT</th><th>Nombre / Razón Social</th><th>Email</th><th>Teléfono</th><th>Condición Pago</th><th>Estado</th><th>Acciones</th></tr></thead><tbody><tr><td colspan="8"><div class="empty-state" style="padding:40px"><div class="empty-icon">🏢</div><div class="empty-title">Sin proveedores registrados</div></div></td></tr></tbody></table></div>
+    </div>
+
+    <!-- ══ COMPRAS: DOCUMENTOS ══ -->
+    <div class="view" id="view-comprasdocs">
+      <div class="page-header"><div><div class="page-title">Documentos de Compras</div></div><div class="btn-group"><button class="btn btn-secondary">🔄 Recargar</button><button class="btn btn-primary">+ Nuevo</button></div></div>
+      <div class="tabs"><div class="tab active">Ingresados</div><div class="tab">Pendientes</div></div>
+      <div class="filter-bar">
+        <div class="filter-group" style="flex:2"><div class="filter-label">RUT o Nombre Proveedor</div><select class="filter-select" style="width:100%"><option>Seleccione</option></select></div>
+        <div class="filter-group" style="flex:1"><div class="filter-label">Fecha emisión</div><input type="text" class="filter-input" value="25-05-2026 — 25-06-2026" style="width:100%"></div>
+        <div class="filter-group"><div class="filter-label">Documento</div><select class="filter-select" style="width:130px"><option>Todos</option><option>Factura</option><option>Boleta</option><option>Nota débito</option></select></div>
+        <div class="filter-group"><div class="filter-label">N° inicial</div><input type="text" class="filter-input" placeholder="N° inicial" style="width:100px"></div>
+        <div class="filter-group"><div class="filter-label">N° final</div><input type="text" class="filter-input" placeholder="N° final" style="width:100px"></div>
+        <div class="filter-actions" style="flex-direction:column;gap:6px"><button class="btn btn-primary">Buscar</button><button class="btn btn-secondary" style="font-size:11px">Discrepancias</button><button class="btn btn-secondary" style="font-size:11px">↓ Exportar</button></div>
+      </div>
+      <div class="table-card"><table><thead><tr><th><input type="checkbox"></th><th>Documento</th><th>Número</th><th>Proveedor</th><th>Emisión</th><th>Recep. SII</th><th>Ingreso</th><th>Estado</th><th>Total</th></tr></thead><tbody><tr><td colspan="9"><div class="empty-state" style="padding:40px"><div class="empty-icon">🔍</div><div class="empty-title">No se encontraron coincidencias</div></div></td></tr></tbody></table></div>
+    </div>
+
+    <!-- ══ COMPRAS: INFORMES ══ -->
+    <div class="view" id="view-informescompras">
+      <div class="page-header"><div><div class="page-title">Informes de Compras</div></div></div>
+      <div class="ifrs-tabs"><div class="ifrs-tab active">Cuentas por Pagar</div><div class="ifrs-tab">Análisis por Proveedor</div><div class="ifrs-tab">Estado de Proveedores</div><div class="ifrs-tab">Libro de Compras</div></div>
+      <div class="filter-bar"><div class="filter-group"><div class="filter-label">Período</div><select class="filter-select" style="width:130px"><option>Junio 2026</option></select></div><div class="filter-group"><div class="filter-label">Rango fechas</div><input type="text" class="filter-input" value="01-06-2026 — 25-06-2026" style="width:200px"></div><div class="filter-actions"><button class="btn btn-primary">Vista Previa</button><button class="btn btn-secondary">↓ PDF</button><button class="btn btn-secondary">↓ CSV</button></div></div>
+      <div class="table-card"><div class="empty-state" style="padding:48px"><div class="empty-icon">📊</div><div class="empty-title">Selecciona un informe y genera</div></div></div>
+    </div>
+
+    <!-- ══ COMPRAS: INFO ELECTRONICA ══ -->
+    <div class="view" id="view-comprasinfoelec"><div class="page-header"><div><div class="page-title">Información Electrónica — Compras</div></div></div><div class="table-card"><div class="empty-state" style="padding:48px"><div class="empty-icon">📡</div><div class="empty-title">Documentos electrónicos recibidos</div></div></div></div>
+
+    <!-- ══ INVENTARIO: ARTICULOS ══ -->
+    <div class="view" id="view-inventarioarticulos">
+      <div class="page-header"><div><div class="page-title">Maestro de Artículos — Inventario</div></div><div class="btn-group"><button class="btn btn-secondary">↓ Exportar Excel</button><button class="btn btn-primary">+ Nuevo ▾</button></div></div>
+      <div class="filter-bar"><div class="filter-group" style="flex:1"><input type="text" class="filter-input" placeholder="Buscar código o descripción..." style="width:100%"></div><div class="filter-group" style="flex:1"><select class="filter-select" style="width:100%"><option>Categorías</option></select></div><div class="filter-actions"><button class="btn btn-primary">Filtrar</button></div></div>
+      <div class="table-card"><table><thead><tr><th>Código</th><th>Descripción</th><th>Categoría</th><th>Stock Disponible</th><th>Precio Venta</th><th>Activo</th><th>Disponible Venta</th><th>Acciones</th></tr></thead><tbody><tr><td colspan="8"><div class="empty-state" style="padding:40px"><div class="empty-icon">📦</div><div class="empty-title">Sin artículos en inventario</div></div></td></tr></tbody></table></div>
+    </div>
+
+    <!-- ══ INVENTARIO: MOVIMIENTOS ══ -->
+    <div class="view" id="view-movsaprobar">
+      <div class="page-header"><div><div class="page-title">Movimientos por Aprobar</div></div><button class="btn btn-primary">+ Nuevo Movimiento</button></div>
+      <div class="filter-bar"><div class="filter-group"><div class="filter-label">Fecha</div><input type="text" class="filter-input" value="01-06-2026 — 25-06-2026" style="width:190px"></div><div class="filter-group"><div class="filter-label">Tipo</div><select class="filter-select" style="width:130px"><option>Todos</option><option>Entrada</option><option>Salida</option><option>Traslado</option><option>Merma</option></select></div><div class="filter-actions"><button class="btn btn-primary">Filtrar</button></div></div>
+      <div class="table-card"><table><thead><tr><th><input type="checkbox"></th><th>N° Movimiento</th><th>Fecha</th><th>Tipo</th><th>Artículo</th><th>Cantidad</th><th>Bodega</th><th>Estado</th><th>Acciones</th></tr></thead><tbody><tr><td colspan="9"><div class="empty-state" style="padding:40px"><div class="empty-icon">⏳</div><div class="empty-title">Sin movimientos pendientes</div></div></td></tr></tbody></table></div>
+    </div>
+
+    <div class="view" id="view-movsaprobados">
+      <div class="page-header"><div><div class="page-title">Movimientos Aprobados</div></div><button class="btn btn-secondary">↓ Exportar</button></div>
+      <div class="filter-bar"><div class="filter-group"><div class="filter-label">Fecha</div><input type="text" class="filter-input" value="01-06-2026 — 25-06-2026" style="width:190px"></div><div class="filter-group"><div class="filter-label">Tipo</div><select class="filter-select" style="width:130px"><option>Todos</option><option>Entrada</option><option>Salida</option><option>Merma</option></select></div><div class="filter-actions"><button class="btn btn-primary">Filtrar</button></div></div>
+      <div class="table-card"><table><thead><tr><th>N° Movimiento</th><th>Fecha</th><th>Tipo</th><th>Artículo</th><th>Cantidad</th><th>Bodega</th><th>Aprobado por</th><th>Acciones</th></tr></thead><tbody><tr><td colspan="8"><div class="empty-state" style="padding:40px"><div class="empty-icon">✅</div><div class="empty-title">Sin movimientos aprobados</div></div></td></tr></tbody></table></div>
+    </div>
+
+    <!-- ══ INVENTARIO: INFORMES ══ -->
+    <div class="view" id="view-informesinventario">
+      <div class="page-header"><div><div class="page-title">Informes de Inventario</div></div></div>
+      <div class="ifrs-tabs" style="flex-wrap:wrap"><div class="ifrs-tab active">Documentos</div><div class="ifrs-tab">Mayor Auxiliar</div><div class="ifrs-tab">Inventario</div><div class="ifrs-tab">Reposición</div><div class="ifrs-tab">Lotes y Series</div><div class="ifrs-tab">Sobre Stock</div><div class="ifrs-tab">Stock Inmóvil</div><div class="ifrs-tab">Artículo</div></div>
+      <div class="filter-bar"><div class="filter-group"><div class="filter-label">Período</div><select class="filter-select" style="width:130px"><option>Junio 2026</option></select></div><div class="filter-group"><div class="filter-label">Bodega</div><select class="filter-select" style="width:130px"><option>Todas</option></select></div><div class="filter-actions"><button class="btn btn-primary">Generar</button><button class="btn btn-secondary">↓ Exportar</button></div></div>
+      <div class="table-card"><div class="empty-state" style="padding:48px"><div class="empty-icon">📊</div><div class="empty-title">Selecciona un informe y genera</div></div></div>
+    </div>
 
   </div><!-- /content -->
 </main>
