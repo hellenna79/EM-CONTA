@@ -402,6 +402,27 @@
       </div>
       <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
     </div>
+    <div class="nav-submenu" id="group-compras" style="display:none">
+      <div style="padding:6px 20px 4px 44px;font-size:10px;font-weight:600;color:#4A6080;text-transform:uppercase;letter-spacing:1px">Compras</div>
+      <div class="nav-item" onclick="setView('proveedores')">Proveedores</div>
+      <div class="nav-item" onclick="setView('comprasdocs')">Listado de Documentos</div>
+      <div class="nav-item" onclick="setView('comprasinfoelec')">Información Electrónica</div>
+      <div class="nav-item" onclick="setView('informescompras')">Informes de Compras</div>
+    </div>
+
+    <div class="nav-group-toggle" onclick="toggleGroup('inventario2')">
+      <div class="left">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+        Inventario
+      </div>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+    <div class="nav-submenu" id="group-inventario2" style="display:none">
+      <div class="nav-item" onclick="setView('inventarioarticulos')">Artículos</div>
+      <div class="nav-item" onclick="setView('movsaprobar')">Movimientos por Aprobar</div>
+      <div class="nav-item" onclick="setView('movsaprobados')">Movimientos Aprobados</div>
+      <div class="nav-item" onclick="setView('informesinventario')">Informes de Inventario</div>
+    </div>
 
     <div class="nav-group-toggle" onclick="toggleGroup('inventario')">
       <div class="left">
