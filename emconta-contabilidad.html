@@ -1723,7 +1723,7 @@
     <div class="view" id="view-clientes">
       <div class="page-header"><div><div class="page-title">Clientes</div></div><button class="btn btn-primary" onclick="openPanel('nuevo-cliente')">+ Nuevo Cliente</button></div>
       <div class="filter-bar"><div class="filter-group"><input type="text" class="filter-input" placeholder="RUT" style="width:130px"></div><div class="filter-group"><input type="text" class="filter-input" placeholder="Nombre" style="width:180px"></div><div class="filter-group"><select class="filter-select" style="width:110px"><option>Todos</option><option>Activo</option><option>Inactivo</option></select></div><div class="filter-actions"><button class="btn btn-primary">Filtrar</button></div></div>
-      <div class="table-card"><table><thead><tr><th>Código</th><th>RUT</th><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Estado</th><th>Acciones</th></tr></thead><tbody><tr><td>01</td><td class="td-mono">12.345.678-9</td><td>Heriberto Carrasco Aravena</td><td class="td-muted">—</td><td class="td-muted">—</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn btn-secondary" style="padding:4px 10px;font-size:11px">Editar</button></td></tr></tbody></table></div>
+      <div class="table-card"><table><thead><tr><th>Código</th><th>RUT</th><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Estado</th><th>Acciones</th></tr></thead><tbody><tr><td>01</td><td class="td-mono">12.345.678-9</td><td>Heriberto Carrasco Aravena</td><td class="td-muted">—</td><td class="td-muted">—</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" style="width:28px;height:28px" onclick="toggleAcciones(this,'cliente')">⋮</button></td></tr></tbody></table></div>
     </div>
 
     <!-- ══ VENTAS: GUIA DESPACHO ══ -->
@@ -2164,20 +2164,29 @@
   document.addEventListener('click', () => {
     document.getElementById('menu-acciones').style.display = 'none';
   });
+
   function accionEditar() {
-    showToast('✏️ Modo edición activado');
     document.getElementById('menu-acciones').style.display = 'none';
+    if (_menuTarget === 'servicio') openPanel('editar-servicio');
+    else if (_menuTarget === 'cliente') openPanel('editar-cliente');
+    else if (_menuTarget === 'proveedor') openPanel('editar-proveedor');
+    else if (_menuTarget === 'articulo') openPanel('nuevo-articulo');
+    else showToast('✏️ Modo edición activado');
   }
+  function accionEliminar() {
+    document.getElementById('menu-acciones').style.display = 'none';
+    openPanel('confirmar-eliminar');
+  }
+  function confirmarEliminar() {
+    closePanel('confirmar-eliminar');
+    showToast('🗑️ Registro eliminado correctamente');
+  }
+
   function accionDuplicar() {
     showToast('📋 Registro duplicado');
     document.getElementById('menu-acciones').style.display = 'none';
   }
-  function accionEliminar() {
-    if (confirm('¿Estás segura de que deseas eliminar este registro?')) {
-      showToast('🗑️ Registro eliminado');
-    }
-    document.getElementById('menu-acciones').style.display = 'none';
-  }
+// accionEliminar y confirmarEliminar movidos arriba
 
   document.getElementById('group-contabilidad').style.display = 'block';
   document.querySelector('[onclick="toggleGroup(\'contabilidad\')"]').classList.add('open');
@@ -2532,6 +2541,135 @@
     <div class="panel-footer">
       <button class="btn btn-secondary" onclick="closePanel('nuevo-movimiento')">Cancelar</button>
       <button class="btn btn-primary" onclick="guardarMovimiento()">Guardar Movimiento</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ PANEL: EDITAR SERVICIO ══ -->
+<div class="panel-overlay" id="panel-editar-servicio">
+  <div class="side-panel">
+    <div class="panel-header">
+      <div class="panel-title">Editar Servicio</div>
+      <button class="btn-icon" onclick="closePanel('editar-servicio')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="panel-body">
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Código</div><input type="text" class="form-input" value="2"></div>
+        <div class="form-group"><div class="form-label">Categoría</div><select class="form-select"><option>Servicios sin categoría</option></select></div>
+      </div>
+      <div class="form-row single">
+        <div class="form-group"><div class="form-label">Descripción *</div><input type="text" class="form-input" value="GASTOS COMUNES"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Precio de Venta</div><input type="number" class="form-input" value="0"></div>
+        <div class="form-group"><div class="form-label">Costo Unitario</div><input type="number" class="form-input" value="0"></div>
+      </div>
+      <div class="form-row single">
+        <div class="form-group"><div class="form-label">Descripción adicional</div><textarea class="form-textarea"></textarea></div>
+      </div>
+    </div>
+    <div class="panel-footer">
+      <button class="btn btn-secondary" onclick="closePanel('editar-servicio')">Cancelar</button>
+      <button class="btn btn-primary" onclick="showToast('✅ Servicio actualizado');closePanel('editar-servicio')">Guardar Cambios</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PANEL: EDITAR CLIENTE ══ -->
+<div class="panel-overlay" id="panel-editar-cliente">
+  <div class="side-panel">
+    <div class="panel-header">
+      <div class="panel-title">Editar Cliente</div>
+      <button class="btn-icon" onclick="closePanel('editar-cliente')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="panel-body">
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">RUT</div><input type="text" class="form-input" value="12.345.678-9"></div>
+        <div class="form-group"><div class="form-label">Código</div><input type="text" class="form-input" value="01"></div>
+      </div>
+      <div class="form-row single">
+        <div class="form-group"><div class="form-label">Nombre / Razón Social *</div><input type="text" class="form-input" value="Heriberto Carrasco Aravena"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Email</div><input type="email" class="form-input" value=""></div>
+        <div class="form-group"><div class="form-label">Teléfono</div><input type="text" class="form-input" value=""></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Giro</div><input type="text" class="form-input" value=""></div>
+        <div class="form-group"><div class="form-label">Condición de Pago</div><select class="form-select"><option>Contado</option><option>30 días</option><option>60 días</option></select></div>
+      </div>
+      <div class="form-row single">
+        <div class="form-group"><div class="form-label">Dirección</div><input type="text" class="form-input" value=""></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Ciudad</div><input type="text" class="form-input" value=""></div>
+        <div class="form-group"><div class="form-label">Estado</div><select class="form-select"><option>Activo</option><option>Inactivo</option></select></div>
+      </div>
+    </div>
+    <div class="panel-footer">
+      <button class="btn btn-secondary" onclick="closePanel('editar-cliente')">Cancelar</button>
+      <button class="btn btn-primary" onclick="showToast('✅ Cliente actualizado');closePanel('editar-cliente')">Guardar Cambios</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PANEL: EDITAR PROVEEDOR ══ -->
+<div class="panel-overlay" id="panel-editar-proveedor">
+  <div class="side-panel">
+    <div class="panel-header">
+      <div class="panel-title">Editar Proveedor</div>
+      <button class="btn-icon" onclick="closePanel('editar-proveedor')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="panel-body">
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">RUT</div><input type="text" class="form-input" placeholder="12.345.678-9"></div>
+        <div class="form-group"><div class="form-label">Código</div><input type="text" class="form-input" placeholder="Auto"></div>
+      </div>
+      <div class="form-row single">
+        <div class="form-group"><div class="form-label">Nombre / Razón Social *</div><input type="text" class="form-input" placeholder="Nombre o razón social"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Email</div><input type="email" class="form-input" placeholder="email@ejemplo.cl"></div>
+        <div class="form-group"><div class="form-label">Teléfono</div><input type="text" class="form-input" placeholder="+56 9..."></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Banco</div><select class="form-select"><option>Sin banco</option><option>BCI</option><option>Banco Chile</option><option>BancoEstado</option><option>Santander</option></select></div>
+        <div class="form-group"><div class="form-label">N° Cuenta</div><input type="text" class="form-input" placeholder="Número de cuenta"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Condición de Pago</div><select class="form-select"><option>Contado</option><option>30 días</option><option>60 días</option></select></div>
+        <div class="form-group"><div class="form-label">Estado</div><select class="form-select"><option>Activo</option><option>Inactivo</option></select></div>
+      </div>
+    </div>
+    <div class="panel-footer">
+      <button class="btn btn-secondary" onclick="closePanel('editar-proveedor')">Cancelar</button>
+      <button class="btn btn-primary" onclick="showToast('✅ Proveedor actualizado');closePanel('editar-proveedor')">Guardar Cambios</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CONFIRMACIÓN ELIMINAR ══ -->
+<div class="panel-overlay" id="panel-confirmar-eliminar">
+  <div class="side-panel" style="width:380px;height:auto;margin:auto;border-radius:16px;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%)">
+    <div class="panel-header">
+      <div class="panel-title" style="color:var(--danger)">⚠️ Confirmar Eliminación</div>
+      <button class="btn-icon" onclick="closePanel('confirmar-eliminar')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="panel-body">
+      <p style="font-size:14px;color:var(--muted);line-height:1.6">¿Estás segura de que deseas eliminar este registro? Esta acción no se puede deshacer.</p>
+    </div>
+    <div class="panel-footer">
+      <button class="btn btn-secondary" onclick="closePanel('confirmar-eliminar')">Cancelar</button>
+      <button class="btn btn-danger" onclick="confirmarEliminar()">Sí, Eliminar</button>
     </div>
   </div>
 </div>
