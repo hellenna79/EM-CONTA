@@ -1789,7 +1789,7 @@
 
     <!-- ══ VENTAS: OTROS ══ -->
     <div class="view" id="view-infoelectronica"><div class="page-header"><div><div class="page-title">Información Electrónica</div></div></div><div class="table-card"><div class="empty-state" style="padding:48px"><div class="empty-icon">📡</div><div class="empty-title">Documentos tributarios electrónicos</div></div></div></div>
-    <div class="view" id="view-guiamasiva"><div class="page-header"><div><div class="page-title">Guía Despacho Masiva</div></div><button class="btn btn-primary">+ Nueva</button></div><div class="table-card"><div class="empty-state" style="padding:48px"><div class="empty-icon">🚚</div><div class="empty-title">Sin guías masivas</div></div></div></div>
+    <div class="view" id="view-guiamasiva"><div class="page-header"><div><div class="page-title">Guía Despacho Masiva</div></div><button class="btn btn-primary" onclick="openPanel('nueva-guia')">+ Nueva</button></div><div class="table-card"><div class="table-header"><div class="table-title">Listado de Guías Masivas</div></div><table><thead><tr><th><input type="checkbox"></th><th>N°</th><th>Fecha</th><th>Cliente</th><th>Artículos</th><th>Total</th><th>Estado</th><th>Acciones</th></tr></thead><tbody><tr><td colspan="8"><div class="empty-state" style="padding:40px"><div class="empty-icon">🚚</div><div class="empty-title">Sin guías masivas registradas</div><div class="empty-sub">Haz clic en + Nueva para agregar</div></div></td></tr></tbody></table></div></div>
     <div class="view" id="view-sawu"><div class="page-header"><div><div class="page-title">SAWU: Abastecimiento B2B</div></div></div><div class="table-card"><div class="empty-state" style="padding:48px"><div class="empty-icon">🏭</div><div class="empty-title">Módulo B2B</div></div></div></div>
     <div class="view" id="view-ecommerce"><div class="page-header"><div><div class="page-title">Plugins Ecommerce</div></div></div><div class="table-card"><div class="empty-state" style="padding:48px"><div class="empty-icon">🛒</div><div class="empty-title">Plugins de comercio electrónico</div></div></div></div>
     <div class="view" id="view-listaprecios"><div class="page-header"><div><div class="page-title">Lista de Precios</div></div><button class="btn btn-primary">+ Nueva Lista</button></div><div class="table-card"><div class="empty-state" style="padding:48px"><div class="empty-icon">💲</div><div class="empty-title">Sin listas de precios</div></div></div></div>
@@ -1818,10 +1818,38 @@
 
     <!-- ══ COMPRAS: INFORMES ══ -->
     <div class="view" id="view-informescompras">
-      <div class="page-header"><div><div class="page-title">Informes de Compras</div></div></div>
-      <div class="ifrs-tabs"><div class="ifrs-tab active">Cuentas por Pagar</div><div class="ifrs-tab">Análisis por Proveedor</div><div class="ifrs-tab">Estado de Proveedores</div><div class="ifrs-tab">Libro de Compras</div></div>
-      <div class="filter-bar"><div class="filter-group"><div class="filter-label">Período</div><select class="filter-select" style="width:130px"><option>Junio 2026</option></select></div><div class="filter-group"><div class="filter-label">Rango fechas</div><input type="text" class="filter-input" value="01-06-2026 — 25-06-2026" style="width:200px"></div><div class="filter-actions"><button class="btn btn-primary">Vista Previa</button><button class="btn btn-secondary">↓ PDF</button><button class="btn btn-secondary">↓ CSV</button></div></div>
-      <div class="table-card"><div class="empty-state" style="padding:48px"><div class="empty-icon">📊</div><div class="empty-title">Selecciona un informe y genera</div></div></div>
+      <div class="page-header"><div><div class="page-title">Informes de Compras</div></div><div class="btn-group"><button class="btn btn-primary" onclick="generarInformeCompras()">📊 Generar</button><button class="btn btn-secondary" onclick="showToast('Exportando PDF...')">↓ PDF</button><button class="btn btn-secondary" onclick="showToast('Exportando CSV...')">↓ CSV</button></div></div>
+      <div class="ifrs-tabs">
+        <div class="ifrs-tab active" onclick="switchInformeCompras(this,'cxp')">Cuentas por Pagar</div>
+        <div class="ifrs-tab" onclick="switchInformeCompras(this,'analisis')">Análisis por Proveedor</div>
+        <div class="ifrs-tab" onclick="switchInformeCompras(this,'estado')">Estado de Proveedores</div>
+        <div class="ifrs-tab" onclick="switchInformeCompras(this,'libro')">Libro de Compras</div>
+      </div>
+      <div class="filter-bar">
+        <div class="filter-group"><div class="filter-label">Período</div><select class="filter-select" style="width:130px"><option>Junio 2026</option><option>Mayo 2026</option><option>Abril 2026</option></select></div>
+        <div class="filter-group"><div class="filter-label">Proveedor</div><select class="filter-select" style="width:160px"><option>Todos</option></select></div>
+        <div class="filter-group"><div class="filter-label">Rango fechas</div><input type="text" class="filter-input" value="01-06-2026 — 25-06-2026" style="width:200px"></div>
+      </div>
+      <div id="ic-cxp" class="table-card">
+        <div class="table-header"><div class="table-title">Cuentas por Pagar</div></div>
+        <table><thead><tr><th>Proveedor</th><th>RUT</th><th>Documento</th><th>Fecha</th><th>Vencimiento</th><th>Monto</th><th>Estado</th></tr></thead>
+        <tbody><tr><td colspan="7"><div class="empty-state" style="padding:40px"><div class="empty-icon">📋</div><div class="empty-title">Sin cuentas por pagar</div><div class="empty-sub">No hay documentos pendientes en el período seleccionado</div></div></td></tr></tbody></table>
+      </div>
+      <div id="ic-analisis" class="table-card" style="display:none">
+        <div class="table-header"><div class="table-title">Análisis por Proveedor</div></div>
+        <table><thead><tr><th>Proveedor</th><th>RUT</th><th>N° Documentos</th><th>Total Neto</th><th>Total IVA</th><th>Total</th><th>% del Total</th></tr></thead>
+        <tbody><tr><td colspan="7"><div class="empty-state" style="padding:40px"><div class="empty-icon">📊</div><div class="empty-title">Sin datos para analizar</div><div class="empty-sub">Genera el informe seleccionando un período</div></div></td></tr></tbody></table>
+      </div>
+      <div id="ic-estado" class="table-card" style="display:none">
+        <div class="table-header"><div class="table-title">Estado de Proveedores</div></div>
+        <table><thead><tr><th>Proveedor</th><th>RUT</th><th>Saldo Actual</th><th>Documentos Pendientes</th><th>Último Pago</th><th>Estado</th></tr></thead>
+        <tbody><tr><td colspan="6"><div class="empty-state" style="padding:40px"><div class="empty-icon">🏢</div><div class="empty-title">Sin proveedores con saldo</div></div></td></tr></tbody></table>
+      </div>
+      <div id="ic-libro" class="table-card" style="display:none">
+        <div class="table-header"><div class="table-title">Libro de Compras</div></div>
+        <table><thead><tr><th>Fecha</th><th>Tipo Doc.</th><th>Folio</th><th>RUT Proveedor</th><th>Proveedor</th><th>Neto</th><th>IVA</th><th>Total</th><th>Estado SII</th></tr></thead>
+        <tbody><tr><td colspan="9"><div class="empty-state" style="padding:40px"><div class="empty-icon">📚</div><div class="empty-title">Sin registros en el Libro de Compras</div><div class="empty-sub">Sincroniza con el SII para ver los registros</div></div></td></tr></tbody></table>
+      </div>
     </div>
 
     <!-- ══ COMPRAS: INFO ELECTRONICA ══ -->
@@ -1829,20 +1857,20 @@
 
     <!-- ══ INVENTARIO: ARTICULOS ══ -->
     <div class="view" id="view-inventarioarticulos">
-      <div class="page-header"><div><div class="page-title">Maestro de Artículos — Inventario</div></div><div class="btn-group"><button class="btn btn-secondary">↓ Exportar Excel</button><button class="btn btn-primary">+ Nuevo ▾</button></div></div>
+      <div class="page-header"><div><div class="page-title">Maestro de Artículos — Inventario</div></div><div class="btn-group"><button class="btn btn-secondary" onclick="showToast('Exportando a Excel...')">↓ Exportar Excel</button><button class="btn btn-primary" onclick="openPanel('nuevo-articulo')">+ Nuevo</button></div></div>
       <div class="filter-bar"><div class="filter-group" style="flex:1"><input type="text" class="filter-input" placeholder="Buscar código o descripción..." style="width:100%"></div><div class="filter-group" style="flex:1"><select class="filter-select" style="width:100%"><option>Categorías</option></select></div><div class="filter-actions"><button class="btn btn-primary">Filtrar</button></div></div>
       <div class="table-card"><table><thead><tr><th>Código</th><th>Descripción</th><th>Categoría</th><th>Stock Disponible</th><th>Precio Venta</th><th>Activo</th><th>Disponible Venta</th><th>Acciones</th></tr></thead><tbody><tr><td colspan="8"><div class="empty-state" style="padding:40px"><div class="empty-icon">📦</div><div class="empty-title">Sin artículos en inventario</div></div></td></tr></tbody></table></div>
     </div>
 
     <!-- ══ INVENTARIO: MOVIMIENTOS ══ -->
     <div class="view" id="view-movsaprobar">
-      <div class="page-header"><div><div class="page-title">Movimientos por Aprobar</div></div><button class="btn btn-primary">+ Nuevo Movimiento</button></div>
+      <div class="page-header"><div><div class="page-title">Movimientos por Aprobar</div></div><button class="btn btn-primary" onclick="openPanel('nuevo-movimiento')">+ Nuevo Movimiento</button></div>
       <div class="filter-bar"><div class="filter-group"><div class="filter-label">Fecha</div><input type="text" class="filter-input" value="01-06-2026 — 25-06-2026" style="width:190px"></div><div class="filter-group"><div class="filter-label">Tipo</div><select class="filter-select" style="width:130px"><option>Todos</option><option>Entrada</option><option>Salida</option><option>Traslado</option><option>Merma</option></select></div><div class="filter-actions"><button class="btn btn-primary">Filtrar</button></div></div>
       <div class="table-card"><table><thead><tr><th><input type="checkbox"></th><th>N° Movimiento</th><th>Fecha</th><th>Tipo</th><th>Artículo</th><th>Cantidad</th><th>Bodega</th><th>Estado</th><th>Acciones</th></tr></thead><tbody><tr><td colspan="9"><div class="empty-state" style="padding:40px"><div class="empty-icon">⏳</div><div class="empty-title">Sin movimientos pendientes</div></div></td></tr></tbody></table></div>
     </div>
 
     <div class="view" id="view-movsaprobados">
-      <div class="page-header"><div><div class="page-title">Movimientos Aprobados</div></div><button class="btn btn-secondary">↓ Exportar</button></div>
+      <div class="page-header"><div><div class="page-title">Movimientos Aprobados</div></div><button class="btn btn-secondary" onclick="showToast('Exportando movimientos...')">↓ Exportar</button></div>
       <div class="filter-bar"><div class="filter-group"><div class="filter-label">Fecha</div><input type="text" class="filter-input" value="01-06-2026 — 25-06-2026" style="width:190px"></div><div class="filter-group"><div class="filter-label">Tipo</div><select class="filter-select" style="width:130px"><option>Todos</option><option>Entrada</option><option>Salida</option><option>Merma</option></select></div><div class="filter-actions"><button class="btn btn-primary">Filtrar</button></div></div>
       <div class="table-card"><table><thead><tr><th>N° Movimiento</th><th>Fecha</th><th>Tipo</th><th>Artículo</th><th>Cantidad</th><th>Bodega</th><th>Aprobado por</th><th>Acciones</th></tr></thead><tbody><tr><td colspan="8"><div class="empty-state" style="padding:40px"><div class="empty-icon">✅</div><div class="empty-title">Sin movimientos aprobados</div></div></td></tr></tbody></table></div>
     </div>
@@ -1850,7 +1878,16 @@
     <!-- ══ INVENTARIO: INFORMES ══ -->
     <div class="view" id="view-informesinventario">
       <div class="page-header"><div><div class="page-title">Informes de Inventario</div></div></div>
-      <div class="ifrs-tabs" style="flex-wrap:wrap"><div class="ifrs-tab active">Documentos</div><div class="ifrs-tab">Mayor Auxiliar</div><div class="ifrs-tab">Inventario</div><div class="ifrs-tab">Reposición</div><div class="ifrs-tab">Lotes y Series</div><div class="ifrs-tab">Sobre Stock</div><div class="ifrs-tab">Stock Inmóvil</div><div class="ifrs-tab">Artículo</div></div>
+      <div class="ifrs-tabs" style="flex-wrap:wrap">
+        <div class="ifrs-tab active" onclick="switchInformeInv(this)">Documentos</div>
+        <div class="ifrs-tab" onclick="switchInformeInv(this)">Mayor Auxiliar</div>
+        <div class="ifrs-tab" onclick="switchInformeInv(this)">Inventario</div>
+        <div class="ifrs-tab" onclick="switchInformeInv(this)">Reposición</div>
+        <div class="ifrs-tab" onclick="switchInformeInv(this)">Lotes y Series</div>
+        <div class="ifrs-tab" onclick="switchInformeInv(this)">Sobre Stock</div>
+        <div class="ifrs-tab" onclick="switchInformeInv(this)">Stock Inmóvil</div>
+        <div class="ifrs-tab" onclick="switchInformeInv(this)">Artículo</div>
+      </div>
       <div class="filter-bar"><div class="filter-group"><div class="filter-label">Período</div><select class="filter-select" style="width:130px"><option>Junio 2026</option></select></div><div class="filter-group"><div class="filter-label">Bodega</div><select class="filter-select" style="width:130px"><option>Todas</option></select></div><div class="filter-actions"><button class="btn btn-primary">Generar</button><button class="btn btn-secondary">↓ Exportar</button></div></div>
       <div class="table-card"><div class="empty-state" style="padding:48px"><div class="empty-icon">📊</div><div class="empty-title">Selecciona un informe y genera</div></div></div>
     </div>
@@ -2077,6 +2114,33 @@
     showToast('✅ Cliente guardado correctamente');
     closePanel('nuevo-cliente');
   }
+  
+  function switchInformeCompras(tab, id) {
+    tab.closest('.view').querySelectorAll('.ifrs-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    ['ic-cxp','ic-analisis','ic-estado','ic-libro'].forEach(i => {
+      const el = document.getElementById(i);
+      if (el) el.style.display = 'none';
+    });
+    const target = document.getElementById('ic-' + id);
+    if (target) target.style.display = 'block';
+  }
+
+  function switchInformeInv(tab) {
+    tab.closest('.ifrs-tabs').querySelectorAll('.ifrs-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    showToast('📊 Cargando informe: ' + tab.textContent.trim());
+  }
+
+  function generarInformeCompras() {
+    showToast('📊 Generando informe...');
+  }
+
+  function guardarMovimiento() {
+    showToast('✅ Movimiento guardado y enviado a aprobación');
+    closePanel('nuevo-movimiento');
+  }
+
   function guardarProveedor() {
     showToast('✅ Proveedor guardado correctamente');
     closePanel('nuevo-proveedor');
@@ -2427,6 +2491,50 @@
 
 <!-- ══ TOAST NOTIFICACIÓN ══ -->
 <div id="toast" style="display:none;position:fixed;bottom:24px;right:24px;background:#1F2937;color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;z-index:300;box-shadow:0 4px 16px rgba(0,0,0,0.2)"></div>
+
+
+<!-- ══ PANEL: NUEVO MOVIMIENTO INVENTARIO ══ -->
+<div class="panel-overlay" id="panel-nuevo-movimiento">
+  <div class="side-panel">
+    <div class="panel-header">
+      <div class="panel-title">Nuevo Movimiento de Inventario</div>
+      <button class="btn-icon" onclick="closePanel('nuevo-movimiento')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="panel-body">
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Tipo de Movimiento *</div>
+          <select class="form-select">
+            <option>Entrada</option>
+            <option>Salida</option>
+            <option>Traslado</option>
+            <option>Merma</option>
+            <option>Ajuste de inventario</option>
+          </select>
+        </div>
+        <div class="form-group"><div class="form-label">Fecha *</div><input type="date" class="form-input" value="2026-06-25"></div>
+      </div>
+      <div class="form-row single">
+        <div class="form-group"><div class="form-label">Artículo *</div><input type="text" class="form-input" placeholder="Buscar artículo por código o nombre..."></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Cantidad *</div><input type="number" class="form-input" placeholder="0" min="0"></div>
+        <div class="form-group"><div class="form-label">Bodega *</div><select class="form-select"><option>Bodega Principal</option><option>Bodega Secundaria</option></select></div>
+      </div>
+      <div class="form-row single">
+        <div class="form-group"><div class="form-label">Documento de Referencia</div><input type="text" class="form-input" placeholder="N° guía, factura u otro doc."></div>
+      </div>
+      <div class="form-row single">
+        <div class="form-group"><div class="form-label">Glosa / Motivo *</div><textarea class="form-textarea" placeholder="Descripción del movimiento..."></textarea></div>
+      </div>
+    </div>
+    <div class="panel-footer">
+      <button class="btn btn-secondary" onclick="closePanel('nuevo-movimiento')">Cancelar</button>
+      <button class="btn btn-primary" onclick="guardarMovimiento()">Guardar Movimiento</button>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
