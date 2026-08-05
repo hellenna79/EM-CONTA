@@ -588,7 +588,7 @@
         </div>
         <div class="filter-group">
           <div class="filter-label">Tipo</div>
-          <select class="filter-select" style="width:140px">
+          <select id="f-cmp-tipo" class="filter-select" style="width:140px">
             <option>Todos</option>
             <option>Comprobante</option>
             <option>Ingreso</option>
@@ -598,23 +598,23 @@
           </select>
         </div>
         <div class="filter-group">
-          <div class="filter-label">Número</div>
-          <input type="text" class="filter-input" placeholder="Desde" style="width:90px">
+          <div class="filter-label">Glosa</div>
+          <input type="text" id="f-cmp-glosa" class="filter-input" placeholder="Buscar glosa..." style="width:150px">
         </div>
         <div class="filter-group">
-          <div class="filter-label">&nbsp;</div>
-          <input type="text" class="filter-input" placeholder="Hasta" style="width:90px">
+          <div class="filter-label">N° Comprobante</div>
+          <input type="text" id="f-cmp-num" class="filter-input" placeholder="Ej: 0128" style="width:110px">
         </div>
         <div class="filter-actions">
-          <button class="btn btn-primary">Filtrar</button>
-          <button class="btn btn-secondary">Limpiar</button>
+          <button class="btn btn-primary" onclick="filtrarComprobantes()">Filtrar</button>
+          <button class="btn btn-secondary" onclick="limpiarFiltro('tb-comprobantes',['f-cmp-tipo','f-cmp-glosa','f-cmp-num'],'cnt-comprobantes')">Limpiar</button>
         </div>
       </div>
 
       <div class="table-card">
         <div class="table-header">
           <div class="table-title">Listado de Documentos</div>
-          <div class="table-count">128 registros</div>
+          <div class="table-count" id="cnt-comprobantes">128 registros</div>
         </div>
         <table>
           <thead>
@@ -631,7 +631,7 @@
               <th>Acciones</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="tb-comprobantes">
             <tr onclick="openPanel('ver-comprobante')">
               <td><input type="checkbox" onclick="event.stopPropagation()"></td>
               <td><span class="badge badge-blue">Comprobante</span></td>
@@ -755,7 +755,7 @@
           <select class="filter-select" style="width:150px"><option>Todos</option><option>Casa Matriz</option></select>
         </div>
         <div class="filter-actions">
-          <button class="btn btn-primary">Generar</button>
+          <button class="btn btn-primary" onclick="generarInformeContable(this)">Generar</button>
           <button class="btn btn-secondary">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             Exportar PDF
@@ -819,15 +819,20 @@
           <div class="page-title">Emisión de Informes IFRS</div>
           <div class="page-subtitle">Estados financieros bajo normas IFRS</div>
         </div>
-        <button class="btn btn-primary">Vista Previa</button>
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="emitirIFRS()">Vista Previa</button>
+          <button class="btn btn-secondary" onclick="showToast('Exportando informe IFRS a PDF...')">↓ PDF</button>
+          <button class="btn btn-secondary" onclick="showToast('Exportando informe IFRS a Excel...')">↓ Excel</button>
+        </div>
       </div>
       <div class="ifrs-tabs">
-        <div class="ifrs-tab active">Est. Situación Financiera Clasificado</div>
-        <div class="ifrs-tab">Est. Situación Financiera por Liquidez</div>
-        <div class="ifrs-tab">Est. de Resultados por Función</div>
-        <div class="ifrs-tab">Est. de Resultados por Naturaleza</div>
-        <div class="ifrs-tab">Est. de Resultados Integral</div>
+        <div class="ifrs-tab active" onclick="selIFRS(this,'esf_clasificado')">Est. Situación Financiera Clasificado</div>
+        <div class="ifrs-tab" onclick="selIFRS(this,'esf_liquidez')">Est. Situación Financiera por Liquidez</div>
+        <div class="ifrs-tab" onclick="selIFRS(this,'er_funcion')">Est. de Resultados por Función</div>
+        <div class="ifrs-tab" onclick="selIFRS(this,'er_naturaleza')">Est. de Resultados por Naturaleza</div>
+        <div class="ifrs-tab" onclick="selIFRS(this,'er_integral')">Est. de Resultados Integral</div>
       </div>
+      <div id="ifrs-salida" style="display:none;margin-bottom:20px"></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
         <div class="table-card" style="padding:20px">
           <div class="form-section-title" style="margin-bottom:16px">Período</div>
@@ -869,6 +874,11 @@
             <input type="checkbox"> Mostrar cuentas sin movimientos
           </label>
         </div>
+      </div>
+      <div style="margin-top:20px;display:flex;gap:10px">
+        <button class="btn btn-primary" onclick="emitirIFRS()">📄 Emitir Informe</button>
+        <button class="btn btn-secondary" onclick="emitirIFRS('esf_liquidez')">Emitir ESF por Liquidez</button>
+        <button class="btn btn-secondary" onclick="emitirIFRS('er_funcion')">Emitir Resultado por Función</button>
       </div>
     </div>
 
@@ -1042,22 +1052,22 @@
         </div>
         <div class="mes-card">
           <div class="mes-nombre">MAYO</div>
-          <div class="mes-estado"><div class="dot dot-pending"></div> Pendiente</div>
-          <div class="mes-estado"><div class="dot dot-pending"></div> Pendiente</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:4px">Última actualización: Sin realizar</div>
+          <div class="mes-estado"><div class="dot dot-ok"></div> Sincronizado</div>
+          <div class="mes-estado"><div class="dot dot-ok"></div> Sincronizado</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">Última actualización: 04-06-2026</div>
           <div class="mes-actions">
             <div class="mes-btn">Entrar</div>
-            <div class="mes-btn sync">Sincronizar</div>
+            <div class="mes-btn sync">Re-sincronizar</div>
           </div>
         </div>
         <div class="mes-card">
           <div class="mes-nombre">JUNIO</div>
-          <div class="mes-estado"><div class="dot dot-none"></div> Sin sincronizar</div>
-          <div class="mes-estado"><div class="dot dot-none"></div> Sin sincronizar</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:4px">Última actualización: Sin realizar</div>
+          <div class="mes-estado"><div class="dot dot-ok"></div> Sincronizado</div>
+          <div class="mes-estado"><div class="dot dot-ok"></div> Sincronizado</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">Última actualización: 03-07-2026</div>
           <div class="mes-actions">
             <div class="mes-btn">Entrar</div>
-            <div class="mes-btn sync">Sincronizar</div>
+            <div class="mes-btn sync">Re-sincronizar</div>
           </div>
         </div>
         <div class="mes-card">
@@ -1122,7 +1132,7 @@
               <td>Juan Pérez González</td>
               <td>Asesor Contable</td>
               <td class="td-muted">j.perez@email.cl</td>
-              <td>10%</td>
+              <td>15,25%</td>
               <td><span class="badge badge-green">Activo</span></td>
               <td><button class="btn btn-secondary" style="padding:4px 10px;font-size:11px">Editar</button></td>
             </tr>
@@ -1131,7 +1141,7 @@
               <td>María López Silva</td>
               <td>Técnico Agrícola</td>
               <td class="td-muted">m.lopez@email.cl</td>
-              <td>10%</td>
+              <td>15,25%</td>
               <td><span class="badge badge-green">Activo</span></td>
               <td><button class="btn btn-secondary" style="padding:4px 10px;font-size:11px">Editar</button></td>
             </tr>
@@ -1142,15 +1152,15 @@
 
     <!-- ══ VIEWS SIMPLES ══ -->
     <div class="view" id="view-presupuesto">
-      <div class="page-header"><div><div class="page-title">Presupuesto</div><div class="page-subtitle">Gestión y control presupuestario</div></div><button class="btn btn-primary">+ Nuevo Presupuesto</button></div>
+      <div class="page-header"><div><div class="page-title">Presupuesto</div><div class="page-subtitle">Gestión y control presupuestario</div></div><button class="btn btn-primary" onclick="showToast('Formulario de nuevo presupuesto')">+ Nuevo Presupuesto</button></div>
       <div class="table-card"><div class="table-card">
   <table class="data-table">
     <thead><tr><th>Código</th><th>Nombre Presupuesto</th><th>Período</th><th>Tipo</th><th>Estado</th><th>Total</th><th>Acciones</th></tr></thead>
     <tbody>
-      <tr><td>PRES-2026-01</td><td>Presupuesto Temporada Palta Hass</td><td>Ene–Jun 2026</td><td>Operacional</td><td><span class="badge badge-green">Activo</span></td><td>$48.500.000</td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-      <tr><td>PRES-2026-02</td><td>Presupuesto Insumos Agrícolas</td><td>Ene–Dic 2026</td><td>Gasto</td><td><span class="badge badge-green">Activo</span></td><td>$12.300.000</td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-      <tr><td>PRES-2026-03</td><td>Presupuesto Inversión Riego</td><td>Mar–Sep 2026</td><td>Inversión</td><td><span class="badge badge-orange">En revisión</span></td><td>$8.750.000</td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-      <tr><td>PRES-2026-04</td><td>Presupuesto Cosecha Cítricos</td><td>Jul–Dic 2026</td><td>Operacional</td><td><span class="badge badge-gray">Borrador</span></td><td>$22.100.000</td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
+      <tr><td>PRES-2026-01</td><td>Presupuesto Temporada Palta Hass</td><td>Ene–Jun 2026</td><td>Operacional</td><td><span class="badge badge-green">Activo</span></td><td>$48.500.000</td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'presupuesto')">⋮</button></td></tr>
+      <tr><td>PRES-2026-02</td><td>Presupuesto Insumos Agrícolas</td><td>Ene–Dic 2026</td><td>Gasto</td><td><span class="badge badge-green">Activo</span></td><td>$12.300.000</td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'presupuesto')">⋮</button></td></tr>
+      <tr><td>PRES-2026-03</td><td>Presupuesto Inversión Riego</td><td>Mar–Sep 2026</td><td>Inversión</td><td><span class="badge badge-orange">En revisión</span></td><td>$8.750.000</td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'presupuesto')">⋮</button></td></tr>
+      <tr><td>PRES-2026-04</td><td>Presupuesto Cosecha Cítricos</td><td>Jul–Dic 2026</td><td>Operacional</td><td><span class="badge badge-gray">Borrador</span></td><td>$22.100.000</td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'presupuesto')">⋮</button></td></tr>
     </tbody>
   </table>
 </div></div>
@@ -1160,20 +1170,40 @@
       <div class="table-card"><div class="empty-state"><div class="empty-icon">⚖️</div><div class="empty-title">Ajustes contables</div><div class="empty-sub">Configura los ajustes de tipo de cambio y diferencias de moneda</div></div></div>
     </div>
     <div class="view" id="view-cierres">
-      <div class="page-header"><div><div class="page-title">Cierres</div><div class="page-subtitle">Cierre de mes y cierre anual</div></div></div>
-      <div class="table-card"><div class="empty-state"><div class="empty-icon">🔒</div><div class="empty-title">Gestión de cierres contables</div><div class="empty-sub">Cierra períodos mensuales y anuales desde aquí</div></div></div>
+      <div class="page-header"><div><div class="page-title">Cierres</div><div class="page-subtitle">Cierre de mes y cierre anual — Ejercicio 2026</div></div><button class="btn btn-primary" onclick="showToast('Asistente de cierre de período')">+ Nuevo Cierre</button></div>
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-label">Períodos Cerrados</div><div class="stat-value blue">6</div><div class="stat-sub">Enero a Junio 2026</div></div>
+        <div class="stat-card"><div class="stat-label">Resultado Acumulado</div><div class="stat-value green">$15.046.530</div><div class="stat-sub">Utilidad del ejercicio</div></div>
+        <div class="stat-card"><div class="stat-label">Último Cierre</div><div class="stat-value">Junio 2026</div><div class="stat-sub">05-07-2026</div></div>
+        <div class="stat-card"><div class="stat-label">Cierre Anual</div><div class="stat-value orange">Pendiente</div><div class="stat-sub">31-12-2026</div></div>
+      </div>
+      <div class="table-card">
+        <div class="table-header"><div class="table-title">Cierres mensuales 2026</div><div class="table-count">6 períodos</div></div>
+        <table>
+          <thead><tr><th>Período</th><th>Fecha Cierre</th><th>Total Debe</th><th>Total Haber</th><th>Resultado del Mes</th><th>Resultado Acumulado</th><th>Usuario</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody id="tb-cierres">
+            <tr><td>Enero 2026</td><td>04-02-2026</td><td class="td-mono">$5.412.800</td><td class="td-mono">$5.412.800</td><td class="td-mono">$1.284.300</td><td class="td-mono">$1.284.300</td><td class="td-muted">E. Maturana</td><td><span class="badge badge-green">Cerrado</span></td><td><button class="btn-icon" onclick="toggleAcciones(this,'cierre')">⋮</button></td></tr>
+            <tr><td>Febrero 2026</td><td>04-03-2026</td><td class="td-mono">$6.128.400</td><td class="td-mono">$6.128.400</td><td class="td-mono">$1.510.400</td><td class="td-mono">$2.794.700</td><td class="td-muted">E. Maturana</td><td><span class="badge badge-green">Cerrado</span></td><td><button class="btn-icon" onclick="toggleAcciones(this,'cierre')">⋮</button></td></tr>
+            <tr><td>Marzo 2026</td><td>02-04-2026</td><td class="td-mono">$8.940.100</td><td class="td-mono">$8.940.100</td><td class="td-mono">$2.238.900</td><td class="td-mono">$5.033.600</td><td class="td-muted">E. Maturana</td><td><span class="badge badge-green">Cerrado</span></td><td><button class="btn-icon" onclick="toggleAcciones(this,'cierre')">⋮</button></td></tr>
+            <tr><td>Abril 2026</td><td>03-05-2026</td><td class="td-mono">$9.744.600</td><td class="td-mono">$9.744.600</td><td class="td-mono">$2.905.630</td><td class="td-mono">$7.939.230</td><td class="td-muted">E. Maturana</td><td><span class="badge badge-green">Cerrado</span></td><td><button class="btn-icon" onclick="toggleAcciones(this,'cierre')">⋮</button></td></tr>
+            <tr><td>Mayo 2026</td><td>04-06-2026</td><td class="td-mono">$8.371.200</td><td class="td-mono">$8.371.200</td><td class="td-mono">$2.857.300</td><td class="td-mono">$10.796.530</td><td class="td-muted">E. Maturana</td><td><span class="badge badge-green">Cerrado</span></td><td><button class="btn-icon" onclick="toggleAcciones(this,'cierre')">⋮</button></td></tr>
+            <tr><td>Junio 2026</td><td>05-07-2026</td><td class="td-mono">$9.723.400</td><td class="td-mono">$9.723.400</td><td class="td-mono">$4.250.000</td><td class="td-mono">$15.046.530</td><td class="td-muted">E. Maturana</td><td><span class="badge badge-green">Cerrado</span></td><td><button class="btn-icon" onclick="toggleAcciones(this,'cierre')">⋮</button></td></tr>
+            <tr style="font-weight:700;border-top:2px solid var(--border)"><td colspan="4">RESULTADO ACUMULADO ENE–JUN 2026</td><td class="td-mono">$15.046.530</td><td colspan="4"></td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
     <div class="view" id="view-rindegastos">
-      <div class="page-header"><div><div class="page-title">Rindegastos</div><div class="page-subtitle">Rendición de gastos y fondos por rendir</div></div><button class="btn btn-primary">+ Nueva Rendición</button></div>
+      <div class="page-header"><div><div class="page-title">Rindegastos</div><div class="page-subtitle">Rendición de gastos y fondos por rendir</div></div><button class="btn btn-primary" onclick="showToast('Formulario de nueva rendición de gastos')">+ Nueva Rendición</button></div>
       <div class="table-card"><div class="table-card">
   <table class="data-table">
     <thead><tr><th>N° Rendición</th><th>Solicitante</th><th>Concepto</th><th>Fecha</th><th>Monto</th><th>Estado</th><th>Acciones</th></tr></thead>
     <tbody>
-      <tr><td>RG-001</td><td>Elena Maturana</td><td>Combustible visita parcelas zona norte</td><td>2026-04-08</td><td>$48.200</td><td><span class="badge badge-green">Aprobado</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-      <tr><td>RG-002</td><td>Carlos Fuentes (Capataz)</td><td>Compra herramientas menores — ferretería</td><td>2026-04-21</td><td>$87.500</td><td><span class="badge badge-green">Aprobado</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-      <tr><td>RG-003</td><td>Elena Maturana</td><td>Alimentación reunión clientes — La Cruz</td><td>2026-05-14</td><td>$34.900</td><td><span class="badge badge-green">Aprobado</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-      <tr><td>RG-004</td><td>Jorge Maturana (Temporero)</td><td>Pasajes ida-vuelta Nogales–Quillota</td><td>2026-06-02</td><td>$12.600</td><td><span class="badge badge-orange">Pendiente</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-      <tr><td>RG-005</td><td>Elena Maturana</td><td>Materiales oficina — impresora y papel</td><td>2026-06-18</td><td>$62.300</td><td><span class="badge badge-orange">Pendiente</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
+      <tr><td>RG-001</td><td>Elena Maturana</td><td>Combustible visita parcelas zona norte</td><td>2026-04-08</td><td>$48.200</td><td><span class="badge badge-green">Aprobado</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'rendicion')">⋮</button></td></tr>
+      <tr><td>RG-002</td><td>Carlos Fuentes (Capataz)</td><td>Compra herramientas menores — ferretería</td><td>2026-04-21</td><td>$87.500</td><td><span class="badge badge-green">Aprobado</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'rendicion')">⋮</button></td></tr>
+      <tr><td>RG-003</td><td>Elena Maturana</td><td>Alimentación reunión clientes — La Cruz</td><td>2026-05-14</td><td>$34.900</td><td><span class="badge badge-green">Aprobado</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'rendicion')">⋮</button></td></tr>
+      <tr><td>RG-004</td><td>Jorge Maturana (Temporero)</td><td>Pasajes ida-vuelta Nogales–Quillota</td><td>2026-06-02</td><td>$12.600</td><td><span class="badge badge-orange">Pendiente</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'rendicion')">⋮</button></td></tr>
+      <tr><td>RG-005</td><td>Elena Maturana</td><td>Materiales oficina — impresora y papel</td><td>2026-06-18</td><td>$62.300</td><td><span class="badge badge-orange">Pendiente</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'rendicion')">⋮</button></td></tr>
     </tbody>
   </table>
 </div></div>
@@ -1259,8 +1289,8 @@
   <div class="table-card"><table class="data-table">
     <thead><tr><th>Año</th><th>RUT Prestador</th><th>Nombre</th><th>Total Honorarios</th><th>Total Retención</th><th>Estado</th><th>Acciones</th></tr></thead>
     <tbody>
-      <tr><td>2025</td><td>12.345.678-9</td><td>Juan Pérez González</td><td>$4.200.000</td><td>$514.500</td><td><span class="badge badge-green">Emitido</span></td><td><button class="btn-icon">⋮</button></td></tr>
-      <tr><td>2025</td><td>9.876.543-2</td><td>María López Silva</td><td>$1.680.000</td><td>$205.800</td><td><span class="badge badge-green">Emitido</span></td><td><button class="btn-icon">⋮</button></td></tr>
+      <tr><td>2025</td><td>12.345.678-9</td><td>Juan Pérez González</td><td>$4.200.000</td><td>$609.000</td><td><span class="badge badge-green">Emitido</span></td><td><button class="btn-icon" onclick="toggleAcciones(this,'registro')">⋮</button></td></tr>
+      <tr><td>2025</td><td>9.876.543-2</td><td>María López Silva</td><td>$1.680.000</td><td>$243.600</td><td><span class="badge badge-green">Emitido</span></td><td><button class="btn-icon" onclick="toggleAcciones(this,'registro')">⋮</button></td></tr>
     </tbody>
   </table></div>
 </div>
@@ -1271,11 +1301,11 @@
   <div class="table-card"><table class="data-table">
     <thead><tr><th>Período</th><th>N° Boletas</th><th>Base Imponible</th><th>Tasa Retención</th><th>Retención</th><th>Declarado F29</th></tr></thead>
     <tbody>
-      <tr><td>Marzo 2026</td><td>1</td><td>$350.000</td><td>12,25%</td><td>$42.875</td><td><span class="badge badge-green">Sí</span></td></tr>
-      <tr><td>Abril 2026</td><td>1</td><td>$350.000</td><td>12,25%</td><td>$42.875</td><td><span class="badge badge-green">Sí</span></td></tr>
-      <tr><td>Mayo 2026</td><td>2</td><td>$630.000</td><td>12,25%</td><td>$77.175</td><td><span class="badge badge-green">Sí</span></td></tr>
-      <tr><td>Junio 2026</td><td>2</td><td>$530.000</td><td>12,25%</td><td>$64.925</td><td><span class="badge badge-orange">Pendiente</span></td></tr>
-      <tr style="font-weight:700;border-top:2px solid var(--border)"><td>TOTAL</td><td>6</td><td>$1.860.000</td><td>—</td><td>$227.850</td><td>—</td></tr>
+      <tr><td>Marzo 2026</td><td>1</td><td>$350.000</td><td>15,25%</td><td>$53.375</td><td><span class="badge badge-green">Sí</span></td></tr>
+      <tr><td>Abril 2026</td><td>1</td><td>$350.000</td><td>15,25%</td><td>$53.375</td><td><span class="badge badge-green">Sí</span></td></tr>
+      <tr><td>Mayo 2026</td><td>2</td><td>$630.000</td><td>15,25%</td><td>$96.075</td><td><span class="badge badge-green">Sí</span></td></tr>
+      <tr><td>Junio 2026</td><td>2</td><td>$530.000</td><td>15,25%</td><td>$80.825</td><td><span class="badge badge-orange">Pendiente</span></td></tr>
+      <tr style="font-weight:700;border-top:2px solid var(--border)"><td>TOTAL</td><td>6</td><td>$1.860.000</td><td>15,25%</td><td>$283.650</td><td>—</td></tr>
     </tbody>
   </table></div>
 </div>
@@ -1286,9 +1316,9 @@
   <div class="table-card"><table class="data-table">
     <thead><tr><th>Prestador</th><th>RUT</th><th>Actividad</th><th>N° Boletas</th><th>Total Bruto</th><th>Total Retención</th><th>Total Líquido</th></tr></thead>
     <tbody>
-      <tr><td>Juan Pérez González</td><td>12.345.678-9</td><td>Asesor Contable</td><td>4</td><td>$1.400.000</td><td>$171.500</td><td>$1.228.500</td></tr>
-      <tr><td>María López Silva</td><td>9.876.543-2</td><td>Técnico Agrícola</td><td>2</td><td>$460.000</td><td>$56.350</td><td>$403.650</td></tr>
-      <tr style="font-weight:700;border-top:2px solid var(--border)"><td colspan="3">TOTAL</td><td>6</td><td>$1.860.000</td><td>$227.850</td><td>$1.632.150</td></tr>
+      <tr><td>Juan Pérez González</td><td>12.345.678-9</td><td>Asesor Contable</td><td>4</td><td>$1.400.000</td><td>$213.500</td><td>$1.186.500</td></tr>
+      <tr><td>María López Silva</td><td>9.876.543-2</td><td>Técnico Agrícola</td><td>2</td><td>$460.000</td><td>$70.150</td><td>$389.850</td></tr>
+      <tr style="font-weight:700;border-top:2px solid var(--border)"><td colspan="3">TOTAL</td><td>6</td><td>$1.860.000</td><td>$283.650</td><td>$1.576.350</td></tr>
     </tbody>
   </table></div>
 </div>
@@ -1338,8 +1368,8 @@
       <div class="page-subtitle">Control y conciliación de cuentas bancarias</div>
     </div>
     <div class="btn-group">
-      <button class="btn btn-secondary">Sincronización de bancos</button>
-      <button class="btn btn-primary">+ Nuevo banco</button>
+      <button class="btn btn-secondary" onclick="showToast('🔄 Sincronizando cartolas bancarias...')">Sincronización de bancos</button>
+      <button class="btn btn-primary" onclick="showToast('Formulario de nueva cuenta bancaria')">+ Nuevo banco</button>
     </div>
   </div>
   <div class="tabs">
@@ -1350,27 +1380,28 @@
   <div class="filter-bar">
     <div class="filter-group">
       <div class="filter-label">Banco</div>
-      <select class="filter-select" style="width:160px"><option>Sin selección</option><option>BCI</option><option>Banco Chile</option><option>Santander</option><option>BancoEstado</option></select>
+      <select id="f-con-banco" class="filter-select" style="width:160px"><option>Sin selección</option><option>BancoEstado</option><option>Banco Chile</option><option>Santander</option><option>BCI</option></select>
     </div>
     <div class="filter-group">
       <div class="filter-label">Cuenta</div>
-      <select class="filter-select" style="width:160px"><option>Sin selección</option></select>
+      <select id="f-con-cuenta" class="filter-select" style="width:180px"><option>Sin selección</option><option>0023-11449-08</option><option>00-154-66778-9</option><option>00-010-33445-5</option></select>
     </div>
     <div class="filter-group">
       <div class="filter-label">Estado</div>
-      <select class="filter-select" style="width:140px"><option>Sin selección</option><option>Pendiente</option><option>Conciliado</option><option>Diferencia</option></select>
+      <select id="f-con-estado" class="filter-select" style="width:140px"><option>Sin selección</option><option>Pendiente</option><option>Conciliado</option><option>Diferencia</option></select>
     </div>
     <div class="filter-group">
-      <div class="filter-label">Fecha</div>
-      <input type="text" class="filter-input" value="25-06-2025 — 25-06-2026" style="width:200px">
+      <div class="filter-label">Fecha (AAAA-MM o AAAA-MM-DD)</div>
+      <input type="text" id="f-con-fecha" class="filter-input" placeholder="Ej: 2026-05" style="width:200px">
     </div>
     <div class="filter-actions">
-      <button class="btn btn-primary">Filtrar</button>
+      <button class="btn btn-primary" onclick="filtrarConciliacion()">Filtrar</button>
+      <button class="btn btn-secondary" onclick="limpiarFiltro('tb-cartolas',['f-con-banco','f-con-cuenta','f-con-estado','f-con-fecha'],'cnt-cartolas')">Limpiar</button>
     </div>
   </div>
   <div class="table-card">
     <div class="table-header">
-      <div class="table-title">Cartolas</div>
+      <div class="table-title">Cartolas</div><div class="table-count" id="cnt-cartolas">6 cartolas</div>
       <button class="btn btn-secondary" style="font-size:12px;padding:5px 12px">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
         Importar cartola
@@ -1382,16 +1413,13 @@
           <th>Número</th><th>Año</th><th>Fecha</th><th>Banco</th><th>Cuenta</th><th>Cargo</th><th>Abono</th><th>Mov. Conciliados</th><th>Estado</th><th>Acciones</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td colspan="10">
-            <div class="empty-state" style="padding:40px">
-              <div class="empty-icon">🔍</div>
-              <div class="empty-title">No hay datos que coincidan con el filtro</div>
-              <div class="empty-sub">Importa una cartola bancaria para comenzar la conciliación</div>
-            </div>
-          </td>
-        </tr>
+      <tbody id="tb-cartolas">
+        <tr><td class="td-mono">CT-001</td><td>2026</td><td>2026-01-31</td><td>BancoEstado</td><td class="td-mono">0023-11449-08</td><td class="td-mono">$2.650.000</td><td class="td-mono">$2.830.000</td><td>42 / 42</td><td><span class="badge badge-green">Conciliado</span></td><td><button class="btn-icon" onclick="toggleAcciones(this,'cartola')">⋮</button></td></tr>
+        <tr><td class="td-mono">CT-002</td><td>2026</td><td>2026-02-28</td><td>BancoEstado</td><td class="td-mono">0023-11449-08</td><td class="td-mono">$2.755.000</td><td class="td-mono">$3.250.000</td><td>38 / 38</td><td><span class="badge badge-green">Conciliado</span></td><td><button class="btn-icon" onclick="toggleAcciones(this,'cartola')">⋮</button></td></tr>
+        <tr><td class="td-mono">CT-003</td><td>2026</td><td>2026-03-31</td><td>BancoEstado</td><td class="td-mono">0023-11449-08</td><td class="td-mono">$3.564.000</td><td class="td-mono">$4.960.000</td><td>51 / 51</td><td><span class="badge badge-green">Conciliado</span></td><td><button class="btn-icon" onclick="toggleAcciones(this,'cartola')">⋮</button></td></tr>
+        <tr><td class="td-mono">CT-004</td><td>2026</td><td>2026-04-30</td><td>BancoEstado</td><td class="td-mono">0023-11449-08</td><td class="td-mono">$6.340.000</td><td class="td-mono">$6.208.000</td><td>60 / 60</td><td><span class="badge badge-green">Conciliado</span></td><td><button class="btn-icon" onclick="toggleAcciones(this,'cartola')">⋮</button></td></tr>
+        <tr><td class="td-mono">CT-005</td><td>2026</td><td>2026-05-31</td><td>Banco Chile</td><td class="td-mono">00-154-66778-9</td><td class="td-mono">$3.552.000</td><td class="td-mono">$4.482.000</td><td>44 / 47</td><td><span class="badge badge-orange">Pendiente</span></td><td><button class="btn-icon" onclick="toggleAcciones(this,'cartola')">⋮</button></td></tr>
+        <tr><td class="td-mono">CT-006</td><td>2026</td><td>2026-06-30</td><td>Santander</td><td class="td-mono">00-010-33445-5</td><td class="td-mono">$5.236.700</td><td class="td-mono">$7.780.000</td><td>49 / 52</td><td><span class="badge badge-red">Diferencia</span></td><td><button class="btn-icon" onclick="toggleAcciones(this,'cartola')">⋮</button></td></tr>
       </tbody>
     </table>
   </div>
@@ -1402,101 +1430,58 @@
   <div class="page-header">
     <div>
       <div class="page-title">Flujo de Caja</div>
-      <div class="page-subtitle">Proyección y control de flujos financieros</div>
+      <div class="page-subtitle">Fundo Puertas Coloradas SpA — RUT 76.987.654-3 — Nogales, Valparaíso</div>
     </div>
     <div class="btn-group">
-      <button class="btn btn-secondary">
+      <button class="btn btn-secondary" onclick="showToast('Exportando flujo de caja...')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Exportar
       </button>
-      <button class="btn btn-secondary">Ver gráfico</button>
-      <button class="btn btn-secondary">Ver política</button>
-      <button class="btn btn-secondary">Configurar</button>
+      <button class="btn btn-secondary" onclick="showToast('Vista gráfica del flujo')">Ver gráfico</button>
+      <button class="btn btn-secondary" onclick="showToast('Política de flujo de caja')">Ver política</button>
+      <button class="btn btn-secondary" onclick="showToast('Configuración del flujo')">Configurar</button>
     </div>
   </div>
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-label">Saldo Inicial Ene-2026</div><div class="stat-value">$1.200.000</div><div class="stat-sub">Caja y bancos</div></div>
+    <div class="stat-card"><div class="stat-label">Resultado Neto Junio 2026</div><div class="stat-value green">$4.250.000</div><div class="stat-sub">Coherente con Balance General</div></div>
+    <div class="stat-card"><div class="stat-label">Resultado Acumulado Ene–Jun</div><div class="stat-value blue">$9.969.000</div><div class="stat-sub">Flujo operacional</div></div>
+    <div class="stat-card"><div class="stat-label">Saldo Caja al 30-06-2026</div><div class="stat-value orange">$4.812.300</div><div class="stat-sub">Cuadra con Balance</div></div>
+  </div>
   <div class="table-card" style="overflow-x:auto">
-    <div style="padding:12px 20px;border-bottom:1px solid var(--border);display:flex;gap:24px;font-size:12px;align-items:center">
-      <span style="display:flex;align-items:center;gap:6px"><span style="width:24px;height:4px;background:#9CA3AF;display:inline-block;border-radius:2px"></span> Proyectado</span>
-      <span style="display:flex;align-items:center;gap:6px"><span style="width:24px;height:4px;background:#1F2937;display:inline-block;border-radius:2px"></span> Real</span>
-      <span style="display:flex;align-items:center;gap:6px"><span style="width:24px;height:4px;background:#7C3AED;display:inline-block;border-radius:2px"></span> Presupuestado</span>
-      <span style="display:flex;align-items:center;gap:6px"><span style="width:24px;height:4px;background:#059669;display:inline-block;border-radius:2px"></span> Saldos por vencer</span>
+    <div style="padding:12px 20px;border-bottom:1px solid var(--border);display:flex;gap:24px;font-size:12px;align-items:center;flex-wrap:wrap">
+      <span style="display:flex;align-items:center;gap:6px"><span style="width:24px;height:4px;background:#1F2937;display:inline-block;border-radius:2px"></span> Real (Ene–Jun 2026)</span>
+      <span style="display:flex;align-items:center;gap:6px"><span style="width:24px;height:4px;background:#9CA3AF;display:inline-block;border-radius:2px"></span> Proyectado (Jul 2026)</span>
+      <span style="margin-left:auto;color:var(--muted)">Cifras en pesos chilenos (CLP)</span>
     </div>
     <table>
       <thead>
         <tr style="background:var(--bg)">
-          <th style="width:180px">Concepto</th>
-          <th>Ene-2026</th><th>Feb-2026</th><th>Mar-2026</th><th>Abr-2026</th><th>May-2026</th><th>Jun-2026</th><th>Jul-2026</th>
+          <th style="width:280px">Concepto</th>
+          <th>Ene-2026</th><th>Feb-2026</th><th>Mar-2026</th><th>Abr-2026</th><th>May-2026</th><th>Jun-2026</th><th>Jul-2026 (P)</th>
         </tr>
       </thead>
       <tbody>
-        <tr style="background:#EFF6FF">
-          <td style="font-weight:700;padding:10px 16px">INGRESOS</td>
-          <td colspan="7"></td>
-        </tr>
-        <tr style="background:#F8FAFF">
-          <td style="padding:10px 16px;font-weight:600;font-size:12px">Clientes</td>
-          <td colspan="7"></td>
-        </tr>
-        <tr>
-          <td style="padding:8px 16px;padding-left:28px;font-size:12px">CLIENTES NACIONALES</td>
-          <td class="td-mono" style="padding:8px 16px;font-size:12px">-</td>
-          <td class="td-mono" style="padding:8px 16px;font-size:12px">-</td>
-          <td class="td-mono" style="padding:8px 16px;font-size:12px">-</td>
-          <td class="td-mono" style="padding:8px 16px;font-size:12px;color:var(--accent2)">$49.000</td>
-          <td class="td-mono" style="padding:8px 16px;font-size:12px">-</td>
-          <td class="td-mono" style="padding:8px 16px;font-size:12px">-</td>
-          <td class="td-mono" style="padding:8px 16px;font-size:12px">-</td>
-        </tr>
-        <tr style="background:#F8FAFF">
-          <td style="padding:10px 16px;font-weight:600;font-size:12px">Total Ingresos</td>
-          <td class="td-mono" style="padding:10px 16px;font-size:12px;font-weight:600">-</td>
-          <td class="td-mono" style="padding:10px 16px;font-size:12px;font-weight:600">-</td>
-          <td class="td-mono" style="padding:10px 16px;font-size:12px;font-weight:600">-</td>
-          <td class="td-mono" style="padding:10px 16px;font-size:12px;font-weight:700;color:var(--accent2)">$49.000</td>
-          <td class="td-mono" style="padding:10px 16px;font-size:12px;font-weight:600">-</td>
-          <td class="td-mono" style="padding:10px 16px;font-size:12px;font-weight:600">-</td>
-          <td class="td-mono" style="padding:10px 16px;font-size:12px;font-weight:600">-</td>
-        </tr>
-        <tr style="background:#FFF7ED">
-          <td style="font-weight:700;padding:10px 16px">EGRESOS</td>
-          <td colspan="7"></td>
-        </tr>
-        <tr style="background:#FFFBF5">
-          <td style="padding:10px 16px;font-weight:600;font-size:12px">Proveedores</td>
-          <td colspan="7"></td>
-        </tr>
-        <tr style="background:#FFFBF5">
-          <td style="padding:10px 16px;font-weight:600;font-size:12px">Remuneraciones</td>
-          <td colspan="7"></td>
-        </tr>
-        <tr style="background:#FFFBF5">
-          <td style="padding:10px 16px;font-weight:600;font-size:12px">Honorarios</td>
-          <td colspan="7"></td>
-        </tr>
-        <tr>
-          <td style="padding:8px 16px;padding-left:28px;font-size:12px">HONORARIOS</td>
-          <td class="td-mono" style="padding:8px 16px;font-size:12px">-</td>
-          <td class="td-mono" style="padding:8px 16px;font-size:12px">-</td>
-          <td class="td-mono" style="padding:8px 16px;font-size:12px">-</td>
-          <td class="td-mono" style="padding:8px 16px;font-size:12px">-</td>
-          <td class="td-mono" style="padding:8px 16px;font-size:12px">-</td>
-          <td class="td-mono" style="padding:8px 16px;font-size:12px">-</td>
-          <td class="td-mono" style="padding:8px 16px;font-size:12px">-</td>
-        </tr>
-        <tr style="background:#FFF7ED">
-          <td style="padding:10px 16px;font-weight:600;font-size:12px">Total Egresos</td>
-          <td colspan="7" class="td-mono" style="padding:10px 16px;font-size:12px;font-weight:700">-</td>
-        </tr>
-        <tr style="background:#F0FFF4;border-top:2px solid var(--border)">
-          <td style="padding:12px 16px;font-weight:700">Saldo Neto</td>
-          <td class="td-mono" style="padding:12px 16px;font-weight:700">-</td>
-          <td class="td-mono" style="padding:12px 16px;font-weight:700">-</td>
-          <td class="td-mono" style="padding:12px 16px;font-weight:700">-</td>
-          <td class="td-mono" style="padding:12px 16px;font-weight:700;color:var(--accent2)">$49.000</td>
-          <td class="td-mono" style="padding:12px 16px;font-weight:700">-</td>
-          <td class="td-mono" style="padding:12px 16px;font-weight:700">-</td>
-          <td class="td-mono" style="padding:12px 16px;font-weight:700">-</td>
-        </tr>
+<tr style="background:#EFF6FF"><td style="font-weight:700;padding:10px 12px">INGRESOS OPERACIONALES</td><td colspan="7"></td></tr>
+<tr><td style="padding:8px 12px;padding-left:28px;font-size:12px">VENTA FRUTA — EXPORTADORAS / AGROINDUSTRIA</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$1.850.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$2.100.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$3.360.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$4.480.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$3.150.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$5.320.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$4.100.000</td></tr>
+<tr><td style="padding:8px 12px;padding-left:28px;font-size:12px">VENTA FRUTA — CLIENTES NACIONALES</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$980.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$1.150.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$1.480.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$1.728.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$1.152.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$2.320.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$1.900.000</td></tr>
+<tr><td style="padding:8px 12px;padding-left:28px;font-size:12px">OTROS INGRESOS OPERACIONALES</td><td class="td-mono" style="padding:8px 12px;font-size:12px">-</td><td class="td-mono" style="padding:8px 12px;font-size:12px">-</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$120.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">-</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$180.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$140.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">-</td></tr>
+<tr style="background:#F8FAFF"><td style="padding:8px 12px;padding-left:12px;font-size:12px;font-weight:700">Total Ingresos</td><td class="td-mono" style="padding:8px 12px;font-size:12px;font-weight:700">$2.830.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px;font-weight:700">$3.250.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px;font-weight:700">$4.960.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px;font-weight:700">$6.208.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px;font-weight:700">$4.482.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px;font-weight:700">$7.780.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px;font-weight:700">$6.000.000</td></tr>
+<tr style="background:#FFF7ED"><td style="font-weight:700;padding:10px 12px">EGRESOS OPERACIONALES</td><td colspan="7"></td></tr>
+<tr><td style="padding:8px 12px;padding-left:28px;font-size:12px">INSUMOS AGRÍCOLAS (fertilizantes, agroquímicos)</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$620.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$580.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$740.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$690.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$510.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$468.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$600.000</td></tr>
+<tr><td style="padding:8px 12px;padding-left:28px;font-size:12px">MANO DE OBRA Y TEMPOREROS</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$1.240.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$1.310.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$1.680.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$1.940.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$1.520.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$1.860.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$1.700.000</td></tr>
+<tr><td style="padding:8px 12px;padding-left:28px;font-size:12px">FLETES Y TRANSPORTE</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$180.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$210.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$285.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$340.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$260.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$395.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$320.000</td></tr>
+<tr><td style="padding:8px 12px;padding-left:28px;font-size:12px">ENVASES Y EMBALAJES</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$140.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$160.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$224.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$310.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$224.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$286.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$250.000</td></tr>
+<tr><td style="padding:8px 12px;padding-left:28px;font-size:12px">HONORARIOS</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$280.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$280.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$340.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$280.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$340.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$280.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$280.000</td></tr>
+<tr><td style="padding:8px 12px;padding-left:28px;font-size:12px">IMPUESTOS (IVA / PPM)</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$190.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$215.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$295.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$380.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$248.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$241.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px">$310.000</td></tr>
+<tr style="background:#FFFBF5"><td style="padding:8px 12px;padding-left:12px;font-size:12px;font-weight:700">Total Egresos</td><td class="td-mono" style="padding:8px 12px;font-size:12px;font-weight:700">$2.650.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px;font-weight:700">$2.755.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px;font-weight:700">$3.564.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px;font-weight:700">$3.940.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px;font-weight:700">$3.102.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px;font-weight:700">$3.530.000</td><td class="td-mono" style="padding:8px 12px;font-size:12px;font-weight:700">$3.460.000</td></tr>
+<tr style="background:#F0FFF4;border-top:2px solid var(--border)"><td style="font-weight:700;padding:12px">RESULTADO NETO OPERACIONAL</td><td class="td-mono" style="padding:12px;font-weight:700;color:inherit">$180.000</td><td class="td-mono" style="padding:12px;font-weight:700;color:inherit">$495.000</td><td class="td-mono" style="padding:12px;font-weight:700;color:inherit">$1.396.000</td><td class="td-mono" style="padding:12px;font-weight:700;color:inherit">$2.268.000</td><td class="td-mono" style="padding:12px;font-weight:700;color:inherit">$1.380.000</td><td class="td-mono" style="padding:12px;font-weight:700;color:var(--accent2)">$4.250.000</td><td class="td-mono" style="padding:12px;font-weight:700;color:inherit">$2.540.000</td></tr>
+<tr style="background:#FAF5FF"><td style="font-weight:700;padding:10px 12px">INVERSIÓN Y FINANCIAMIENTO</td><td colspan="7"></td></tr>
+<tr><td style="padding:8px 12px;padding-left:28px;font-size:12px">AMORTIZACIÓN CRÉDITO BANCOESTADO</td><td class="td-mono" style="padding:8px 12px;font-size:12px">(450.000)</td><td class="td-mono" style="padding:8px 12px;font-size:12px">(450.000)</td><td class="td-mono" style="padding:8px 12px;font-size:12px">(450.000)</td><td class="td-mono" style="padding:8px 12px;font-size:12px">(450.000)</td><td class="td-mono" style="padding:8px 12px;font-size:12px">(450.000)</td><td class="td-mono" style="padding:8px 12px;font-size:12px">(450.000)</td><td class="td-mono" style="padding:8px 12px;font-size:12px">(450.000)</td></tr>
+<tr><td style="padding:8px 12px;padding-left:28px;font-size:12px">INVERSIÓN SISTEMA DE RIEGO TECNIFICADO</td><td class="td-mono" style="padding:8px 12px;font-size:12px">-</td><td class="td-mono" style="padding:8px 12px;font-size:12px">-</td><td class="td-mono" style="padding:8px 12px;font-size:12px">-</td><td class="td-mono" style="padding:8px 12px;font-size:12px">(2.400.000)</td><td class="td-mono" style="padding:8px 12px;font-size:12px">-</td><td class="td-mono" style="padding:8px 12px;font-size:12px">-</td><td class="td-mono" style="padding:8px 12px;font-size:12px">-</td></tr>
+<tr><td style="padding:8px 12px;padding-left:28px;font-size:12px">RETIRO DE SOCIOS</td><td class="td-mono" style="padding:8px 12px;font-size:12px">-</td><td class="td-mono" style="padding:8px 12px;font-size:12px">-</td><td class="td-mono" style="padding:8px 12px;font-size:12px">-</td><td class="td-mono" style="padding:8px 12px;font-size:12px">-</td><td class="td-mono" style="padding:8px 12px;font-size:12px">-</td><td class="td-mono" style="padding:8px 12px;font-size:12px">(1.256.700)</td><td class="td-mono" style="padding:8px 12px;font-size:12px">-</td></tr>
+<tr style="background:#FAF5FF"><td style="padding:8px 12px;padding-left:12px;font-size:12px;font-weight:700">Total Inversión y Financiamiento</td><td class="td-mono" style="padding:8px 12px;font-size:12px;font-weight:700">(450.000)</td><td class="td-mono" style="padding:8px 12px;font-size:12px;font-weight:700">(450.000)</td><td class="td-mono" style="padding:8px 12px;font-size:12px;font-weight:700">(450.000)</td><td class="td-mono" style="padding:8px 12px;font-size:12px;font-weight:700">(2.850.000)</td><td class="td-mono" style="padding:8px 12px;font-size:12px;font-weight:700">(450.000)</td><td class="td-mono" style="padding:8px 12px;font-size:12px;font-weight:700">(1.706.700)</td><td class="td-mono" style="padding:8px 12px;font-size:12px;font-weight:700">(450.000)</td></tr>
+<tr style="border-top:2px solid var(--text);background:var(--bg)"><td style="font-weight:700;padding:12px">SALDO ACUMULADO EN CAJA Y BANCOS</td><td class="td-mono" style="padding:12px;font-weight:700">$930.000</td><td class="td-mono" style="padding:12px;font-weight:700">$975.000</td><td class="td-mono" style="padding:12px;font-weight:700">$1.921.000</td><td class="td-mono" style="padding:12px;font-weight:700">$1.339.000</td><td class="td-mono" style="padding:12px;font-weight:700">$2.269.000</td><td class="td-mono" style="padding:12px;font-weight:700">$4.812.300</td><td class="td-mono" style="padding:12px;font-weight:700">$6.902.300</td></tr>
       </tbody>
     </table>
   </div>
@@ -1544,10 +1529,10 @@
         <tr><th>Número</th><th>Fecha emisión</th><th>Banco</th><th>Cuenta bancaria</th><th>Total</th><th>Estado</th><th>Acciones</th></tr>
       </thead>
       <tbody>
-<tr><td>CH-0041</td><td>2026-03-31</td><td>Banco Estado</td><td>Cta. Cte. 0023-11449-08</td><td>$1.240.000</td><td><span class="badge badge-green">Cobrado</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>CH-0042</td><td>2026-04-15</td><td>Banco Estado</td><td>Cta. Cte. 0023-11449-08</td><td>$875.000</td><td><span class="badge badge-green">Cobrado</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>CH-0043</td><td>2026-05-05</td><td>Banco Estado</td><td>Cta. Cte. 0023-11449-08</td><td>$520.000</td><td><span class="badge badge-orange">Emitido</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>CH-0044</td><td>2026-06-10</td><td>Banco Estado</td><td>Cta. Cte. 0023-11449-08</td><td>$2.100.000</td><td><span class="badge badge-orange">Emitido</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
+<tr><td>CH-0041</td><td>2026-03-31</td><td>Banco Estado</td><td>Cta. Cte. 0023-11449-08</td><td>$1.240.000</td><td><span class="badge badge-green">Cobrado</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'registro')">⋮</button></td></tr>
+<tr><td>CH-0042</td><td>2026-04-15</td><td>Banco Estado</td><td>Cta. Cte. 0023-11449-08</td><td>$875.000</td><td><span class="badge badge-green">Cobrado</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'registro')">⋮</button></td></tr>
+<tr><td>CH-0043</td><td>2026-05-05</td><td>Banco Estado</td><td>Cta. Cte. 0023-11449-08</td><td>$520.000</td><td><span class="badge badge-orange">Emitido</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'registro')">⋮</button></td></tr>
+<tr><td>CH-0044</td><td>2026-06-10</td><td>Banco Estado</td><td>Cta. Cte. 0023-11449-08</td><td>$2.100.000</td><td><span class="badge badge-orange">Emitido</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'registro')">⋮</button></td></tr>
 </tbody>
     </table>
   </div>
@@ -1573,7 +1558,7 @@
       <select class="filter-select" style="width:140px"><option>Sin selección</option><option>Pendiente</option><option>Procesado</option></select>
     </div>
     <div class="filter-actions">
-      <button class="btn btn-primary">Filtrar</button>
+      <button class="btn btn-primary" onclick="filtrarGenerico(this)">Filtrar</button>
     </div>
   </div>
   <div class="table-card">
@@ -1583,11 +1568,11 @@
         <tr><th>N° Pago</th><th>Fecha</th><th>Proveedor/Beneficiario</th><th>Banco destino</th><th>Cuenta destino</th><th>Monto</th><th>Estado</th><th>Acciones</th></tr>
       </thead>
       <tbody>
-<tr><td>PAG-001</td><td>2026-03-28</td><td>Semillas del Sur Ltda.</td><td>Banco Chile</td><td>00-111-22222-33</td><td>$468.000</td><td><span class="badge badge-green">Pagado</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>PAG-002</td><td>2026-04-12</td><td>Agroquímicos Nogales SpA</td><td>Banco Estado</td><td>011-0234-5678</td><td>$312.000</td><td><span class="badge badge-green">Pagado</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>PAG-003</td><td>2026-05-03</td><td>Transportes Valles Verdes</td><td>Banco Santander</td><td>00-010-33445-5</td><td>$185.000</td><td><span class="badge badge-green">Pagado</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>PAG-004</td><td>2026-05-30</td><td>Envases y Embalajes Quilpué</td><td>Banco Estado</td><td>052-0098-7654</td><td>$224.000</td><td><span class="badge badge-orange">Pendiente</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>PAG-005</td><td>2026-06-18</td><td>Ferretería Campo Abierto</td><td>Banco Chile</td><td>00-154-66778-9</td><td>$97.500</td><td><span class="badge badge-orange">Pendiente</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
+<tr><td>PAG-001</td><td>2026-03-28</td><td>Semillas del Sur Ltda.</td><td>Banco Chile</td><td>00-111-22222-33</td><td>$468.000</td><td><span class="badge badge-green">Pagado</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'registro')">⋮</button></td></tr>
+<tr><td>PAG-002</td><td>2026-04-12</td><td>Agroquímicos Nogales SpA</td><td>Banco Estado</td><td>011-0234-5678</td><td>$312.000</td><td><span class="badge badge-green">Pagado</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'registro')">⋮</button></td></tr>
+<tr><td>PAG-003</td><td>2026-05-03</td><td>Transportes Valles Verdes</td><td>Banco Santander</td><td>00-010-33445-5</td><td>$185.000</td><td><span class="badge badge-green">Pagado</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'registro')">⋮</button></td></tr>
+<tr><td>PAG-004</td><td>2026-05-30</td><td>Envases y Embalajes Quilpué</td><td>Banco Estado</td><td>052-0098-7654</td><td>$224.000</td><td><span class="badge badge-orange">Pendiente</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'registro')">⋮</button></td></tr>
+<tr><td>PAG-005</td><td>2026-06-18</td><td>Ferretería Campo Abierto</td><td>Banco Chile</td><td>00-154-66778-9</td><td>$97.500</td><td><span class="badge badge-orange">Pendiente</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'registro')">⋮</button></td></tr>
 </tbody>
     </table>
   </div>
@@ -1621,7 +1606,7 @@
       <input type="text" class="filter-input" placeholder="Seleccionar fechas" style="width:180px">
     </div>
     <div class="filter-actions">
-      <button class="btn btn-primary">Filtrar</button>
+      <button class="btn btn-primary" onclick="filtrarGenerico(this)">Filtrar</button>
     </div>
   </div>
   <div class="table-card">
@@ -1637,9 +1622,9 @@
         <tr><th>N° Documento</th><th>Fecha emisión</th><th>Vencimiento</th><th>Cliente/Proveedor</th><th>Monto</th><th>Estado</th><th>Acciones</th></tr>
       </thead>
       <tbody>
-<tr><td>LC-2026-001</td><td>2026-03-01</td><td>2026-06-01</td><td>Exportadora Del Monte Chile</td><td>$5.880.000</td><td><span class="badge badge-green">Pagada</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>LC-2026-002</td><td>2026-04-01</td><td>2026-07-01</td><td>Frutas Orgánicas del Valle S.A.</td><td>$2.160.000</td><td><span class="badge badge-blue">Vigente</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>LC-2026-003</td><td>2026-05-15</td><td>2026-08-15</td><td>Agrícola Los Leones Ltda.</td><td>$1.470.000</td><td><span class="badge badge-blue">Vigente</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
+<tr><td>LC-2026-001</td><td>2026-03-01</td><td>2026-06-01</td><td>Exportadora Del Monte Chile</td><td>$5.880.000</td><td><span class="badge badge-green">Pagada</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'registro')">⋮</button></td></tr>
+<tr><td>LC-2026-002</td><td>2026-04-01</td><td>2026-07-01</td><td>Frutas Orgánicas del Valle S.A.</td><td>$2.160.000</td><td><span class="badge badge-blue">Vigente</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'registro')">⋮</button></td></tr>
+<tr><td>LC-2026-003</td><td>2026-05-15</td><td>2026-08-15</td><td>Agrícola Los Leones Ltda.</td><td>$1.470.000</td><td><span class="badge badge-blue">Vigente</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'registro')">⋮</button></td></tr>
 </tbody>
     </table>
   </div>
@@ -1690,54 +1675,12 @@
           <tr><th>Código</th><th>Nombre</th><th>Cobrador</th><th>Estado</th><th>Saldo</th><th>Acciones</th></tr>
         </thead>
         <tbody>
-          <tr>
-            <td style="text-align:center">01</td>
-            <td>EXPORTADORA DEL MONTE CHILE LTDA.</td>
-            <td class="td-muted">E. Maturana</td>
-            <td><span class="badge badge-orange">Pendiente</span></td>
-            <td class="td-mono">$3.150.000</td>
-            <td><button class="btn-icon" style="width:28px;height:28px">⋮</button></td>
-          </tr>
-          <tr>
-            <td style="text-align:center">02</td>
-            <td>FRUTAS ORGÁNICAS DEL VALLE S.A.</td>
-            <td class="td-muted">E. Maturana</td>
-            <td><span class="badge badge-orange">Pendiente</span></td>
-            <td class="td-mono">$840.000</td>
-            <td><button class="btn-icon" style="width:28px;height:28px">⋮</button></td>
-          </tr>
-          <tr>
-            <td style="text-align:center">03</td>
-            <td>AGRÍCOLA LOS LEONES LTDA.</td>
-            <td class="td-muted">E. Maturana</td>
-            <td><span class="badge badge-green">Al día</span></td>
-            <td class="td-mono">$0</td>
-            <td><button class="btn-icon" style="width:28px;height:28px">⋮</button></td>
-          </tr>
-          <tr>
-            <td style="text-align:center">04</td>
-            <td>SUPERMERCADOS UNIMARC QUILLOTA</td>
-            <td class="td-muted">E. Maturana</td>
-            <td><span class="badge badge-green">Al día</span></td>
-            <td class="td-mono">$0</td>
-            <td><button class="btn-icon" style="width:28px;height:28px">⋮</button></td>
-          </tr>
-          <tr>
-            <td style="text-align:center">05</td>
-            <td>CENTRAL DE FRUTAS SANTIAGO LTDA.</td>
-            <td class="td-muted">E. Maturana</td>
-            <td><span class="badge badge-green">Al día</span></td>
-            <td class="td-mono">$0</td>
-            <td><button class="btn-icon" style="width:28px;height:28px">⋮</button></td>
-          </tr>
-          <tr>
-            <td style="text-align:center">06</td>
-            <td>EXPORTACIONES DEL NORTE S.A.</td>
-            <td class="td-muted">E. Maturana</td>
-            <td><span class="badge badge-green">Al día</span></td>
-            <td class="td-mono">$0</td>
-            <td><button class="btn-icon" style="width:28px;height:28px">⋮</button></td>
-          </tr>
+          <tr><td style="text-align:center">01</td><td>EXPORTADORA DEL MONTE CHILE LTDA.</td><td class="td-muted">E. Maturana</td><td><span class="badge badge-orange">Pendiente</span></td><td class="td-mono">$5.622.199</td><td><button class="btn-icon" style="width:28px;height:28px" onclick="toggleAcciones(this,'cobranza')">⋮</button></td></tr>
+          <tr><td style="text-align:center">02</td><td>FRUTAS ORGÁNICAS DEL VALLE S.A.</td><td class="td-muted">E. Maturana</td><td><span class="badge badge-orange">Pendiente</span></td><td class="td-mono">$1.152.001</td><td><button class="btn-icon" style="width:28px;height:28px" onclick="toggleAcciones(this,'cobranza')">⋮</button></td></tr>
+          <tr><td style="text-align:center">03</td><td>AGRÍCOLA LOS LEONES LTDA.</td><td class="td-muted">E. Maturana</td><td><span class="badge badge-orange">Pendiente</span></td><td class="td-mono">$840.000</td><td><button class="btn-icon" style="width:28px;height:28px" onclick="toggleAcciones(this,'cobranza')">⋮</button></td></tr>
+          <tr><td style="text-align:center">04</td><td>SUPERMERCADOS UNIMARC QUILLOTA</td><td class="td-muted">E. Maturana</td><td><span class="badge badge-orange">Pendiente</span></td><td class="td-mono">$576.000</td><td><button class="btn-icon" style="width:28px;height:28px" onclick="toggleAcciones(this,'cobranza')">⋮</button></td></tr>
+          <tr><td style="text-align:center">05</td><td>CENTRAL DE FRUTAS SANTIAGO LTDA.</td><td class="td-muted">E. Maturana</td><td><span class="badge badge-orange">Pendiente</span></td><td class="td-mono">$1.480.000</td><td><button class="btn-icon" style="width:28px;height:28px" onclick="toggleAcciones(this,'cobranza')">⋮</button></td></tr>
+          <tr style="font-weight:700;border-top:2px solid var(--border)"><td colspan="4">TOTAL POR COBRAR AL 30-06-2026</td><td class="td-mono">$9.670.200</td><td></td></tr>
         </tbody>
       </table>
     </div>
@@ -1822,10 +1765,11 @@
     </div>
   </div>
   <div style="display:flex;gap:10px">
-    <button class="btn btn-primary">Vista Previa</button>
-    <button class="btn btn-secondary">Exportar a .PDF</button>
-    <button class="btn btn-secondary">Exportar a .CSV</button>
+    <button class="btn btn-primary" onclick="vistaPreviaCobranza()">Vista Previa</button>
+    <button class="btn btn-secondary" onclick="showToast('Exportando informe de cobranza a PDF...')">Exportar a .PDF</button>
+    <button class="btn btn-secondary" onclick="showToast('Exportando informe de cobranza a CSV...')">Exportar a .CSV</button>
   </div>
+  <div id="cobranza-informe" style="display:none;margin-top:20px"></div>
 </div>
 
 <!-- ══ VIEW: INGRESOS TESORERIA ══ -->
@@ -1869,10 +1813,10 @@
         <tr><th><input type="checkbox"></th><th>Rut cliente</th><th>Nombre cliente</th><th>Documentos pagados</th><th>Monto</th><th>Acciones</th></tr>
       </thead>
       <tbody>
-<tr><td>18.765.432-1</td><td>Exportadora Del Monte Chile</td><td>FAC-2026-001, FAC-2026-003</td><td>$9.240.000</td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>76.543.210-2</td><td>Frutas Orgánicas del Valle S.A.</td><td>FAC-2026-002</td><td>$1.764.000</td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>77.890.123-4</td><td>Supermercados Unimarc Quillota</td><td>BOL-2026-008</td><td>$685.440</td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>79.234.567-8</td><td>Agrícola Los Leones Ltda.</td><td>FAC-2026-004</td><td>$980.700</td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
+<tr><td class="td-mono">76.987.123-4</td><td>Exportadora Del Monte Chile Ltda.</td><td>FAC-2026-001, FAC-2026-003</td><td class="td-mono">$9.100.000</td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'ingreso')">⋮</button></td></tr>
+<tr><td class="td-mono">76.543.210-5</td><td>Frutas Orgánicas del Valle S.A.</td><td>FAC-2026-002</td><td class="td-mono">$1.768.000</td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'ingreso')">⋮</button></td></tr>
+<tr><td class="td-mono">76.354.771-2</td><td>Supermercados Unimarc Quillota</td><td>BOL-2026-007</td><td class="td-mono">$576.000</td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'ingreso')">⋮</button></td></tr>
+<tr><td class="td-mono">76.234.567-8</td><td>Agrícola Los Leones Ltda.</td><td>FAC-2026-004 (abono)</td><td class="td-mono">$0</td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'ingreso')">⋮</button></td></tr>
 </tbody>
     </table>
     <div class="table-footer">
@@ -1920,42 +1864,50 @@
     <!-- ══ VENTAS: ARTICULOS ══ -->
     <div class="view" id="view-articulos">
       <div class="page-header"><div><div class="page-title">Maestro de Artículos</div></div><div class="btn-group"><button class="btn btn-secondary" onclick="showToast('Exportando a Excel...')">↓ Exportar Excel</button><button class="btn btn-primary" onclick="openPanel('nuevo-articulo')">+ Nuevo</button></div></div>
-      <div class="filter-bar"><div class="filter-group" style="flex:1"><input type="text" class="filter-input" placeholder="Buscar código o descripción..." style="width:100%"></div><div class="filter-group" style="flex:1"><select class="filter-select" style="width:100%"><option>Categorías</option></select></div><div class="filter-actions"><button class="btn btn-primary">Filtrar</button></div></div>
-      <div class="table-card"><table><thead><tr><th>Código</th><th>Descripción</th><th>Categoría</th><th>Stock</th><th>Precio Venta</th><th>Activo</th><th>Acciones</th></tr></thead><tbody>
-<tr><td>ART-001</td><td>Paltas Hass Categoría Extra (kg)</td><td>Frutas Frescas</td><td>1.200</td><td>$2.800</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>ART-002</td><td>Paltas Hass Categoría I (kg)</td><td>Frutas Frescas</td><td>3.500</td><td>$2.100</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>ART-003</td><td>Paltas Hass Descarte (kg)</td><td>Frutas Frescas</td><td>800</td><td>$650</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>ART-004</td><td>Naranjas Valencia (kg)</td><td>Frutas Frescas</td><td>2.100</td><td>$480</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>ART-005</td><td>Limones Eureka (kg)</td><td>Frutas Frescas</td><td>900</td><td>$520</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>ART-006</td><td>Mandarinas Clementina (kg)</td><td>Frutas Frescas</td><td>1.600</td><td>$390</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>ART-007</td><td>Caja Cartón Palta 4 kg</td><td>Insumos Embalaje</td><td>5.000</td><td>$320</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>ART-008</td><td>Malla Calibración #40</td><td>Insumos Embalaje</td><td>200</td><td>$1.100</td><td><span class="badge badge-gray">Inactivo</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
+      <div class="filter-bar"><div class="filter-group" style="flex:1"><input type="text" id="f-art-txt" class="filter-input" placeholder="Buscar código o descripción..." style="width:100%"></div><div class="filter-group" style="flex:1"><select id="f-art-cat" class="filter-select" style="width:100%"><option>Categorías</option><option>Frutas Frescas</option><option>Insumos Embalaje</option></select></div><div class="filter-actions"><button class="btn btn-primary" onclick="filtrarArticulos()">Filtrar</button><button class="btn btn-secondary" onclick="limpiarFiltro('tb-articulos',['f-art-txt','f-art-cat'])">Limpiar</button></div></div>
+      <div class="table-card"><table><thead><tr><th>Código</th><th>Descripción</th><th>Categoría</th><th>Stock</th><th>Precio Venta</th><th>Activo</th><th>Acciones</th></tr></thead><tbody id="tb-articulos">
+<tr><td>ART-001</td><td>Palta Hass Extra (kg)</td><td>Frutas Frescas</td><td>1.200</td><td>$2.800</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'articulo')">⋮</button></td></tr>
+<tr><td>ART-002</td><td>Palta Hass Categoría I (kg)</td><td>Frutas Frescas</td><td>3.500</td><td>$2.100</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'articulo')">⋮</button></td></tr>
+<tr><td>ART-003</td><td>Palta Hass Descarte (kg)</td><td>Frutas Frescas</td><td>800</td><td>$650</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'articulo')">⋮</button></td></tr>
+<tr><td>ART-004</td><td>Naranjas Valencia (kg)</td><td>Frutas Frescas</td><td>2.100</td><td>$660</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'articulo')">⋮</button></td></tr>
+<tr><td>ART-005</td><td>Limones Eureka (kg)</td><td>Frutas Frescas</td><td>900</td><td>$520</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'articulo')">⋮</button></td></tr>
+<tr><td>ART-006</td><td>Mandarinas Clementina (kg)</td><td>Frutas Frescas</td><td>1.600</td><td>$516</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'articulo')">⋮</button></td></tr>
+<tr><td>ART-007</td><td>Cajas cartón embalaje (unidad)</td><td>Insumos Embalaje</td><td>5.000</td><td>$1.200</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'articulo')">⋮</button></td></tr>
+<tr><td>ART-008</td><td>Malla Calibración #40</td><td>Insumos Embalaje</td><td>200</td><td>$1.100</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'articulo')">⋮</button></td></tr>
 </tbody></table></div>
     </div>
 
     <!-- ══ VENTAS: SERVICIOS ══ -->
     <div class="view" id="view-servicios">
       <div class="page-header"><div><div class="page-title">Maestro de Servicios</div></div><button class="btn btn-primary" onclick="openPanel('nuevo-servicio')">+ Nuevo</button></div>
-      <div class="table-card"><table><thead><tr><th>Código</th><th>Descripción</th><th>Categoría</th><th>Precio Venta</th><th>Activo</th><th>Acciones</th></tr></thead><tbody><tr><td>2</td><td>Asesoría en Manejo Agronómico</td><td class="td-muted">Servicios agrícolas</td><td class="td-mono">$250.000</td><td><span style="color:var(--accent2)">✓</span></td><td><button class="btn-icon" style="width:28px;height:28px">⋮</button></td></tr></tbody></table></div>
+      <div class="table-card"><table><thead><tr><th>Código</th><th>Descripción</th><th>Categoría</th><th>Precio Venta</th><th>Activo</th><th>Acciones</th></tr></thead><tbody><tr><td>2</td><td>Asesoría en Manejo Agronómico</td><td class="td-muted">Servicios agrícolas</td><td class="td-mono">$250.000</td><td><span style="color:var(--accent2)">✓</span></td><td><button class="btn-icon" style="width:28px;height:28px" onclick="toggleAcciones(this,'servicio')">⋮</button></td></tr></tbody></table></div>
     </div>
 
     <!-- ══ VENTAS: CLIENTES ══ -->
     <div class="view" id="view-clientes">
       <div class="page-header"><div><div class="page-title">Clientes</div></div><button class="btn btn-primary" onclick="openPanel('nuevo-cliente')">+ Nuevo Cliente</button></div>
-      <div class="filter-bar"><div class="filter-group"><input type="text" class="filter-input" placeholder="RUT" style="width:130px"></div><div class="filter-group"><input type="text" class="filter-input" placeholder="Nombre" style="width:180px"></div><div class="filter-group"><select class="filter-select" style="width:110px"><option>Todos</option><option>Activo</option><option>Inactivo</option></select></div><div class="filter-actions"><button class="btn btn-primary">Filtrar</button></div></div>
-      <div class="table-card"><table><thead><tr><th>Código</th><th>RUT</th><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Estado</th><th>Acciones</th></tr></thead><tbody><tr><td>01</td><td class="td-mono">76.354.771-2</td><td>Supermercados Unimarc Quillota</td><td class="td-muted">—</td><td class="td-muted">—</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" style="width:28px;height:28px" onclick="toggleAcciones(this,'cliente')">⋮</button></td></tr></tbody></table></div>
+      <div class="filter-bar"><div class="filter-group"><input type="text" id="f-cli-rut" class="filter-input" placeholder="RUT" style="width:130px"></div><div class="filter-group"><input type="text" id="f-cli-nom" class="filter-input" placeholder="Nombre" style="width:180px"></div><div class="filter-group"><select id="f-cli-est" class="filter-select" style="width:110px"><option>Todos</option><option>Activo</option><option>Inactivo</option></select></div><div class="filter-actions"><button class="btn btn-primary" onclick="filtrarClientes()">Filtrar</button><button class="btn btn-secondary" onclick="limpiarFiltro('tb-clientes',['f-cli-rut','f-cli-nom','f-cli-est'])">Limpiar</button></div></div>
+      <div class="table-card"><table><thead><tr><th>Código</th><th>RUT</th><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="tb-clientes">
+<tr><td>01</td><td class="td-mono">76.987.123-4</td><td>Exportadora Del Monte Chile Ltda.</td><td class="td-muted">contacto@delmonte.cl</td><td class="td-muted">+56 32 245 6789</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" style="width:28px;height:28px" onclick="toggleAcciones(this,'cliente')">⋮</button></td></tr>
+<tr><td>02</td><td class="td-mono">76.543.210-5</td><td>Frutas Orgánicas del Valle S.A.</td><td class="td-muted">ventas@frutasdelvallar.cl</td><td class="td-muted">+56 32 312 4567</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" style="width:28px;height:28px" onclick="toggleAcciones(this,'cliente')">⋮</button></td></tr>
+<tr><td>03</td><td class="td-mono">76.234.567-8</td><td>Agrícola Los Leones Ltda.</td><td class="td-muted">compras@losleones.cl</td><td class="td-muted">+56 33 198 7654</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" style="width:28px;height:28px" onclick="toggleAcciones(this,'cliente')">⋮</button></td></tr>
+<tr><td>04</td><td class="td-mono">76.354.771-2</td><td>Supermercados Unimarc Quillota</td><td class="td-muted">ventas@unimarc.cl</td><td class="td-muted">+56 33 210 3456</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" style="width:28px;height:28px" onclick="toggleAcciones(this,'cliente')">⋮</button></td></tr>
+<tr><td>05</td><td class="td-mono">77.123.456-9</td><td>Central de Frutas Santiago Ltda.</td><td class="td-muted">pedidos@centralfrutas.cl</td><td class="td-muted">+56 2 2345 6789</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" style="width:28px;height:28px" onclick="toggleAcciones(this,'cliente')">⋮</button></td></tr>
+</tbody></table></div>
     </div>
 
     <!-- ══ VENTAS: GUIA DESPACHO ══ -->
     <div class="view" id="view-guiadespacho">
-      <div class="page-header"><div><div class="page-title">Guía de Despacho</div></div><div class="btn-group"><button class="btn btn-secondary">Facturación múltiple</button><button class="btn btn-primary" onclick="openPanel('nueva-guia')">+ Nuevo</button></div></div>
-      <div class="filter-bar"><div class="filter-group"><input type="text" class="filter-input" placeholder="Documento" style="width:130px"></div><div class="filter-group"><input type="text" class="filter-input" placeholder="Cliente" style="width:150px"></div><div class="filter-group"><input type="text" class="filter-input" placeholder="Fecha" style="width:120px"></div><div class="filter-actions"><button class="btn btn-primary">Filtrar</button></div></div>
-      <div class="table-card"><table><thead><tr><th><input type="checkbox"></th><th>Documento</th><th>Número</th><th>Cliente</th><th>Fecha</th><th>Estado DTE</th><th>Total</th></tr></thead><tbody>
-<tr><td>Guía Despacho</td><td>GD-001</td><td>Exportadora Del Monte Chile</td><td>2026-04-10</td><td><span class="badge badge-green">Aceptado</span></td><td>$3.360.000</td></tr>
-<tr><td>Guía Despacho</td><td>GD-002</td><td>Frutas Orgánicas del Valle S.A.</td><td>2026-04-22</td><td><span class="badge badge-green">Aceptado</span></td><td>$1.008.000</td></tr>
-<tr><td>Guía Despacho</td><td>GD-003</td><td>Supermercados Unimarc Quillota</td><td>2026-05-05</td><td><span class="badge badge-green">Aceptado</span></td><td>$576.000</td></tr>
-<tr><td>Guía Despacho</td><td>GD-004</td><td>Agrícola Los Leones Ltda.</td><td>2026-05-18</td><td><span class="badge badge-orange">Enviado</span></td><td>$840.000</td></tr>
-<tr><td>Guía Despacho</td><td>GD-005</td><td>Exportadora Del Monte Chile</td><td>2026-06-02</td><td><span class="badge badge-orange">Enviado</span></td><td>$4.200.000</td></tr>
+      <div class="page-header"><div><div class="page-title">Guía de Despacho</div></div><div class="btn-group"><button class="btn btn-secondary" onclick="showToast('Facturación múltiple de guías de despacho')">Facturación múltiple</button><button class="btn btn-primary" onclick="openPanel('nueva-guia')">+ Nuevo</button></div></div>
+      <div class="filter-bar"><div class="filter-group"><input type="text" id="f-gd-doc" class="filter-input" placeholder="N° documento" style="width:130px"></div><div class="filter-group"><input type="text" id="f-gd-cli" class="filter-input" placeholder="Cliente" style="width:150px"></div><div class="filter-group"><input type="text" id="f-gd-fec" class="filter-input" placeholder="Fecha (AAAA-MM)" style="width:130px"></div><div class="filter-actions"><button class="btn btn-primary" onclick="filtrarGuias()">Filtrar</button><button class="btn btn-secondary" onclick="limpiarFiltro('tb-guias',['f-gd-doc','f-gd-cli','f-gd-fec'])">Limpiar</button></div></div>
+      <div class="table-card"><div class="table-header"><div class="table-title">Listado de documentos</div><div class="table-count" id="cnt-guias">6 guías</div></div>
+<table><thead><tr><th><input type="checkbox"></th><th>Documento</th><th>Número</th><th>Cliente</th><th>Fecha</th><th>Origen</th><th>Destino</th><th>Estado DTE</th><th>Total</th><th>Acciones</th></tr></thead><tbody id="tb-guias">
+<tr><td><input type="checkbox"></td><td>Guía Despacho</td><td class="td-mono">GD-2026-001</td><td>Exportadora Del Monte Chile Ltda.</td><td>2026-04-10</td><td>Fundo Puertas Coloradas, Nogales</td><td>Planta Del Monte, La Calera</td><td><span class="badge badge-green">Aceptado</span></td><td class="td-mono">$3.360.000</td><td><button class="btn-icon" style="width:28px;height:28px" onclick="toggleAcciones(this,'guia')">⋮</button></td></tr>
+<tr><td><input type="checkbox"></td><td>Guía Despacho</td><td class="td-mono">GD-2026-002</td><td>Frutas Orgánicas del Valle S.A.</td><td>2026-04-22</td><td>Fundo Puertas Coloradas, Nogales</td><td>Packing Frutas del Valle, Quillota</td><td><span class="badge badge-green">Aceptado</span></td><td class="td-mono">$1.008.000</td><td><button class="btn-icon" style="width:28px;height:28px" onclick="toggleAcciones(this,'guia')">⋮</button></td></tr>
+<tr><td><input type="checkbox"></td><td>Guía Despacho</td><td class="td-mono">GD-2026-003</td><td>Supermercados Unimarc Quillota</td><td>2026-05-05</td><td>Fundo Puertas Coloradas, Nogales</td><td>CD Unimarc, Quillota</td><td><span class="badge badge-green">Aceptado</span></td><td class="td-mono">$576.000</td><td><button class="btn-icon" style="width:28px;height:28px" onclick="toggleAcciones(this,'guia')">⋮</button></td></tr>
+<tr><td><input type="checkbox"></td><td>Guía Despacho</td><td class="td-mono">GD-2026-004</td><td>Agrícola Los Leones Ltda.</td><td>2026-05-18</td><td>Fundo Puertas Coloradas, Nogales</td><td>Agrícola Los Leones, La Cruz</td><td><span class="badge badge-green">Aceptado</span></td><td class="td-mono">$840.000</td><td><button class="btn-icon" style="width:28px;height:28px" onclick="toggleAcciones(this,'guia')">⋮</button></td></tr>
+<tr><td><input type="checkbox"></td><td>Guía Despacho</td><td class="td-mono">GD-2026-005</td><td>Exportadora Del Monte Chile Ltda.</td><td>2026-06-02</td><td>Fundo Puertas Coloradas, Nogales</td><td>Planta Del Monte, La Calera</td><td><span class="badge badge-orange">Enviado</span></td><td class="td-mono">$4.200.000</td><td><button class="btn-icon" style="width:28px;height:28px" onclick="toggleAcciones(this,'guia')">⋮</button></td></tr>
+<tr><td><input type="checkbox"></td><td>Guía Despacho</td><td class="td-mono">GD-2026-006</td><td>Central de Frutas Santiago Ltda.</td><td>2026-06-24</td><td>Fundo Puertas Coloradas, Nogales</td><td>Lo Valledor, Santiago</td><td><span class="badge badge-orange">Enviado</span></td><td class="td-mono">$1.480.000</td><td><button class="btn-icon" style="width:28px;height:28px" onclick="toggleAcciones(this,'guia')">⋮</button></td></tr>
 </tbody></table></div>
     </div>
 
@@ -1972,15 +1924,36 @@
       </div>
       <div class="table-card">
         <table><thead><tr><th><input type="checkbox"></th><th>Documento</th><th>Folio</th><th>Cliente</th><th>Vendedor</th><th>Fecha</th><th>SII</th><th>Total</th><th>Opciones</th></tr></thead>
-        <tbody><tr><td><input type="checkbox"></td><td><span style="color:var(--accent);font-size:12px">🔗 (35) Boleta Manual</span></td><td class="td-mono">1-1</td><td>HERIBERTO CARRASCO ARAVENA</td><td class="td-muted">CONDOMINIO LAS ARAUCARIAS</td><td>2026-04-24</td><td class="td-muted">-</td><td class="td-mono" style="color:var(--accent)">$49.000</td><td><button class="btn-icon" style="width:28px;height:28px">⋮</button></td></tr></tbody></table>
+        <tbody id="tb-ventasdocs">
+<tr><td><input type="checkbox"></td><td><span style="color:var(--accent);font-size:12px">🔗 (33) Factura Electrónica</span></td><td class="td-mono">2026-001</td><td>Exportadora Del Monte Chile Ltda.</td><td class="td-muted">E. Maturana</td><td>2026-03-20</td><td><span class="badge badge-green">Aceptado</span></td><td class="td-mono" style="color:var(--accent)">$4.480.000</td><td><button class="btn-icon" style="width:28px;height:28px" onclick="toggleAcciones(this,'venta')">⋮</button></td></tr>
+<tr><td><input type="checkbox"></td><td><span style="color:var(--accent);font-size:12px">🔗 (33) Factura Electrónica</span></td><td class="td-mono">2026-002</td><td>Frutas Orgánicas del Valle S.A.</td><td class="td-muted">E. Maturana</td><td>2026-04-15</td><td><span class="badge badge-green">Aceptado</span></td><td class="td-mono" style="color:var(--accent)">$1.768.000</td><td><button class="btn-icon" style="width:28px;height:28px" onclick="toggleAcciones(this,'venta')">⋮</button></td></tr>
+<tr><td><input type="checkbox"></td><td><span style="color:var(--accent);font-size:12px">🔗 (33) Factura Electrónica</span></td><td class="td-mono">2026-003</td><td>Exportadora Del Monte Chile Ltda.</td><td class="td-muted">E. Maturana</td><td>2026-05-08</td><td><span class="badge badge-green">Aceptado</span></td><td class="td-mono" style="color:var(--accent)">$4.620.000</td><td><button class="btn-icon" style="width:28px;height:28px" onclick="toggleAcciones(this,'venta')">⋮</button></td></tr>
+<tr><td><input type="checkbox"></td><td><span style="color:var(--accent);font-size:12px">🔗 (33) Factura Electrónica</span></td><td class="td-mono">2026-004</td><td>Agrícola Los Leones Ltda.</td><td class="td-muted">E. Maturana</td><td>2026-05-22</td><td><span class="badge badge-green">Aceptado</span></td><td class="td-mono" style="color:var(--accent)">$840.000</td><td><button class="btn-icon" style="width:28px;height:28px" onclick="toggleAcciones(this,'venta')">⋮</button></td></tr>
+<tr><td><input type="checkbox"></td><td><span style="color:var(--accent);font-size:12px">🔗 (39) Boleta Electrónica</span></td><td class="td-mono">2026-007</td><td>Supermercados Unimarc Quillota</td><td class="td-muted">E. Maturana</td><td>2026-05-05</td><td><span class="badge badge-green">Aceptado</span></td><td class="td-mono" style="color:var(--accent)">$576.000</td><td><button class="btn-icon" style="width:28px;height:28px" onclick="toggleAcciones(this,'venta')">⋮</button></td></tr>
+<tr><td><input type="checkbox"></td><td><span style="color:var(--accent);font-size:12px">🔗 (33) Factura Electrónica</span></td><td class="td-mono">2026-005</td><td>Exportadora Del Monte Chile Ltda.</td><td class="td-muted">E. Maturana</td><td>2026-06-12</td><td><span class="badge badge-orange">Enviado</span></td><td class="td-mono" style="color:var(--accent)">$4.200.000</td><td><button class="btn-icon" style="width:28px;height:28px" onclick="toggleAcciones(this,'venta')">⋮</button></td></tr>
+<tr><td><input type="checkbox"></td><td><span style="color:var(--accent);font-size:12px">🔗 (33) Factura Electrónica</span></td><td class="td-mono">2026-006</td><td>Frutas Orgánicas del Valle S.A.</td><td class="td-muted">E. Maturana</td><td>2026-06-18</td><td><span class="badge badge-orange">Enviado</span></td><td class="td-mono" style="color:var(--accent)">$1.152.001</td><td><button class="btn-icon" style="width:28px;height:28px" onclick="toggleAcciones(this,'venta')">⋮</button></td></tr>
+<tr><td><input type="checkbox"></td><td><span style="color:var(--accent);font-size:12px">🔗 (39) Boleta Electrónica</span></td><td class="td-mono">2026-008</td><td>Supermercados Unimarc Quillota</td><td class="td-muted">E. Maturana</td><td>2026-06-20</td><td><span class="badge badge-orange">Enviado</span></td><td class="td-mono" style="color:var(--accent)">$576.000</td><td><button class="btn-icon" style="width:28px;height:28px" onclick="toggleAcciones(this,'venta')">⋮</button></td></tr>
+<tr><td><input type="checkbox"></td><td><span style="color:var(--accent);font-size:12px">🔗 (33) Factura Electrónica</span></td><td class="td-mono">2026-009</td><td>Central de Frutas Santiago Ltda.</td><td class="td-muted">E. Maturana</td><td>2026-06-25</td><td><span class="badge badge-orange">Enviado</span></td><td class="td-mono" style="color:var(--accent)">$1.480.000</td><td><button class="btn-icon" style="width:28px;height:28px" onclick="toggleAcciones(this,'venta')">⋮</button></td></tr>
+<tr style="font-weight:700;border-top:2px solid var(--border)"><td colspan="7">TOTAL VENTAS ENE–JUN 2026</td><td class="td-mono">$19.692.001</td><td></td></tr>
+</tbody></table>
       </div>
     </div>
 
     <!-- ══ VENTAS: FACTURADOR RECURRENTE ══ -->
     <div class="view" id="view-facturadorrecurrente">
-      <div class="page-header"><div><div class="page-title">Facturador Recurrente</div></div><button class="btn btn-primary">+ Agregar documento</button></div>
+      <div class="page-header"><div><div class="page-title">Facturador Recurrente</div></div><button class="btn btn-primary" onclick="showToast('Nueva programación de facturación recurrente')">+ Agregar documento</button></div>
       <div class="tabs"><div class="tab active">Documentos programados</div><div class="tab">Documentos por emitir</div></div>
-      <div class="table-card"><div class="empty-state" style="padding:48px"><div class="empty-icon">🔄</div><div class="empty-title">Sin documentos programados</div></div></div>
+      <div class="table-card">
+        <div class="table-header"><div class="table-title">Documentos programados</div><div class="table-count">3 programaciones</div></div>
+        <table>
+          <thead><tr><th>Código</th><th>Cliente</th><th>RUT</th><th>Documento</th><th>Concepto</th><th>Periodicidad</th><th>Día de emisión</th><th>Monto Neto</th><th>Total c/IVA</th><th>Próxima emisión</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody id="tb-recurrente">
+            <tr><td class="td-mono">REC-001</td><td>Central de Frutas Santiago Ltda.</td><td class="td-mono">77.123.456-9</td><td>Factura Electrónica (33)</td><td>Despacho mensual palta Hass Cat. I — 700 kg</td><td><span class="badge badge-blue">Mensual</span></td><td>25</td><td class="td-mono">$1.243.697</td><td class="td-mono">$1.480.000</td><td>25-08-2026</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" onclick="toggleAcciones(this,'recurrente')">⋮</button></td></tr>
+            <tr><td class="td-mono">REC-002</td><td>Supermercados Unimarc Quillota</td><td class="td-mono">76.354.771-2</td><td>Boleta Electrónica (39)</td><td>Abastecimiento cítricos — naranjas y limones</td><td><span class="badge badge-blue">Mensual</span></td><td>05</td><td class="td-mono">$484.034</td><td class="td-mono">$576.000</td><td>05-09-2026</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" onclick="toggleAcciones(this,'recurrente')">⋮</button></td></tr>
+            <tr><td class="td-mono">REC-003</td><td>Agrícola Los Leones Ltda.</td><td class="td-mono">76.234.567-8</td><td>Factura Electrónica (33)</td><td>Venta mandarinas Clementina — 500 kg</td><td><span class="badge badge-blue">Mensual</span></td><td>18</td><td class="td-mono">$216.807</td><td class="td-mono">$258.000</td><td>18-08-2026</td><td><span class="badge badge-orange">Suspendido</span></td><td><button class="btn-icon" onclick="toggleAcciones(this,'recurrente')">⋮</button></td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- ══ VENTAS: FACTURADOR MASIVO ══ -->
@@ -1995,7 +1968,7 @@
 
     <!-- ══ VENTAS: INFORMES NUEVO ══ -->
     <div class="view" id="view-informesventasnuevo">
-      <div class="page-header"><div><div class="page-title">Informes de Ventas (Nuevo)</div></div><button class="btn btn-primary">📊 Generar Informe</button></div>
+      <div class="page-header"><div><div class="page-title">Informes de Ventas (Nuevo)</div></div><button class="btn btn-primary" onclick="showToast('📊 Informe de ventas generado')">📊 Generar Informe</button></div>
       <div class="table-card" style="padding:24px">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
           <div class="form-group"><div class="form-label">Tipo de Informe</div><select class="form-select"><option>Consolidado</option><option>Por vendedor</option></select></div>
@@ -2017,35 +1990,85 @@
   <table class="data-table">
     <thead><tr><th>#</th><th>Cliente</th><th>N° Documentos</th><th>Neto</th><th>IVA</th><th>Total</th><th>% Part.</th></tr></thead>
     <tbody>
-      <tr><td>1</td><td>Exportadora Del Monte Chile</td><td>3</td><td>$11.176.471</td><td>$2.123.529</td><td>$13.300.000</td><td>61,2%</td></tr>
-      <tr><td>2</td><td>Frutas Orgánicas del Valle S.A.</td><td>2</td><td>$2.453.782</td><td>$466.219</td><td>$2.920.001</td><td>13,4%</td></tr>
-      <tr><td>3</td><td>Supermercados Unimarc Quillota</td><td>1</td><td>$484.034</td><td>$91.966</td><td>$576.000</td><td>2,6%</td></tr>
-      <tr><td>4</td><td>Agrícola Los Leones Ltda.</td><td>1</td><td>$705.882</td><td>$134.118</td><td>$840.000</td><td>3,9%</td></tr>
-      <tr><td>5</td><td>Supermercados Unimarc Quillota</td><td>2</td><td>$484.034</td><td>$91.966</td><td>$576.000</td><td>2,6%</td></tr>
-      <tr style="font-weight:700;border-top:2px solid var(--border)"><td colspan="3">TOTAL</td><td>$14.861.345</td><td>$2.823.656</td><td>$17.685.001</td><td>100%</td></tr>
+      <tr><td>1</td><td>Exportadora Del Monte Chile Ltda.</td><td>3</td><td>$11.176.471</td><td>$2.123.529</td><td>$13.300.000</td><td>67,5%</td></tr>
+      <tr><td>2</td><td>Frutas Orgánicas del Valle S.A.</td><td>2</td><td>$2.453.782</td><td>$466.219</td><td>$2.920.001</td><td>14,8%</td></tr>
+      <tr><td>3</td><td>Central de Frutas Santiago Ltda.</td><td>1</td><td>$1.243.697</td><td>$236.303</td><td>$1.480.000</td><td>7,5%</td></tr>
+      <tr><td>4</td><td>Supermercados Unimarc Quillota</td><td>2</td><td>$968.067</td><td>$183.933</td><td>$1.152.000</td><td>5,9%</td></tr>
+      <tr><td>5</td><td>Agrícola Los Leones Ltda.</td><td>1</td><td>$705.882</td><td>$134.118</td><td>$840.000</td><td>4,3%</td></tr>
+      <tr style="font-weight:700;border-top:2px solid var(--border)"><td colspan="2">TOTAL</td><td>9</td><td>$16.547.899</td><td>$3.144.102</td><td>$19.692.001</td><td>100,0%</td></tr>
     </tbody>
   </table>
 </div>
 </div>
 
     <!-- ══ VENTAS: OTROS ══ -->
-    <div class="view" id="view-infoelectronica"><div class="page-header"><div><div class="page-title">Información Electrónica</div></div></div><div class="table-card"><div class="empty-state" style="padding:48px"><div class="empty-icon">📡</div><div class="empty-title">Documentos tributarios electrónicos</div></div></div></div>
+    <div class="view" id="view-infoelectronica">
+  <div class="page-header"><div><div class="page-title">Información Electrónica — Ventas</div><div class="page-subtitle">Documentos tributarios electrónicos emitidos al SII</div></div><div class="btn-group"><button class="btn btn-secondary" onclick="showToast('Consultando estado en el SII...')">🔄 Consultar SII</button><button class="btn btn-secondary" onclick="showToast('Descargando XML...')">↓ Descargar XML</button></div></div>
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-label">DTE Emitidos</div><div class="stat-value blue">9</div><div class="stat-sub">Ene–Jun 2026</div></div>
+    <div class="stat-card"><div class="stat-label">Aceptados SII</div><div class="stat-value green">5</div><div class="stat-sub">Con acuse de recibo</div></div>
+    <div class="stat-card"><div class="stat-label">Enviados</div><div class="stat-value orange">4</div><div class="stat-sub">En espera de aceptación</div></div>
+    <div class="stat-card"><div class="stat-label">Monto Total</div><div class="stat-value">$19.692.001</div><div class="stat-sub">IVA incluido</div></div>
+  </div>
+  <div class="table-card">
+    <div class="table-header"><div class="table-title">Documentos tributarios electrónicos emitidos</div><div class="table-count">9 documentos</div></div>
+    <table>
+      <thead><tr><th>Tipo DTE</th><th>Folio</th><th>Receptor</th><th>RUT Receptor</th><th>Fecha</th><th>Neto</th><th>IVA</th><th>Total</th><th>Track ID</th><th>Estado SII</th></tr></thead>
+      <tbody id="tb-dteventas">
+        <tr><td><span class="badge badge-blue">33 Factura</span></td><td class="td-mono">2026-001</td><td>Exportadora Del Monte Chile Ltda.</td><td class="td-mono">76.987.123-4</td><td>2026-03-20</td><td class="td-mono">$3.764.706</td><td class="td-mono">$715.294</td><td class="td-mono">$4.480.000</td><td class="td-mono td-muted">881234501</td><td><span class="badge badge-green">Aceptado</span></td></tr>
+        <tr><td><span class="badge badge-blue">33 Factura</span></td><td class="td-mono">2026-002</td><td>Frutas Orgánicas del Valle S.A.</td><td class="td-mono">76.543.210-5</td><td>2026-04-15</td><td class="td-mono">$1.485.714</td><td class="td-mono">$282.286</td><td class="td-mono">$1.768.000</td><td class="td-mono td-muted">881234502</td><td><span class="badge badge-green">Aceptado</span></td></tr>
+        <tr><td><span class="badge badge-blue">33 Factura</span></td><td class="td-mono">2026-003</td><td>Exportadora Del Monte Chile Ltda.</td><td class="td-mono">76.987.123-4</td><td>2026-05-08</td><td class="td-mono">$3.882.353</td><td class="td-mono">$737.647</td><td class="td-mono">$4.620.000</td><td class="td-mono td-muted">881234503</td><td><span class="badge badge-green">Aceptado</span></td></tr>
+        <tr><td><span class="badge badge-blue">33 Factura</span></td><td class="td-mono">2026-004</td><td>Agrícola Los Leones Ltda.</td><td class="td-mono">76.234.567-8</td><td>2026-05-22</td><td class="td-mono">$705.882</td><td class="td-mono">$134.118</td><td class="td-mono">$840.000</td><td class="td-mono td-muted">881234504</td><td><span class="badge badge-green">Aceptado</span></td></tr>
+        <tr><td><span class="badge badge-gray">39 Boleta</span></td><td class="td-mono">2026-007</td><td>Supermercados Unimarc Quillota</td><td class="td-mono">76.354.771-2</td><td>2026-05-05</td><td class="td-mono">$484.034</td><td class="td-mono">$91.966</td><td class="td-mono">$576.000</td><td class="td-mono td-muted">881234507</td><td><span class="badge badge-green">Aceptado</span></td></tr>
+        <tr><td><span class="badge badge-blue">33 Factura</span></td><td class="td-mono">2026-005</td><td>Exportadora Del Monte Chile Ltda.</td><td class="td-mono">76.987.123-4</td><td>2026-06-12</td><td class="td-mono">$3.529.412</td><td class="td-mono">$670.588</td><td class="td-mono">$4.200.000</td><td class="td-mono td-muted">881234505</td><td><span class="badge badge-orange">Enviado</span></td></tr>
+        <tr><td><span class="badge badge-blue">33 Factura</span></td><td class="td-mono">2026-006</td><td>Frutas Orgánicas del Valle S.A.</td><td class="td-mono">76.543.210-5</td><td>2026-06-18</td><td class="td-mono">$968.068</td><td class="td-mono">$183.933</td><td class="td-mono">$1.152.001</td><td class="td-mono td-muted">881234506</td><td><span class="badge badge-orange">Enviado</span></td></tr>
+        <tr><td><span class="badge badge-gray">39 Boleta</span></td><td class="td-mono">2026-008</td><td>Supermercados Unimarc Quillota</td><td class="td-mono">76.354.771-2</td><td>2026-06-20</td><td class="td-mono">$484.033</td><td class="td-mono">$91.967</td><td class="td-mono">$576.000</td><td class="td-mono td-muted">881234508</td><td><span class="badge badge-orange">Enviado</span></td></tr>
+        <tr><td><span class="badge badge-blue">33 Factura</span></td><td class="td-mono">2026-009</td><td>Central de Frutas Santiago Ltda.</td><td class="td-mono">77.123.456-9</td><td>2026-06-25</td><td class="td-mono">$1.243.697</td><td class="td-mono">$236.303</td><td class="td-mono">$1.480.000</td><td class="td-mono td-muted">881234509</td><td><span class="badge badge-orange">Enviado</span></td></tr>
+        <tr style="font-weight:700;border-top:2px solid var(--border)"><td colspan="5">TOTAL</td><td class="td-mono">$16.547.899</td><td class="td-mono">$3.144.102</td><td class="td-mono">$19.692.001</td><td colspan="2"></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
     <div class="view" id="view-guiamasiva"><div class="page-header"><div><div class="page-title">Guía Despacho Masiva</div></div><button class="btn btn-primary" onclick="openPanel('nueva-guia')">+ Nueva</button></div><div class="table-card"><div class="table-header"><div class="table-title">Listado de Guías Masivas</div></div><table><thead><tr><th><input type="checkbox"></th><th>N°</th><th>Fecha</th><th>Cliente</th><th>Artículos</th><th>Total</th><th>Estado</th><th>Acciones</th></tr></thead><tbody><tr><td colspan="8"><div class="empty-state" style="padding:40px"><div class="empty-icon">🚚</div><div class="empty-title">Sin guías masivas registradas</div><div class="empty-sub">Haz clic en + Nueva para agregar</div></div></td></tr></tbody></table></div></div>
     <div class="view" id="view-sawu"><div class="page-header"><div><div class="page-title">SAWU: Abastecimiento B2B</div></div></div><div class="table-card"><div class="empty-state" style="padding:48px"><div class="empty-icon">🏭</div><div class="empty-title">Módulo B2B</div></div></div></div>
     <div class="view" id="view-ecommerce"><div class="page-header"><div><div class="page-title">Plugins Ecommerce</div></div></div><div class="table-card"><div class="empty-state" style="padding:48px"><div class="empty-icon">🛒</div><div class="empty-title">Plugins de comercio electrónico</div></div></div></div>
-    <div class="view" id="view-listaprecios"><div class="page-header"><div><div class="page-title">Lista de Precios</div></div><button class="btn btn-primary">+ Nueva Lista</button></div><div class="table-card"><div class="empty-state" style="padding:48px"><div class="empty-icon">💲</div><div class="empty-title">Sin listas de precios</div></div></div></div>
+    <div class="view" id="view-listaprecios">
+  <div class="page-header"><div><div class="page-title">Lista de Precios</div><div class="page-subtitle">Precios de venta vigentes por temporada</div></div><button class="btn btn-primary" onclick="showToast('Formulario de nueva lista de precios')">+ Nueva Lista</button></div>
+  <div class="table-card" style="margin-bottom:20px">
+    <div class="table-header"><div class="table-title">Listas de precios</div><div class="table-count">1 lista</div></div>
+    <table>
+      <thead><tr><th>Código</th><th>Nombre</th><th>Vigencia</th><th>Moneda</th><th>N° Artículos</th><th>Estado</th></tr></thead>
+      <tbody><tr><td class="td-mono">LP-2026-01</td><td><strong>Temporada 2026</strong></td><td>01-01-2026 — 31-12-2026</td><td>CLP</td><td>7</td><td><span class="badge badge-green">Vigente</span></td></tr></tbody>
+    </table>
+  </div>
+  <div class="table-card">
+    <div class="table-header"><div class="table-title">Detalle — Temporada 2026</div><div class="table-count">7 artículos</div></div>
+    <table>
+      <thead><tr><th>Código</th><th>Artículo</th><th>Unidad</th><th>Precio Neto</th><th>IVA 19%</th><th>Precio con IVA</th></tr></thead>
+      <tbody>
+        <tr><td class="td-mono">ART-001</td><td>Palta Hass Extra</td><td>kg</td><td class="td-mono">$2.800</td><td class="td-mono">$532</td><td class="td-mono">$3.332</td></tr>
+        <tr><td class="td-mono">ART-002</td><td>Palta Hass Categoría I</td><td>kg</td><td class="td-mono">$2.100</td><td class="td-mono">$399</td><td class="td-mono">$2.499</td></tr>
+        <tr><td class="td-mono">ART-003</td><td>Palta Hass Descarte</td><td>kg</td><td class="td-mono">$650</td><td class="td-mono">$124</td><td class="td-mono">$774</td></tr>
+        <tr><td class="td-mono">ART-004</td><td>Naranjas Valencia</td><td>kg</td><td class="td-mono">$660</td><td class="td-mono">$125</td><td class="td-mono">$785</td></tr>
+        <tr><td class="td-mono">ART-005</td><td>Limones Eureka</td><td>kg</td><td class="td-mono">$520</td><td class="td-mono">$99</td><td class="td-mono">$619</td></tr>
+        <tr><td class="td-mono">ART-006</td><td>Mandarinas Clementina</td><td>kg</td><td class="td-mono">$516</td><td class="td-mono">$98</td><td class="td-mono">$614</td></tr>
+        <tr><td class="td-mono">ART-007</td><td>Cajas cartón embalaje</td><td>unidad</td><td class="td-mono">$1.200</td><td class="td-mono">$228</td><td class="td-mono">$1.428</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 
     <!-- ══ COMPRAS: PROVEEDORES ══ -->
     <div class="view" id="view-proveedores">
       <div class="page-header"><div><div class="page-title">Proveedores</div></div><button class="btn btn-primary" onclick="openPanel('nuevo-proveedor')">+ Nuevo Proveedor</button></div>
-      <div class="filter-bar"><div class="filter-group"><input type="text" class="filter-input" placeholder="RUT" style="width:130px"></div><div class="filter-group"><input type="text" class="filter-input" placeholder="Nombre proveedor" style="width:180px"></div><div class="filter-group"><select class="filter-select" style="width:110px"><option>Todos</option><option>Activo</option></select></div><div class="filter-actions"><button class="btn btn-primary">Filtrar</button><button class="btn btn-secondary">↓ Exportar</button></div></div>
+      <div class="filter-bar"><div class="filter-group"><input type="text" class="filter-input" placeholder="RUT" style="width:130px"></div><div class="filter-group"><input type="text" class="filter-input" placeholder="Nombre proveedor" style="width:180px"></div><div class="filter-group"><select class="filter-select" style="width:110px"><option>Todos</option><option>Activo</option></select></div><div class="filter-actions"><button class="btn btn-primary" onclick="filtrarGenerico(this)">Filtrar</button><button class="btn btn-secondary">↓ Exportar</button></div></div>
       <div class="table-card"><table><thead><tr><th>Código</th><th>RUT</th><th>Nombre / Razón Social</th><th>Email</th><th>Teléfono</th><th>Condición Pago</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>
-<tr><td>001</td><td>76.123.456-7</td><td>Semillas del Sur Ltda.</td><td>ventas@semillasdelsur.cl</td><td>+56 32 221 4400</td><td>30 días</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>002</td><td>77.234.567-8</td><td>Agroquímicos Nogales SpA</td><td>contacto@aqnogales.cl</td><td>+56 33 298 1100</td><td>Contado</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>003</td><td>78.345.678-9</td><td>Transportes Valles Verdes E.I.R.L.</td><td>ops@vallesverdes.cl</td><td>+56 9 9812 3344</td><td>15 días</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>004</td><td>79.456.789-0</td><td>Ferretería Campo Abierto Ltda.</td><td>pedidos@campoa.cl</td><td>+56 33 285 6677</td><td>30 días</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>005</td><td>80.567.890-1</td><td>Envases y Embalajes Quilpué S.A.</td><td>ventas@eequilpue.cl</td><td>+56 32 274 9900</td><td>45 días</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>006</td><td>81.678.901-2</td><td>Asesorías Agronómicas Maturana</td><td>agro@maturana.cl</td><td>+56 9 7654 3210</td><td>Contado</td><td><span class="badge badge-gray">Inactivo</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
+<tr><td>001</td><td>76.123.456-7</td><td>Semillas del Sur Ltda.</td><td>ventas@semillasdelsur.cl</td><td>+56 32 221 4400</td><td>30 días</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'proveedor')">⋮</button></td></tr>
+<tr><td>002</td><td>77.234.567-8</td><td>Agroquímicos Nogales SpA</td><td>contacto@aqnogales.cl</td><td>+56 33 298 1100</td><td>Contado</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'proveedor')">⋮</button></td></tr>
+<tr><td>003</td><td>78.345.678-9</td><td>Transportes Valles Verdes E.I.R.L.</td><td>ops@vallesverdes.cl</td><td>+56 9 9812 3344</td><td>15 días</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'proveedor')">⋮</button></td></tr>
+<tr><td>004</td><td>79.456.789-0</td><td>Ferretería Campo Abierto Ltda.</td><td>pedidos@campoa.cl</td><td>+56 33 285 6677</td><td>30 días</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'proveedor')">⋮</button></td></tr>
+<tr><td>005</td><td>80.567.890-1</td><td>Envases y Embalajes Quilpué S.A.</td><td>ventas@eequilpue.cl</td><td>+56 32 274 9900</td><td>45 días</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'proveedor')">⋮</button></td></tr>
+<tr><td>006</td><td>81.678.901-2</td><td>Asesorías Agronómicas Maturana</td><td>agro@maturana.cl</td><td>+56 9 7654 3210</td><td>Contado</td><td><span class="badge badge-gray">Inactivo</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'proveedor')">⋮</button></td></tr>
 </tbody></table></div>
     </div>
 
@@ -2133,44 +2156,67 @@
     </div>
 
     <!-- ══ COMPRAS: INFO ELECTRONICA ══ -->
-    <div class="view" id="view-comprasinfoelec"><div class="page-header"><div><div class="page-title">Información Electrónica — Compras</div></div></div><div class="table-card"><div class="empty-state" style="padding:48px"><div class="empty-icon">📡</div><div class="empty-title">Documentos electrónicos recibidos</div></div></div></div>
+    <div class="view" id="view-comprasinfoelec">
+  <div class="page-header"><div><div class="page-title">Información Electrónica — Compras</div><div class="page-subtitle">Documentos tributarios electrónicos recibidos de proveedores</div></div><div class="btn-group"><button class="btn btn-secondary" onclick="showToast('Consultando DTE recibidos en el SII...')">🔄 Consultar SII</button><button class="btn btn-secondary" onclick="showToast('Descargando XML...')">↓ Descargar XML</button></div></div>
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-label">DTE Recibidos</div><div class="stat-value blue">5</div><div class="stat-sub">Mar–Jun 2026</div></div>
+    <div class="stat-card"><div class="stat-label">Acusados</div><div class="stat-value green">4</div><div class="stat-sub">Con acuse de recibo</div></div>
+    <div class="stat-card"><div class="stat-label">Por Acusar</div><div class="stat-value orange">1</div><div class="stat-sub">Dentro de plazo (8 días)</div></div>
+    <div class="stat-card"><div class="stat-label">IVA Crédito Fiscal</div><div class="stat-value">$172.606</div><div class="stat-sub">Período acumulado</div></div>
+  </div>
+  <div class="table-card">
+    <div class="table-header"><div class="table-title">Documentos tributarios electrónicos recibidos</div><div class="table-count">5 documentos</div></div>
+    <table>
+      <thead><tr><th>Tipo DTE</th><th>Folio</th><th>Emisor</th><th>RUT Emisor</th><th>Emisión</th><th>Recep. SII</th><th>Neto</th><th>IVA</th><th>Total</th><th>Acuse</th></tr></thead>
+      <tbody id="tb-dtecompras">
+        <tr><td><span class="badge badge-blue">33 Factura</span></td><td class="td-mono">F-001234</td><td>Semillas del Sur Ltda.</td><td class="td-mono">76.123.456-7</td><td>2026-03-15</td><td>2026-03-17</td><td class="td-mono">$330.353</td><td class="td-mono">$62.767</td><td class="td-mono">$393.120</td><td><span class="badge badge-green">Acusado</span></td></tr>
+        <tr><td><span class="badge badge-blue">33 Factura</span></td><td class="td-mono">F-002891</td><td>Agroquímicos Nogales SpA</td><td class="td-mono">77.234.567-8</td><td>2026-04-02</td><td>2026-04-04</td><td class="td-mono">$220.235</td><td class="td-mono">$41.845</td><td class="td-mono">$262.080</td><td><span class="badge badge-green">Acusado</span></td></tr>
+        <tr><td><span class="badge badge-blue">33 Factura</span></td><td class="td-mono">F-003445</td><td>Transportes Valles Verdes E.I.R.L.</td><td class="td-mono">78.345.678-9</td><td>2026-04-25</td><td>2026-04-26</td><td class="td-mono">$130.706</td><td class="td-mono">$24.834</td><td class="td-mono">$155.540</td><td><span class="badge badge-green">Acusado</span></td></tr>
+        <tr><td><span class="badge badge-blue">33 Factura</span></td><td class="td-mono">F-004012</td><td>Envases y Embalajes Quilpué S.A.</td><td class="td-mono">80.567.890-1</td><td>2026-05-10</td><td>2026-05-11</td><td class="td-mono">$158.118</td><td class="td-mono">$30.042</td><td class="td-mono">$188.160</td><td><span class="badge badge-green">Acusado</span></td></tr>
+        <tr><td><span class="badge badge-blue">33 Factura</span></td><td class="td-mono">F-005678</td><td>Ferretería Campo Abierto Ltda.</td><td class="td-mono">79.456.789-0</td><td>2026-06-01</td><td>2026-06-02</td><td class="td-mono">$68.899</td><td class="td-mono">$13.091</td><td class="td-mono">$81.990</td><td><span class="badge badge-orange">Por acusar</span></td></tr>
+        <tr style="font-weight:700;border-top:2px solid var(--border)"><td colspan="6">TOTAL</td><td class="td-mono">$908.311</td><td class="td-mono">$172.579</td><td class="td-mono">$1.080.890</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 
     <!-- ══ INVENTARIO: ARTICULOS ══ -->
     <div class="view" id="view-inventarioarticulos">
       <div class="page-header"><div><div class="page-title">Maestro de Artículos — Inventario</div></div><div class="btn-group"><button class="btn btn-secondary" onclick="showToast('Exportando a Excel...')">↓ Exportar Excel</button><button class="btn btn-primary" onclick="openPanel('nuevo-articulo')">+ Nuevo</button></div></div>
-      <div class="filter-bar"><div class="filter-group" style="flex:1"><input type="text" class="filter-input" placeholder="Buscar código o descripción..." style="width:100%"></div><div class="filter-group" style="flex:1"><select class="filter-select" style="width:100%"><option>Categorías</option></select></div><div class="filter-actions"><button class="btn btn-primary">Filtrar</button></div></div>
+      <div class="filter-bar"><div class="filter-group" style="flex:1"><input type="text" class="filter-input" placeholder="Buscar código o descripción..." style="width:100%"></div><div class="filter-group" style="flex:1"><select class="filter-select" style="width:100%"><option>Categorías</option></select></div><div class="filter-actions"><button class="btn btn-primary" onclick="filtrarGenerico(this)">Filtrar</button></div></div>
       <div class="table-card"><table><thead><tr><th>Código</th><th>Descripción</th><th>Categoría</th><th>Stock Disponible</th><th>Precio Venta</th><th>Activo</th><th>Disponible Venta</th><th>Acciones</th></tr></thead><tbody>
-<tr><td>ART-001</td><td>Paltas Hass Categoría Extra (kg)</td><td>Frutas Frescas</td><td>1.200</td><td>$2.800</td><td><span class="badge badge-green">Activo</span></td><td><span class="badge badge-green">Sí</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>ART-002</td><td>Paltas Hass Categoría I (kg)</td><td>Frutas Frescas</td><td>3.500</td><td>$2.100</td><td><span class="badge badge-green">Activo</span></td><td><span class="badge badge-green">Sí</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>ART-003</td><td>Paltas Hass Descarte (kg)</td><td>Frutas Frescas</td><td>800</td><td>$650</td><td><span class="badge badge-green">Activo</span></td><td><span class="badge badge-green">Sí</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>ART-004</td><td>Naranjas Valencia (kg)</td><td>Frutas Frescas</td><td>2.100</td><td>$480</td><td><span class="badge badge-green">Activo</span></td><td><span class="badge badge-green">Sí</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>ART-005</td><td>Limones Eureka (kg)</td><td>Frutas Frescas</td><td>900</td><td>$520</td><td><span class="badge badge-green">Activo</span></td><td><span class="badge badge-green">Sí</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>ART-006</td><td>Mandarinas Clementina (kg)</td><td>Frutas Frescas</td><td>1.600</td><td>$390</td><td><span class="badge badge-green">Activo</span></td><td><span class="badge badge-green">Sí</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>ART-007</td><td>Caja Cartón Palta 4 kg</td><td>Insumos Embalaje</td><td>5.000</td><td>$320</td><td><span class="badge badge-green">Activo</span></td><td><span class="badge badge-gray">No</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
+<tr><td>ART-001</td><td>Paltas Hass Categoría Extra (kg)</td><td>Frutas Frescas</td><td>1.200</td><td>$2.800</td><td><span class="badge badge-green">Activo</span></td><td><span class="badge badge-green">Sí</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'registro')">⋮</button></td></tr>
+<tr><td>ART-002</td><td>Paltas Hass Categoría I (kg)</td><td>Frutas Frescas</td><td>3.500</td><td>$2.100</td><td><span class="badge badge-green">Activo</span></td><td><span class="badge badge-green">Sí</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'registro')">⋮</button></td></tr>
+<tr><td>ART-003</td><td>Paltas Hass Descarte (kg)</td><td>Frutas Frescas</td><td>800</td><td>$650</td><td><span class="badge badge-green">Activo</span></td><td><span class="badge badge-green">Sí</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'registro')">⋮</button></td></tr>
+<tr><td>ART-004</td><td>Naranjas Valencia (kg)</td><td>Frutas Frescas</td><td>2.100</td><td>$660</td><td><span class="badge badge-green">Activo</span></td><td><span class="badge badge-green">Sí</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'articulo')">⋮</button></td></tr>
+<tr><td>ART-005</td><td>Limones Eureka (kg)</td><td>Frutas Frescas</td><td>900</td><td>$520</td><td><span class="badge badge-green">Activo</span></td><td><span class="badge badge-green">Sí</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'registro')">⋮</button></td></tr>
+<tr><td>ART-006</td><td>Mandarinas Clementina (kg)</td><td>Frutas Frescas</td><td>1.600</td><td>$516</td><td><span class="badge badge-green">Activo</span></td><td><span class="badge badge-green">Sí</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'articulo')">⋮</button></td></tr>
+<tr><td>ART-007</td><td>Cajas cartón embalaje (unidad)</td><td>Insumos Embalaje</td><td>5.000</td><td>$1.200</td><td><span class="badge badge-green">Activo</span></td><td><span class="badge badge-gray">No</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'articulo')">⋮</button></td></tr>
+<tr><td>ART-008</td><td>Malla Calibración #40</td><td>Insumos Embalaje</td><td>200</td><td>$1.100</td><td><span class="badge badge-green">Activo</span></td><td><span class="badge badge-gray">No</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'articulo')">⋮</button></td></tr>
 </tbody></table></div>
     </div>
 
     <!-- ══ INVENTARIO: MOVIMIENTOS ══ -->
     <div class="view" id="view-movsaprobar">
       <div class="page-header"><div><div class="page-title">Movimientos por Aprobar</div></div><button class="btn btn-primary" onclick="openPanel('nuevo-movimiento')">+ Nuevo Movimiento</button></div>
-      <div class="filter-bar"><div class="filter-group"><div class="filter-label">Fecha</div><input type="text" class="filter-input" value="01-06-2026 — 25-06-2026" style="width:190px"></div><div class="filter-group"><div class="filter-label">Tipo</div><select class="filter-select" style="width:130px"><option>Todos</option><option>Entrada</option><option>Salida</option><option>Traslado</option><option>Merma</option></select></div><div class="filter-actions"><button class="btn btn-primary">Filtrar</button></div></div>
+      <div class="filter-bar"><div class="filter-group"><div class="filter-label">Fecha</div><input type="text" class="filter-input" value="01-06-2026 — 25-06-2026" style="width:190px"></div><div class="filter-group"><div class="filter-label">Tipo</div><select class="filter-select" style="width:130px"><option>Todos</option><option>Entrada</option><option>Salida</option><option>Traslado</option><option>Merma</option></select></div><div class="filter-actions"><button class="btn btn-primary" onclick="filtrarGenerico(this)">Filtrar</button></div></div>
       <div class="table-card"><table><thead><tr><th><input type="checkbox"></th><th>N° Movimiento</th><th>Fecha</th><th>Tipo</th><th>Artículo</th><th>Cantidad</th><th>Bodega</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>
-<tr><td>MOV-0031</td><td>2026-06-20</td><td>Entrada Bodega</td><td>Paltas Hass Cat. Extra</td><td>800 kg</td><td>Bodega Principal</td><td>—</td><td><span class="badge badge-orange">Pendiente</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>MOV-0032</td><td>2026-06-21</td><td>Traslado</td><td>Limones Eureka</td><td>300 kg</td><td>Cámara Frío N°2</td><td>—</td><td><span class="badge badge-orange">Pendiente</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>MOV-0033</td><td>2026-06-23</td><td>Salida Venta</td><td>Naranjas Valencia</td><td>500 kg</td><td>Bodega Principal</td><td>—</td><td><span class="badge badge-orange">Pendiente</span></td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
+<tr><td>MOV-0031</td><td>2026-06-20</td><td>Entrada Bodega</td><td>Paltas Hass Cat. Extra</td><td>800 kg</td><td>Bodega Principal</td><td>—</td><td><span class="badge badge-orange">Pendiente</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'registro')">⋮</button></td></tr>
+<tr><td>MOV-0032</td><td>2026-06-21</td><td>Traslado</td><td>Limones Eureka</td><td>300 kg</td><td>Cámara Frío N°2</td><td>—</td><td><span class="badge badge-orange">Pendiente</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'registro')">⋮</button></td></tr>
+<tr><td>MOV-0033</td><td>2026-06-23</td><td>Salida Venta</td><td>Naranjas Valencia</td><td>500 kg</td><td>Bodega Principal</td><td>—</td><td><span class="badge badge-orange">Pendiente</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'registro')">⋮</button></td></tr>
 </tbody></table></div>
     </div>
 
     <div class="view" id="view-movsaprobados">
       <div class="page-header"><div><div class="page-title">Movimientos Aprobados</div></div><button class="btn btn-secondary" onclick="showToast('Exportando movimientos...')">↓ Exportar</button></div>
-      <div class="filter-bar"><div class="filter-group"><div class="filter-label">Fecha</div><input type="text" class="filter-input" value="01-06-2026 — 25-06-2026" style="width:190px"></div><div class="filter-group"><div class="filter-label">Tipo</div><select class="filter-select" style="width:130px"><option>Todos</option><option>Entrada</option><option>Salida</option><option>Merma</option></select></div><div class="filter-actions"><button class="btn btn-primary">Filtrar</button></div></div>
+      <div class="filter-bar"><div class="filter-group"><div class="filter-label">Fecha</div><input type="text" class="filter-input" value="01-06-2026 — 25-06-2026" style="width:190px"></div><div class="filter-group"><div class="filter-label">Tipo</div><select class="filter-select" style="width:130px"><option>Todos</option><option>Entrada</option><option>Salida</option><option>Merma</option></select></div><div class="filter-actions"><button class="btn btn-primary" onclick="filtrarGenerico(this)">Filtrar</button></div></div>
       <div class="table-card"><table><thead><tr><th>N° Movimiento</th><th>Fecha</th><th>Tipo</th><th>Artículo</th><th>Cantidad</th><th>Bodega</th><th>Aprobado por</th><th>Acciones</th></tr></thead><tbody>
-<tr><td>MOV-0025</td><td>2026-05-10</td><td>Entrada Cosecha</td><td>Paltas Hass Categoría I</td><td>2.000 kg</td><td>Bodega Principal</td><td>E. Maturana</td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>MOV-0026</td><td>2026-05-12</td><td>Salida Venta</td><td>Paltas Hass Categoría Extra</td><td>1.200 kg</td><td>Bodega Principal</td><td>E. Maturana</td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>MOV-0027</td><td>2026-05-20</td><td>Entrada Cosecha</td><td>Naranjas Valencia</td><td>1.500 kg</td><td>Cámara Frío N°1</td><td>E. Maturana</td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>MOV-0028</td><td>2026-05-28</td><td>Salida Despacho</td><td>Paltas Hass Categoría I</td><td>800 kg</td><td>Bodega Principal</td><td>E. Maturana</td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>MOV-0029</td><td>2026-06-05</td><td>Entrada Cosecha</td><td>Limones Eureka</td><td>600 kg</td><td>Cámara Frío N°2</td><td>E. Maturana</td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
-<tr><td>MOV-0030</td><td>2026-06-15</td><td>Salida Venta</td><td>Naranjas Valencia</td><td>900 kg</td><td>Cámara Frío N°1</td><td>E. Maturana</td><td><button class="btn-icon" title="Acciones">⋮</button></td></tr>
+<tr><td>MOV-0025</td><td>2026-05-10</td><td>Entrada Cosecha</td><td>Paltas Hass Categoría I</td><td>2.000 kg</td><td>Bodega Principal</td><td>E. Maturana</td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'registro')">⋮</button></td></tr>
+<tr><td>MOV-0026</td><td>2026-05-12</td><td>Salida Venta</td><td>Paltas Hass Categoría Extra</td><td>1.200 kg</td><td>Bodega Principal</td><td>E. Maturana</td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'registro')">⋮</button></td></tr>
+<tr><td>MOV-0027</td><td>2026-05-20</td><td>Entrada Cosecha</td><td>Naranjas Valencia</td><td>1.500 kg</td><td>Cámara Frío N°1</td><td>E. Maturana</td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'registro')">⋮</button></td></tr>
+<tr><td>MOV-0028</td><td>2026-05-28</td><td>Salida Despacho</td><td>Paltas Hass Categoría I</td><td>800 kg</td><td>Bodega Principal</td><td>E. Maturana</td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'registro')">⋮</button></td></tr>
+<tr><td>MOV-0029</td><td>2026-06-05</td><td>Entrada Cosecha</td><td>Limones Eureka</td><td>600 kg</td><td>Cámara Frío N°2</td><td>E. Maturana</td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'registro')">⋮</button></td></tr>
+<tr><td>MOV-0030</td><td>2026-06-15</td><td>Salida Venta</td><td>Naranjas Valencia</td><td>900 kg</td><td>Cámara Frío N°1</td><td>E. Maturana</td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'registro')">⋮</button></td></tr>
 </tbody></table></div>
     </div>
 
@@ -2187,7 +2233,7 @@
         <div class="ifrs-tab" onclick="switchInformeInv(this)">Stock Inmóvil</div>
         <div class="ifrs-tab" onclick="switchInformeInv(this)">Artículo</div>
       </div>
-      <div class="filter-bar"><div class="filter-group"><div class="filter-label">Período</div><select class="filter-select" style="width:130px"><option>Junio 2026</option></select></div><div class="filter-group"><div class="filter-label">Bodega</div><select class="filter-select" style="width:130px"><option>Todas</option></select></div><div class="filter-actions"><button class="btn btn-primary">Generar</button><button class="btn btn-secondary">↓ Exportar</button></div></div>
+      <div class="filter-bar"><div class="filter-group"><div class="filter-label">Período</div><select class="filter-select" style="width:130px"><option>Junio 2026</option></select></div><div class="filter-group"><div class="filter-label">Bodega</div><select class="filter-select" style="width:130px"><option>Todas</option></select></div><div class="filter-actions"><button class="btn btn-primary" onclick="generarInformeContable(this)">Generar</button><button class="btn btn-secondary">↓ Exportar</button></div></div>
       <div class="table-card"><table class="data-table">
     <thead><tr><th>Código</th><th>Artículo</th><th>Bodega</th><th>Stock Inicial</th><th>Entradas</th><th>Salidas</th><th>Stock Actual</th><th>Valorización</th></tr></thead>
     <tbody>
@@ -2457,21 +2503,8 @@
     closePanel('nuevo-proveedor');
   }
 
-  // ── MENÚ ACCIONES ══
+  // ── MENÚ ACCIONES ──
   let _menuTarget = null;
-  function toggleAcciones(btn, tipo) {
-    event.stopPropagation();
-    const menu = document.getElementById('menu-acciones');
-    const rect = btn.getBoundingClientRect();
-    _menuTarget = tipo;
-    if (menu.style.display === 'block') {
-      menu.style.display = 'none';
-    } else {
-      menu.style.display = 'block';
-      menu.style.top = (rect.bottom + 4) + 'px';
-      menu.style.right = (window.innerWidth - rect.right) + 'px';
-    }
-  }
   document.addEventListener('click', () => {
     document.getElementById('menu-acciones').style.display = 'none';
   });
@@ -2488,16 +2521,438 @@
     document.getElementById('menu-acciones').style.display = 'none';
     openPanel('confirmar-eliminar');
   }
+
+// accionEliminar y confirmarEliminar movidos arriba
+
+
+  // ══════════════════════════════════════════════════════════════
+  //  em.conta — MOTOR DE ACCIONES, FILTROS E INFORMES
+  //  Fundo Puertas Coloradas SpA — RUT 76.987.654-3 — Nogales, V Región
+  // ══════════════════════════════════════════════════════════════
+  var _menuRow = null;
+
+  // ── Menú de acciones (⋮) ──────────────────────────────────────
+  function toggleAcciones(btn, tipo, ev) {
+    ev = ev || window.event;
+    if (ev && ev.stopPropagation) ev.stopPropagation();
+    var menu = document.getElementById('menu-acciones');
+    _menuTarget = tipo;
+    _menuRow = btn.closest('tr');
+    var rect = btn.getBoundingClientRect();
+    if (menu.style.display === 'block' && menu.dataset.row === (rect.top + '_' + rect.left)) {
+      menu.style.display = 'none';
+      return;
+    }
+    menu.dataset.row = rect.top + '_' + rect.left;
+    menu.style.display = 'block';
+    var top = rect.bottom + 4;
+    if (top + 160 > window.innerHeight) top = rect.top - 160;
+    menu.style.top = top + 'px';
+    menu.style.right = (window.innerWidth - rect.right) + 'px';
+  }
+
+  var _titulos = {
+    articulo: 'Detalle del Artículo', servicio: 'Detalle del Servicio',
+    cliente: 'Detalle del Cliente', proveedor: 'Detalle del Proveedor',
+    presupuesto: 'Detalle del Presupuesto', cobranza: 'Detalle de Cobranza',
+    rendicion: 'Detalle de la Rendición', guia: 'Detalle de la Guía de Despacho',
+    venta: 'Detalle del Documento de Venta', cierre: 'Detalle del Cierre Contable',
+    cartola: 'Detalle de la Cartola', recurrente: 'Detalle de Facturación Recurrente',
+    ingreso: 'Detalle del Ingreso'
+  };
+
+  function accionVer() {
+    document.getElementById('menu-acciones').style.display = 'none';
+    if (!_menuRow) { showToast('No hay registro seleccionado', 'error'); return; }
+    var table = _menuRow.closest('table');
+    var heads = [].slice.call(table.querySelectorAll('thead th')).map(function (t) { return t.textContent.trim(); });
+    var cells = [].slice.call(_menuRow.children);
+    var html = '';
+    cells.forEach(function (c, i) {
+      var h = heads[i] || '';
+      if (!h || h === 'Acciones' || h === 'Opciones' || c.querySelector('input[type="checkbox"]')) return;
+      html += '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px">'
+            + '<span style="color:var(--muted);flex-shrink:0">' + h + '</span>'
+            + '<span style="font-weight:600;text-align:right">' + c.innerHTML + '</span></div>';
+    });
+    if (!html) html = '<div style="color:var(--muted);font-size:13px">Sin datos para mostrar.</div>';
+    document.getElementById('ver-registro-titulo').textContent = _titulos[_menuTarget] || 'Detalle del Registro';
+    document.getElementById('ver-registro-body').innerHTML = html;
+    openPanel('ver-registro');
+  }
+
   function confirmarEliminar() {
     closePanel('confirmar-eliminar');
-    showToast('🗑️ Registro eliminado correctamente');
+    if (_menuRow && _menuRow.parentNode) {
+      _menuRow.parentNode.removeChild(_menuRow);
+      _menuRow = null;
+      showToast('🗑️ Registro eliminado correctamente');
+    } else {
+      showToast('🗑️ Registro eliminado correctamente');
+    }
   }
 
   function accionDuplicar() {
-    showToast('📋 Registro duplicado');
     document.getElementById('menu-acciones').style.display = 'none';
+    if (_menuRow && _menuRow.parentNode) {
+      var copia = _menuRow.cloneNode(true);
+      _menuRow.parentNode.insertBefore(copia, _menuRow.nextSibling);
+    }
+    showToast('📋 Registro duplicado');
   }
-// accionEliminar y confirmarEliminar movidos arriba
+
+  // ── Motor genérico de filtros ─────────────────────────────────
+  var _NEUTROS = ['', 'todos', 'todas', 'sin selección', '-- todos --', 'categorías',
+                  'seleccione', 'ninguno', 'todos los tipos'];
+
+  function _valor(id) {
+    var el = document.getElementById(id);
+    if (!el) return '';
+    var v = (el.value || '').trim().toLowerCase();
+    return _NEUTROS.indexOf(v) >= 0 ? '' : v;
+  }
+
+  function emcFiltrar(tbodyId, specs, contadorId, etiqueta) {
+    var tb = document.getElementById(tbodyId);
+    if (!tb) { showToast('Tabla no disponible', 'error'); return; }
+    var filas = [].slice.call(tb.rows), visibles = 0;
+    filas.forEach(function (r) {
+      if (r.dataset.emcTotal !== undefined || /^(TOTAL|RESULTADO)/i.test((r.cells[0] || {}).textContent || '')) {
+        r.style.display = '';
+        return;
+      }
+      var ok = true;
+      specs.forEach(function (sp) {
+        var v = _valor(sp.id);
+        if (!v) return;
+        var txt = (sp.cols === undefined
+          ? r.textContent
+          : sp.cols.map(function (i) { return r.cells[i] ? r.cells[i].textContent : ''; }).join(' ')
+        ).toLowerCase();
+        if (txt.indexOf(v) < 0) ok = false;
+      });
+      r.style.display = ok ? '' : 'none';
+      if (ok) visibles++;
+    });
+    if (contadorId) {
+      var c = document.getElementById(contadorId);
+      if (c) c.textContent = visibles + ' ' + (etiqueta || 'registros');
+    }
+    showToast(visibles > 0
+      ? '🔍 ' + visibles + ' ' + (etiqueta || 'registros') + ' encontrados'
+      : '🔍 Sin resultados para el filtro aplicado', visibles > 0 ? '' : 'error');
+  }
+
+  function limpiarFiltro(tbodyId, ids, contadorId, etiqueta) {
+    ids.forEach(function (id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      if (el.tagName === 'SELECT') el.selectedIndex = 0; else el.value = '';
+    });
+    var tb = document.getElementById(tbodyId);
+    var n = 0;
+    if (tb) [].slice.call(tb.rows).forEach(function (r) {
+      r.style.display = '';
+      if (!/^(TOTAL|RESULTADO)/i.test((r.cells[0] || {}).textContent || '')) n++;
+    });
+    if (contadorId) {
+      var c = document.getElementById(contadorId);
+      if (c) c.textContent = n + ' ' + (etiqueta || 'registros');
+    }
+    showToast('Filtros limpiados');
+  }
+
+  // Ventas → Artículos (código y nombre)
+  function filtrarArticulos() {
+    emcFiltrar('tb-articulos', [
+      { id: 'f-art-txt', cols: [0, 1] },
+      { id: 'f-art-cat', cols: [2] }
+    ], null, 'artículos');
+  }
+
+  // Ventas → Clientes (nombre y RUT)
+  function filtrarClientes() {
+    emcFiltrar('tb-clientes', [
+      { id: 'f-cli-rut', cols: [1] },
+      { id: 'f-cli-nom', cols: [2] },
+      { id: 'f-cli-est', cols: [5] }
+    ], null, 'clientes');
+  }
+
+  // Ventas → Guía de despacho (cliente o número de documento)
+  function filtrarGuias() {
+    emcFiltrar('tb-guias', [
+      { id: 'f-gd-doc', cols: [2] },
+      { id: 'f-gd-cli', cols: [3] },
+      { id: 'f-gd-fec', cols: [4] }
+    ], 'cnt-guias', 'guías');
+  }
+
+  // Contabilidad → Listado de documentos (por tipo)
+  function filtrarComprobantes() {
+    emcFiltrar('tb-comprobantes', [
+      { id: 'f-cmp-tipo', cols: [1] },
+      { id: 'f-cmp-num', cols: [2] },
+      { id: 'f-cmp-glosa', cols: [4] }
+    ], 'cnt-comprobantes', 'registros');
+  }
+
+  // Tesorería → Conciliación bancaria (fecha y estado)
+  function filtrarConciliacion() {
+    emcFiltrar('tb-cartolas', [
+      { id: 'f-con-banco', cols: [3] },
+      { id: 'f-con-cuenta', cols: [4] },
+      { id: 'f-con-estado', cols: [8] },
+      { id: 'f-con-fecha', cols: [2] }
+    ], 'cnt-cartolas', 'cartolas');
+  }
+
+  // ── Informes IFRS ─────────────────────────────────────────────
+  var _ifrsSel = 'esf_clasificado';
+  function selIFRS(el, clave) {
+    el.closest('.ifrs-tabs').querySelectorAll('.ifrs-tab').forEach(function (t) { t.classList.remove('active'); });
+    el.classList.add('active');
+    _ifrsSel = clave;
+    emitirIFRS(clave);
+  }
+
+  function _cab(titulo, sub) {
+    return '<div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">'
+         + '<div><div style="font-weight:700;font-size:14px">' + titulo + '</div>'
+         + '<div style="font-size:12px;color:var(--muted);margin-top:2px">' + sub + '</div></div>'
+         + '<span style="font-size:12px;color:var(--muted)">Fundo Puertas Coloradas SpA · RUT 76.987.654-3</span></div>';
+  }
+
+  function _lineas(items) {
+    var h = '<div style="padding:20px;font-size:12px;display:flex;flex-direction:column;gap:5px">';
+    items.forEach(function (it) {
+      var t = it[0], txt = it[1], val = it[2];
+      if (t === 'h') {
+        h += '<div style="font-weight:700;font-size:13px;margin-top:12px;color:var(--accent)">' + txt + '</div>';
+      } else if (t === 's') {
+        h += '<div style="font-weight:600;margin-top:8px">' + txt + '</div>';
+      } else if (t === 't') {
+        h += '<div style="display:flex;justify-content:space-between;font-weight:700;border-top:2px solid var(--text);padding-top:6px;margin-top:6px;font-size:13px"><span>' + txt + '</span><span class="td-mono">' + val + '</span></div>';
+      } else if (t === 'st') {
+        h += '<div style="display:flex;justify-content:space-between;font-weight:600;border-top:1px solid var(--border);padding-top:4px;padding-left:12px"><span>' + txt + '</span><span class="td-mono">' + val + '</span></div>';
+      } else {
+        h += '<div style="display:flex;justify-content:space-between;padding-left:12px"><span>' + txt + '</span><span class="td-mono">' + val + '</span></div>';
+      }
+    });
+    return h + '</div>';
+  }
+
+  var _IFRS = {
+    esf_clasificado: function () {
+      return _cab('Estado de Situación Financiera Clasificado', 'Al 30 de junio de 2026 · Cifras en CLP · Norma IFRS')
+        + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0"><div style="border-right:1px solid var(--border)">'
+        + _lineas([['h', 'ACTIVOS'], ['s', 'Activos Corrientes'],
+            ['l', 'Efectivo y equivalentes al efectivo', '$4.812.300'],
+            ['l', 'Deudores comerciales y otras cuentas por cobrar', '$9.670.200'],
+            ['l', 'Activos por impuestos corrientes (IVA CF)', '$312.000'],
+            ['l', 'Inventarios (fruta y materiales)', '$18.430.000'],
+            ['st', 'Total Activos Corrientes', '$33.224.500'],
+            ['s', 'Activos No Corrientes'],
+            ['l', 'Propiedades, planta y equipo — Terrenos (12 há)', '$180.000.000'],
+            ['l', 'Activos biológicos — Plantaciones de palto', '$24.500.000'],
+            ['l', 'Maquinaria agrícola', '$12.300.000'],
+            ['l', 'Vehículos', '$8.200.000'],
+            ['l', 'Depreciación acumulada', '($3.450.000)'],
+            ['st', 'Total Activos No Corrientes', '$221.550.000'],
+            ['t', 'TOTAL ACTIVOS', '$254.774.500']])
+        + '</div><div>'
+        + _lineas([['h', 'PASIVOS Y PATRIMONIO'], ['s', 'Pasivos Corrientes'],
+            ['l', 'Cuentas por pagar comerciales', '$1.268.770'],
+            ['l', 'Pasivos por impuestos corrientes (IVA DF)', '$420.000'],
+            ['l', 'Retenciones de honorarios por enterar', '$89.200'],
+            ['l', 'Otros pasivos financieros corrientes', '$950.000'],
+            ['st', 'Total Pasivos Corrientes', '$2.727.970'],
+            ['s', 'Pasivos No Corrientes'],
+            ['l', 'Otros pasivos financieros no corrientes', '$42.000.000'],
+            ['st', 'Total Pasivos No Corrientes', '$42.000.000'],
+            ['s', 'Patrimonio'],
+            ['l', 'Capital emitido', '$195.000.000'],
+            ['l', 'Resultado del ejercicio (Ene–Jun 2026)', '$15.046.530'],
+            ['st', 'Total Patrimonio', '$210.046.530'],
+            ['t', 'TOTAL PASIVOS Y PATRIMONIO', '$254.774.500']])
+        + '</div></div>';
+    },
+    esf_liquidez: function () {
+      return _cab('Estado de Situación Financiera por Liquidez', 'Al 30 de junio de 2026 · Ordenado de mayor a menor liquidez · CLP')
+        + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0"><div style="border-right:1px solid var(--border)">'
+        + _lineas([['h', 'ACTIVOS — ORDEN DE LIQUIDEZ'],
+            ['l', '1. Efectivo y equivalentes al efectivo', '$4.812.300'],
+            ['l', '2. Deudores comerciales (venc. ≤ 30 días)', '$5.622.199'],
+            ['l', '3. Deudores comerciales (venc. 31–90 días)', '$4.048.001'],
+            ['l', '4. Activos por impuestos corrientes', '$312.000'],
+            ['l', '5. Inventarios de fruta y materiales', '$18.430.000'],
+            ['st', 'Subtotal activos realizables', '$33.224.500'],
+            ['l', '6. Activos biológicos (plantaciones)', '$24.500.000'],
+            ['l', '7. Maquinaria agrícola (neto de depreciación)', '$8.850.000'],
+            ['l', '8. Vehículos', '$8.200.000'],
+            ['l', '9. Terrenos', '$180.000.000'],
+            ['st', 'Subtotal activos de lenta realización', '$221.550.000'],
+            ['t', 'TOTAL ACTIVOS', '$254.774.500']])
+        + '</div><div>'
+        + _lineas([['h', 'PASIVOS — ORDEN DE EXIGIBILIDAD'],
+            ['l', '1. Retenciones por enterar (venc. 12-07-2026)', '$89.200'],
+            ['l', '2. Pasivos por impuestos (IVA venc. 20-07-2026)', '$420.000'],
+            ['l', '3. Cuentas por pagar comerciales (≤ 45 días)', '$1.268.770'],
+            ['l', '4. Cuota crédito BancoEstado (corriente)', '$950.000'],
+            ['st', 'Subtotal pasivos exigibles a corto plazo', '$2.727.970'],
+            ['l', '5. Crédito hipotecario BancoEstado (LP)', '$42.000.000'],
+            ['st', 'Subtotal pasivos exigibles a largo plazo', '$42.000.000'],
+            ['s', 'Patrimonio (no exigible)'],
+            ['l', 'Capital emitido', '$195.000.000'],
+            ['l', 'Resultado del ejercicio', '$15.046.530'],
+            ['st', 'Total Patrimonio', '$210.046.530'],
+            ['t', 'TOTAL PASIVOS Y PATRIMONIO', '$254.774.500'],
+            ['s', 'Índices de liquidez'],
+            ['l', 'Razón corriente (AC / PC)', '12,18'],
+            ['l', 'Razón ácida ((AC − Inv.) / PC)', '5,42'],
+            ['l', 'Capital de trabajo', '$30.496.530']])
+        + '</div></div>';
+    },
+    er_funcion: function () {
+      return _cab('Estado de Resultados por Función', 'Por el período de seis meses terminado al 30 de junio de 2026 · CLP')
+        + _lineas([['h', 'RESULTADO POR FUNCIÓN'],
+            ['l', 'Ingresos de actividades ordinarias (venta de fruta)', '$16.547.899'],
+            ['l', 'Costo de ventas', '($6.891.240)'],
+            ['st', 'Ganancia Bruta', '$9.656.659'],
+            ['s', 'Gastos por función'],
+            ['l', 'Gastos de administración', '($1.842.400)'],
+            ['l', 'Costos de distribución (fletes y embalaje)', '($1.324.500)'],
+            ['l', 'Otros gastos por función', '($412.300)'],
+            ['st', 'Total gastos operacionales', '($3.579.200)'],
+            ['st', 'Ganancia de Actividades Operacionales', '$6.077.459'],
+            ['s', 'Resultado no operacional'],
+            ['l', 'Otros ingresos (arriendo maquinaria y varios)', '$440.000'],
+            ['l', 'Costos financieros (crédito BancoEstado)', '($1.284.000)'],
+            ['l', 'Ganancia por cambios en valor razonable de activos biológicos', '$11.320.000'],
+            ['st', 'Total no operacional', '$10.476.000'],
+            ['st', 'Ganancia antes de impuestos', '$16.553.459'],
+            ['l', 'Gasto por impuesto a las ganancias (27%)', '($1.506.929)'],
+            ['t', 'GANANCIA DEL PERÍODO', '$15.046.530'],
+            ['s', 'Detalle mensual del resultado'],
+            ['l', 'Enero 2026', '$1.284.300'], ['l', 'Febrero 2026', '$1.510.400'],
+            ['l', 'Marzo 2026', '$2.238.900'], ['l', 'Abril 2026', '$2.905.630'],
+            ['l', 'Mayo 2026', '$2.857.300'], ['l', 'Junio 2026', '$4.250.000'],
+            ['t', 'ACUMULADO ENE–JUN 2026', '$15.046.530']]);
+    },
+    er_naturaleza: function () {
+      return _cab('Estado de Resultados por Naturaleza', 'Por el período de seis meses terminado al 30 de junio de 2026 · CLP')
+        + _lineas([['h', 'RESULTADO POR NATURALEZA'],
+            ['l', 'Ingresos de actividades ordinarias', '$16.547.899'],
+            ['l', 'Otros ingresos operacionales', '$440.000'],
+            ['st', 'Total ingresos', '$16.987.899'],
+            ['s', 'Gastos por naturaleza'],
+            ['l', 'Consumo de insumos agrícolas y fertilizantes', '($3.608.000)'],
+            ['l', 'Gastos por beneficios a empleados y temporeros', '($9.550.000)'],
+            ['l', 'Honorarios profesionales', '($1.860.000)'],
+            ['l', 'Fletes y transporte', '($1.670.000)'],
+            ['l', 'Envases y materiales de embalaje', '($1.344.000)'],
+            ['l', 'Depreciación y amortización', '($1.150.000)'],
+            ['l', 'Variación de inventarios de fruta', '$6.847.560'],
+            ['st', 'Total gastos por naturaleza', '($12.334.440)'],
+            ['st', 'Resultado operacional', '$4.653.459'],
+            ['l', 'Costos financieros', '($1.284.000)'],
+            ['l', 'Cambios en valor razonable de activos biológicos', '$11.320.000'],
+            ['l', 'Ajustes de consolidación de resultado', '$1.864.000'],
+            ['st', 'Ganancia antes de impuestos', '$16.553.459'],
+            ['l', 'Impuesto a las ganancias (27%)', '($1.506.929)'],
+            ['t', 'GANANCIA DEL PERÍODO', '$15.046.530']]);
+    },
+    er_integral: function () {
+      return _cab('Estado de Resultado Integral', 'Por el período de seis meses terminado al 30 de junio de 2026 · CLP')
+        + _lineas([['h', 'RESULTADO INTEGRAL'],
+            ['l', 'Ganancia del período', '$15.046.530'],
+            ['s', 'Otro resultado integral'],
+            ['l', 'Revalorización de terrenos agrícolas (neto de impuestos)', '$3.200.000'],
+            ['l', 'Coberturas de flujo de efectivo (contratos de exportación)', '($480.000)'],
+            ['l', 'Diferencias de cambio por conversión (ventas en USD)', '$186.400'],
+            ['st', 'Total otro resultado integral', '$2.906.400'],
+            ['t', 'RESULTADO INTEGRAL TOTAL DEL PERÍODO', '$17.952.930'],
+            ['s', 'Atribuible a'],
+            ['l', 'Propietarios de la controladora', '$17.952.930'],
+            ['l', 'Participaciones no controladoras', '$0']]);
+    }
+  };
+
+  function emitirIFRS(clave) {
+    clave = clave || _ifrsSel;
+    _ifrsSel = clave;
+    var cont = document.getElementById('ifrs-salida');
+    if (!cont) return;
+    cont.innerHTML = '<div class="table-card" style="padding:0">' + _IFRS[clave]() + '</div>';
+    cont.style.display = 'block';
+    if (cont.scrollIntoView) cont.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    showToast('📊 Informe emitido correctamente');
+  }
+
+  // ── Cobranza: vista previa del informe ────────────────────────
+  function vistaPreviaCobranza() {
+    var cont = document.getElementById('cobranza-informe');
+    if (!cont) return;
+    cont.innerHTML =
+      '<div class="table-card" style="padding:0">'
+      + _cab('Informe de Cobranza — Resumen por Cliente', 'Documentos por cobrar con vencimiento hasta el 25-06-2026 · Cobrador: Todos · CLP')
+      + '<table><thead><tr><th>Cliente</th><th>RUT</th><th>Documento</th><th>Emisión</th><th>Vencimiento</th><th>Días vencido</th><th>Monto</th><th>Estado</th></tr></thead><tbody>'
+      + '<tr><td>Exportadora Del Monte Chile Ltda.</td><td class="td-mono">76.987.123-4</td><td class="td-mono">FAC 2026-003 (saldo)</td><td>2026-05-08</td><td>2026-06-07</td><td>18</td><td class="td-mono">$1.422.199</td><td><span class="badge badge-red">Vencido</span></td></tr>'
+      + '<tr><td>Exportadora Del Monte Chile Ltda.</td><td class="td-mono">76.987.123-4</td><td class="td-mono">FAC 2026-005</td><td>2026-06-12</td><td>2026-07-12</td><td>—</td><td class="td-mono">$4.200.000</td><td><span class="badge badge-orange">Por vencer</span></td></tr>'
+      + '<tr><td>Frutas Orgánicas del Valle S.A.</td><td class="td-mono">76.543.210-5</td><td class="td-mono">FAC 2026-006</td><td>2026-06-18</td><td>2026-07-18</td><td>—</td><td class="td-mono">$1.152.001</td><td><span class="badge badge-orange">Por vencer</span></td></tr>'
+      + '<tr><td>Agrícola Los Leones Ltda.</td><td class="td-mono">76.234.567-8</td><td class="td-mono">FAC 2026-004</td><td>2026-05-22</td><td>2026-06-21</td><td>4</td><td class="td-mono">$840.000</td><td><span class="badge badge-red">Vencido</span></td></tr>'
+      + '<tr><td>Supermercados Unimarc Quillota</td><td class="td-mono">76.354.771-2</td><td class="td-mono">BOL 2026-008</td><td>2026-06-20</td><td>2026-07-20</td><td>—</td><td class="td-mono">$576.000</td><td><span class="badge badge-orange">Por vencer</span></td></tr>'
+      + '<tr><td>Central de Frutas Santiago Ltda.</td><td class="td-mono">77.123.456-9</td><td class="td-mono">FAC 2026-009</td><td>2026-06-25</td><td>2026-07-25</td><td>—</td><td class="td-mono">$1.480.000</td><td><span class="badge badge-orange">Por vencer</span></td></tr>'
+      + '<tr style="font-weight:700;border-top:2px solid var(--border)"><td colspan="6">TOTAL POR COBRAR AL 30-06-2026</td><td class="td-mono">$9.670.200</td><td></td></tr>'
+      + '</tbody></table>'
+      + '<div style="padding:16px 20px;border-top:1px solid var(--border);display:flex;gap:32px;flex-wrap:wrap;font-size:12px">'
+      + '<span><strong>Vencido:</strong> $2.262.199 (23,4%)</span>'
+      + '<span><strong>Por vencer:</strong> $7.408.001 (76,6%)</span>'
+      + '<span><strong>Documentos:</strong> 6</span>'
+      + '<span><strong>Promedio días de cobro:</strong> 34</span>'
+      + '</div></div>';
+    cont.style.display = 'block';
+    if (cont.scrollIntoView) cont.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    showToast('📄 Vista previa del informe de cobranza generada');
+  }
+
+
+  // ── Filtro genérico: usa los campos de la barra de filtros de la vista ──
+  function filtrarGenerico(btn) {
+    var bar = btn.closest('.filter-bar');
+    var view = btn.closest('.view');
+    if (!bar || !view) { showToast('Filtro no disponible aquí', 'error'); return; }
+    var campos = [].slice.call(bar.querySelectorAll('input[type="text"], select'));
+    var terms = [];
+    campos.forEach(function (e) {
+      var v = (e.value || '').trim().toLowerCase();
+      if (e.tagName === 'SELECT') { if (e.selectedIndex > 0 && _NEUTROS.indexOf(v) < 0) terms.push(v); return; }
+      if (!v || v.indexOf('—') >= 0 || _NEUTROS.indexOf(v) >= 0) return;   // ignora rangos por defecto
+      terms.push(v);
+    });
+    var tb = view.querySelector('table tbody');
+    if (!tb) { showToast('📊 Informe generado con los parámetros seleccionados'); return; }
+    var visibles = 0;
+    [].slice.call(tb.rows).forEach(function (r) {
+      if (/^(TOTAL|RESULTADO)/i.test((r.cells[0] || {}).textContent || '')) { r.style.display = ''; return; }
+      var txt = r.textContent.toLowerCase();
+      var ok = terms.every(function (t) { return txt.indexOf(t) >= 0; });
+      r.style.display = ok ? '' : 'none';
+      if (ok) visibles++;
+    });
+    showToast(visibles > 0 ? '🔍 ' + visibles + ' registros encontrados'
+                           : '🔍 Sin resultados para el filtro aplicado',
+              visibles > 0 ? '' : 'error');
+  }
+
+  // ── Generar informe contable (Balance / Libros) ──────────────
+  function generarInformeContable(btn) {
+    var view = btn.closest('.view');
+    var per = view.querySelector('.filter-select');
+    showToast('📊 Informe generado — ' + (per ? per.value : 'período actual'));
+    var card = view.querySelector('.table-card');
+    if (card && card.scrollIntoView) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 
   document.getElementById('group-contabilidad').style.display = 'block';
   document.querySelector('[onclick="toggleGroup(\'contabilidad\')"]').classList.add('open');
@@ -2803,10 +3258,28 @@
 
 <!-- ══ MENÚ ACCIONES ══ -->
 <div id="menu-acciones" style="display:none;position:fixed;background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.12);z-index:200;min-width:140px;padding:6px 0">
+  <div onclick="accionVer()" style="padding:10px 16px;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:8px" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background=''">👁️ Ver</div>
   <div onclick="accionEditar()" style="padding:10px 16px;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:8px" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background=''">✏️ Editar</div>
   <div onclick="accionDuplicar()" style="padding:10px 16px;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:8px" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background=''">📋 Duplicar</div>
   <div style="height:1px;background:var(--border);margin:4px 0"></div>
   <div onclick="accionEliminar()" style="padding:10px 16px;font-size:13px;cursor:pointer;color:var(--danger);display:flex;align-items:center;gap:8px" onmouseover="this.style.background='#FEF2F2'" onmouseout="this.style.background=''">🗑️ Eliminar</div>
+</div>
+
+<!-- ══ PANEL: VER REGISTRO ══ -->
+<div class="panel-overlay" id="panel-ver-registro">
+  <div class="side-panel">
+    <div class="panel-header">
+      <div class="panel-title" id="ver-registro-titulo">Detalle del Registro</div>
+      <button class="btn-icon" onclick="closePanel('ver-registro')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="panel-body"><div id="ver-registro-body"></div></div>
+    <div class="panel-footer">
+      <button class="btn btn-secondary" onclick="closePanel('ver-registro')">Cerrar</button>
+      <button class="btn btn-primary" onclick="closePanel('ver-registro');accionEditar()">Editar</button>
+    </div>
+  </div>
 </div>
 
 <!-- ══ TOAST NOTIFICACIÓN ══ -->
