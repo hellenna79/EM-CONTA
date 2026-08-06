@@ -479,6 +479,7 @@
     </div>
     <div class="nav-submenu" id="group-tesoreria" style="display:none">
       <div class="nav-item" onclick="setView('conciliacion')">Conciliación</div>
+      <div class="nav-item" onclick="setView('cartolavigente')">Cartola Vigente</div>
       <div class="nav-item" onclick="setView('cuadratura')">Cuadratura Bancaria</div>
       <div class="nav-item" onclick="setView('flujocaja')">Flujo de Caja</div>
       <div class="nav-item" onclick="setView('emisioncheque')">Emisión Cheque</div>
@@ -780,7 +781,7 @@
           </button>
         </div>
       </div>
-      <div class="table-card" style="padding:0">
+      <div class="table-card" id="rep-balance" style="padding:0">
   <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
     <div style="font-weight:600;font-size:14px">Balance General — Fundo Puertas Coloradas SpA — Junio 2026</div>
     <span style="font-size:12px;color:var(--muted)">RUT: 76.987.654-3</span>
@@ -1432,12 +1433,12 @@
         </tr>
       </thead>
       <tbody id="tb-cartolas">
-        <tr><td class="td-mono">CT-001</td><td>2026</td><td>2026-01-31</td><td>BancoEstado</td><td class="td-mono">0023-11449-08</td><td class="td-mono">$3.100.000</td><td class="td-mono">$2.830.000</td><td>42 / 42</td><td><span class="badge badge-green">Conciliado</span></td><td><button class="btn-icon" onclick="toggleAcciones(this,'cartola')">⋮</button></td></tr>
-        <tr><td class="td-mono">CT-002</td><td>2026</td><td>2026-02-28</td><td>BancoEstado</td><td class="td-mono">0023-11449-08</td><td class="td-mono">$3.205.000</td><td class="td-mono">$3.250.000</td><td>38 / 38</td><td><span class="badge badge-green">Conciliado</span></td><td><button class="btn-icon" onclick="toggleAcciones(this,'cartola')">⋮</button></td></tr>
-        <tr><td class="td-mono">CT-003</td><td>2026</td><td>2026-03-31</td><td>BancoEstado</td><td class="td-mono">0023-11449-08</td><td class="td-mono">$4.014.000</td><td class="td-mono">$4.960.000</td><td>51 / 51</td><td><span class="badge badge-green">Conciliado</span></td><td><button class="btn-icon" onclick="toggleAcciones(this,'cartola')">⋮</button></td></tr>
-        <tr><td class="td-mono">CT-004</td><td>2026</td><td>2026-04-30</td><td>BancoEstado</td><td class="td-mono">0023-11449-08</td><td class="td-mono">$6.790.000</td><td class="td-mono">$6.208.000</td><td>60 / 60</td><td><span class="badge badge-green">Conciliado</span></td><td><button class="btn-icon" onclick="toggleAcciones(this,'cartola')">⋮</button></td></tr>
-        <tr><td class="td-mono">CT-005</td><td>2026</td><td>2026-05-31</td><td>Banco Chile</td><td class="td-mono">00-154-66778-9</td><td class="td-mono">$3.552.000</td><td class="td-mono">$4.482.000</td><td>45 / 47</td><td><span class="badge badge-orange">Pendiente</span></td><td><button class="btn-icon" onclick="toggleAcciones(this,'cartola')">⋮</button></td></tr>
-        <tr><td class="td-mono">CT-006</td><td>2026</td><td>2026-06-30</td><td>Santander</td><td class="td-mono">00-010-33445-5</td><td class="td-mono">$5.236.700</td><td class="td-mono">$7.780.000</td><td>49 / 52</td><td><span class="badge badge-red">Diferencia</span></td><td><button class="btn-icon" onclick="toggleAcciones(this,'cartola')">⋮</button></td></tr>
+        <tr><td class="td-mono">CT-001</td><td>2026</td><td>2026-01-31</td><td>BancoEstado</td><td class="td-mono">0023-11449-08</td><td class="td-mono">$3.100.000</td><td class="td-mono">$2.830.000</td><td>15 / 15</td><td><span class="badge badge-green">Conciliado</span></td><td><button class="btn-icon" onclick="toggleAcciones(this,'cartola')">⋮</button></td></tr>
+        <tr><td class="td-mono">CT-002</td><td>2026</td><td>2026-02-28</td><td>BancoEstado</td><td class="td-mono">0023-11449-08</td><td class="td-mono">$3.205.000</td><td class="td-mono">$3.250.000</td><td>14 / 14</td><td><span class="badge badge-green">Conciliado</span></td><td><button class="btn-icon" onclick="toggleAcciones(this,'cartola')">⋮</button></td></tr>
+        <tr><td class="td-mono">CT-003</td><td>2026</td><td>2026-03-31</td><td>BancoEstado</td><td class="td-mono">0023-11449-08</td><td class="td-mono">$4.014.000</td><td class="td-mono">$4.960.000</td><td>16 / 16</td><td><span class="badge badge-green">Conciliado</span></td><td><button class="btn-icon" onclick="toggleAcciones(this,'cartola')">⋮</button></td></tr>
+        <tr><td class="td-mono">CT-004</td><td>2026</td><td>2026-04-30</td><td>BancoEstado</td><td class="td-mono">0023-11449-08</td><td class="td-mono">$6.790.000</td><td class="td-mono">$6.208.000</td><td>18 / 18</td><td><span class="badge badge-green">Conciliado</span></td><td><button class="btn-icon" onclick="toggleAcciones(this,'cartola')">⋮</button></td></tr>
+        <tr><td class="td-mono">CT-005</td><td>2026</td><td>2026-05-31</td><td>Banco Chile</td><td class="td-mono">00-154-66778-9</td><td class="td-mono">$3.552.000</td><td class="td-mono">$4.482.000</td><td>15 / 17</td><td><span class="badge badge-orange">Pendiente</span></td><td><button class="btn-icon" onclick="toggleAcciones(this,'cartola')">⋮</button></td></tr>
+        <tr><td class="td-mono">CT-006</td><td>2026</td><td>2026-06-30</td><td>Santander</td><td class="td-mono">00-010-33445-5</td><td class="td-mono">$5.236.700</td><td class="td-mono">$7.780.000</td><td>13 / 16</td><td><span class="badge badge-red">Diferencia</span></td><td><button class="btn-icon" onclick="toggleAcciones(this,'cartola')">⋮</button></td></tr>
       </tbody>
     </table>
   </div>
@@ -2001,7 +2002,7 @@
     <div class="view" id="view-informesventas">
       <div class="page-header"><div><div class="page-title">Informes de Ventas</div></div></div>
       <div class="ifrs-tabs" style="flex-wrap:wrap"><div class="ifrs-tab active">Ranking</div><div class="ifrs-tab">Comisiones</div><div class="ifrs-tab">Cuentas por Cobrar</div><div class="ifrs-tab">Análisis por Cliente</div><div class="ifrs-tab">Estado de Clientes</div><div class="ifrs-tab">Libro de Ventas y Guías</div><div class="ifrs-tab">Lista de Precios</div></div>
-      <div class="table-card">
+      <div class="table-card" id="rep-ranking">
   <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:600;font-size:14px">
     Ranking de Ventas — Ene a Jun 2026 — Fundo Puertas Coloradas SpA
   </div>
@@ -2080,7 +2081,7 @@
     <div class="view" id="view-proveedores">
       <div class="page-header"><div><div class="page-title">Proveedores</div></div><button class="btn btn-primary" onclick="openPanel('nuevo-proveedor')">+ Nuevo Proveedor</button></div>
       <div class="filter-bar"><div class="filter-group"><input type="text" class="filter-input" placeholder="RUT" style="width:130px"></div><div class="filter-group"><input type="text" class="filter-input" placeholder="Nombre proveedor" style="width:180px"></div><div class="filter-group"><select class="filter-select" style="width:110px"><option>Todos</option><option>Activo</option></select></div><div class="filter-actions"><button class="btn btn-primary" onclick="filtrarGenerico(this)">Filtrar</button><button class="btn btn-secondary">↓ Exportar</button></div></div>
-      <div class="table-card"><table><thead><tr><th>Código</th><th>RUT</th><th>Nombre / Razón Social</th><th>Email</th><th>Teléfono</th><th>Condición Pago</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>
+      <div class="table-card"><table><thead><tr><th>Código</th><th>RUT</th><th>Nombre / Razón Social</th><th>Email</th><th>Teléfono</th><th>Condición Pago</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="tb-proveedores">
 <tr><td>001</td><td>76.123.456-7</td><td>Semillas del Sur Ltda.</td><td>ventas@semillasdelsur.cl</td><td>+56 32 221 4400</td><td>30 días</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'proveedor')">⋮</button></td></tr>
 <tr><td>002</td><td>77.234.567-8</td><td>Agroquímicos Nogales SpA</td><td>contacto@aqnogales.cl</td><td>+56 33 298 1100</td><td>Contado</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'proveedor')">⋮</button></td></tr>
 <tr><td>003</td><td>78.345.678-9</td><td>Transportes Valles Verdes E.I.R.L.</td><td>ops@vallesverdes.cl</td><td>+56 9 9812 3344</td><td>15 días</td><td><span class="badge badge-green">Activo</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'proveedor')">⋮</button></td></tr>
@@ -2202,7 +2203,7 @@
     <div class="view" id="view-inventarioarticulos">
       <div class="page-header"><div><div class="page-title">Maestro de Artículos — Inventario</div></div><div class="btn-group"><button class="btn btn-secondary" onclick="showToast('Exportando a Excel...')">↓ Exportar Excel</button><button class="btn btn-primary" onclick="openPanel('nuevo-articulo')">+ Nuevo</button></div></div>
       <div class="filter-bar"><div class="filter-group" style="flex:1"><input type="text" class="filter-input" placeholder="Buscar código o descripción..." style="width:100%"></div><div class="filter-group" style="flex:1"><select class="filter-select" style="width:100%"><option>Categorías</option></select></div><div class="filter-actions"><button class="btn btn-primary" onclick="filtrarGenerico(this)">Filtrar</button></div></div>
-      <div class="table-card"><table><thead><tr><th>Código</th><th>Descripción</th><th>Categoría</th><th>Stock Disponible</th><th>Precio Venta</th><th>Activo</th><th>Disponible Venta</th><th>Acciones</th></tr></thead><tbody>
+      <div class="table-card" id="rep-invarticulos"><table><thead><tr><th>Código</th><th>Descripción</th><th>Categoría</th><th>Stock Disponible</th><th>Precio Venta</th><th>Activo</th><th>Disponible Venta</th><th>Acciones</th></tr></thead><tbody>
 <tr><td>ART-001</td><td>Paltas Hass Categoría Extra (kg)</td><td>Frutas Frescas</td><td>1.200</td><td>$2.800</td><td><span class="badge badge-green">Activo</span></td><td><span class="badge badge-green">Sí</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'registro')">⋮</button></td></tr>
 <tr><td>ART-002</td><td>Paltas Hass Categoría I (kg)</td><td>Frutas Frescas</td><td>3.500</td><td>$2.100</td><td><span class="badge badge-green">Activo</span></td><td><span class="badge badge-green">Sí</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'registro')">⋮</button></td></tr>
 <tr><td>ART-003</td><td>Paltas Hass Descarte (kg)</td><td>Frutas Frescas</td><td>800</td><td>$650</td><td><span class="badge badge-green">Activo</span></td><td><span class="badge badge-green">Sí</span></td><td><button class="btn-icon" title="Acciones" onclick="toggleAcciones(this,'registro')">⋮</button></td></tr>
@@ -2426,6 +2427,7 @@
       librossii: 'Importar Libro C/V SII',
       mermas: 'Registro de Mermas',
       cuadratura: 'Cuadratura Bancaria Mensual',
+      cartolavigente: 'Cartola Vigente — CT-006',
       ventasfruta: 'Informe de Ventas por Tipo de Fruta',
       honorarios: 'Honorarios',
       dashboard: 'Panel Operacional'
@@ -2984,6 +2986,12 @@
       { id: 'f-mer-bod', cols: [7] }
     ], 'cnt-mermas', 'movimientos');
   }
+  function filtrarCartolaVigente() {
+    emcFiltrar('tb-cartola', [
+      { id: 'f-cav-tipo', cols: [2] },
+      { id: 'f-cav-est', cols: [8] }
+    ], 'cnt-cartola', 'movimientos');
+  }
   function filtrarCuadratura() {
     emcFiltrar('tb-cuadratura', [
       { id: 'f-cua-mes', cols: [0] },
@@ -3512,13 +3520,13 @@
       <table>
         <thead><tr><th>Período</th><th>N° Cartola</th><th>Banco</th><th>Cuenta</th><th>Fecha cierre</th><th>N° Cartolas</th><th>Cargos</th><th>Abonos</th><th>Mov. conciliados</th><th>Estado</th><th>Monto por cuadrar</th></tr></thead>
         <tbody id="tb-cuadratura">
-<tr><td>Enero 2026</td><td class="td-mono">CT-001</td><td>BancoEstado</td><td class="td-mono">0023-11449-08</td><td>2026-01-31</td><td class="td-mono">1</td><td class="td-mono">$3.100.000</td><td class="td-mono">$2.830.000</td><td>42 / 42</td><td><span class="badge badge-green">Conciliado</span></td><td class="td-mono">—</td></tr>
-<tr><td>Febrero 2026</td><td class="td-mono">CT-002</td><td>BancoEstado</td><td class="td-mono">0023-11449-08</td><td>2026-02-28</td><td class="td-mono">1</td><td class="td-mono">$3.205.000</td><td class="td-mono">$3.250.000</td><td>38 / 38</td><td><span class="badge badge-green">Conciliado</span></td><td class="td-mono">—</td></tr>
-<tr><td>Marzo 2026</td><td class="td-mono">CT-003</td><td>BancoEstado</td><td class="td-mono">0023-11449-08</td><td>2026-03-31</td><td class="td-mono">1</td><td class="td-mono">$4.014.000</td><td class="td-mono">$4.960.000</td><td>51 / 51</td><td><span class="badge badge-green">Conciliado</span></td><td class="td-mono">—</td></tr>
-<tr><td>Abril 2026</td><td class="td-mono">CT-004</td><td>BancoEstado</td><td class="td-mono">0023-11449-08</td><td>2026-04-30</td><td class="td-mono">1</td><td class="td-mono">$6.790.000</td><td class="td-mono">$6.208.000</td><td>60 / 60</td><td><span class="badge badge-green">Conciliado</span></td><td class="td-mono">—</td></tr>
-<tr><td>Mayo 2026</td><td class="td-mono">CT-005</td><td>Banco Chile</td><td class="td-mono">00-154-66778-9</td><td>2026-05-31</td><td class="td-mono">1</td><td class="td-mono">$3.552.000</td><td class="td-mono">$4.482.000</td><td>45 / 47</td><td><span class="badge badge-orange">Pendiente</span></td><td class="td-mono">$321.500</td></tr>
-<tr><td>Junio 2026</td><td class="td-mono">CT-006</td><td>Santander</td><td class="td-mono">00-010-33445-5</td><td>2026-06-30</td><td class="td-mono">1</td><td class="td-mono">$5.236.700</td><td class="td-mono">$7.780.000</td><td>49 / 52</td><td><span class="badge badge-red">Diferencia</span></td><td class="td-mono">$186.400</td></tr>
-          <tr style="font-weight:700;border-top:2px solid var(--border)"><td colspan="5">TOTAL ENERO – JUNIO 2026</td><td class="td-mono">6</td><td class="td-mono">$25.897.700</td><td class="td-mono">$29.510.000</td><td>285 / 290</td><td></td><td class="td-mono">$507.900</td></tr>
+<tr><td>Enero 2026</td><td class="td-mono">CT-001</td><td>BancoEstado</td><td class="td-mono">0023-11449-08</td><td>2026-01-31</td><td class="td-mono">1</td><td class="td-mono">$3.100.000</td><td class="td-mono">$2.830.000</td><td>15 / 15</td><td><span class="badge badge-green">Conciliado</span></td><td class="td-mono">—</td></tr>
+<tr><td>Febrero 2026</td><td class="td-mono">CT-002</td><td>BancoEstado</td><td class="td-mono">0023-11449-08</td><td>2026-02-28</td><td class="td-mono">1</td><td class="td-mono">$3.205.000</td><td class="td-mono">$3.250.000</td><td>14 / 14</td><td><span class="badge badge-green">Conciliado</span></td><td class="td-mono">—</td></tr>
+<tr><td>Marzo 2026</td><td class="td-mono">CT-003</td><td>BancoEstado</td><td class="td-mono">0023-11449-08</td><td>2026-03-31</td><td class="td-mono">1</td><td class="td-mono">$4.014.000</td><td class="td-mono">$4.960.000</td><td>16 / 16</td><td><span class="badge badge-green">Conciliado</span></td><td class="td-mono">—</td></tr>
+<tr><td>Abril 2026</td><td class="td-mono">CT-004</td><td>BancoEstado</td><td class="td-mono">0023-11449-08</td><td>2026-04-30</td><td class="td-mono">1</td><td class="td-mono">$6.790.000</td><td class="td-mono">$6.208.000</td><td>18 / 18</td><td><span class="badge badge-green">Conciliado</span></td><td class="td-mono">—</td></tr>
+<tr><td>Mayo 2026</td><td class="td-mono">CT-005</td><td>Banco Chile</td><td class="td-mono">00-154-66778-9</td><td>2026-05-31</td><td class="td-mono">1</td><td class="td-mono">$3.552.000</td><td class="td-mono">$4.482.000</td><td>15 / 17</td><td><span class="badge badge-orange">Pendiente</span></td><td class="td-mono">$321.500</td></tr>
+<tr><td>Junio 2026</td><td class="td-mono">CT-006</td><td>Santander</td><td class="td-mono">00-010-33445-5</td><td>2026-06-30</td><td class="td-mono">1</td><td class="td-mono">$5.236.700</td><td class="td-mono">$7.780.000</td><td>13 / 16</td><td><span class="badge badge-red">Diferencia</span></td><td class="td-mono">$186.400</td></tr>
+          <tr style="font-weight:700;border-top:2px solid var(--border)"><td colspan="5">TOTAL ENERO – JUNIO 2026</td><td class="td-mono">6</td><td class="td-mono">$25.897.700</td><td class="td-mono">$29.510.000</td><td>91 / 96</td><td></td><td class="td-mono">$507.900</td></tr>
         </tbody>
       </table>
     </div>
@@ -3636,6 +3644,94 @@
           </tbody>
         </table>
       </div>
+    </div>
+    <div class="rep-pie">Emitido por em.conta · Fundo Puertas Coloradas SpA · Datos al 30-06-2026</div>
+  </div>
+</div>
+
+
+<!-- ══ VIEW: CARTOLA VIGENTE ══ -->
+<div class="view" id="view-cartolavigente">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Cartola Vigente — CT-006</div>
+      <div class="page-subtitle">Detalle de movimientos bancarios · Santander · Cuenta 00-010-33445-5 · Junio 2026</div>
+    </div>
+    <div class="btn-group no-print">
+      <button class="btn btn-secondary" onclick="exportarPNG('rep-cartola','cartola-vigente-CT-006-junio-2026')">🖼 Descargar PNG</button>
+      <button class="btn btn-secondary" onclick="exportarPDF('rep-cartola')">↓ Exportar PDF</button>
+      <button class="btn btn-primary" onclick="showToast('🔄 Conciliando movimientos pendientes...')">Conciliar seleccionados</button>
+    </div>
+  </div>
+
+  <div class="filter-bar no-print">
+    <div class="filter-group"><div class="filter-label">Cartola</div>
+      <select class="filter-select" style="width:150px"><option>CT-006 — Junio 2026</option><option>CT-005 — Mayo 2026</option><option>CT-004 — Abril 2026</option></select></div>
+    <div class="filter-group"><div class="filter-label">Tipo</div>
+      <select id="f-cav-tipo" class="filter-select" style="width:130px"><option>Todos</option><option>ABONO</option><option>CARGO</option><option>TRASPASO</option></select></div>
+    <div class="filter-group"><div class="filter-label">Estado</div>
+      <select id="f-cav-est" class="filter-select" style="width:140px"><option>Todos</option><option>Conciliado</option><option>Diferencia</option></select></div>
+    <div class="filter-actions">
+      <button class="btn btn-primary" onclick="filtrarCartolaVigente()">Filtrar</button>
+      <button class="btn btn-secondary" onclick="limpiarFiltro('tb-cartola',['f-cav-tipo','f-cav-est'],'cnt-cartola','movimientos')">Limpiar</button>
+    </div>
+  </div>
+
+  <div id="rep-cartola">
+    <div class="rep-titulo">
+      <div>
+        <div style="font-weight:700;font-size:15px">Cartola Bancaria CT-006 — Junio 2026</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:3px">Fundo Puertas Coloradas SpA · RUT 76.987.654-3 · Banco Santander · Cuenta Corriente 00-010-33445-5</div>
+      </div>
+      <div style="text-align:right;font-size:12px;color:var(--muted)">Período 01-06-2026 al 30-06-2026<br>Cifras en pesos chilenos (CLP)</div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-label">Saldo Inicial 01-06-2026</div><div class="stat-value">$2.269.000</div><div class="stat-sub">Según cartola CT-005</div></div>
+      <div class="stat-card"><div class="stat-label">Total Abonos</div><div class="stat-value green">$7.780.000</div><div class="stat-sub">7 movimientos</div></div>
+      <div class="stat-card"><div class="stat-label">Total Cargos</div><div class="stat-value orange">$5.236.700</div><div class="stat-sub">9 movimientos</div></div>
+      <div class="stat-card"><div class="stat-label">Saldo Final 30-06-2026</div><div class="stat-value blue">$4.812.300</div><div class="stat-sub">Cuadra con Balance General</div></div>
+    </div>
+
+    <div class="table-card" style="margin-bottom:20px">
+      <div class="table-header"><div class="table-title">Movimientos de la cartola</div><div class="table-count" id="cnt-cartola">16 movimientos · 13 conciliados</div></div>
+      <table>
+        <thead><tr><th>N°</th><th>Fecha</th><th>Tipo</th><th>Glosa del movimiento</th><th>Documento</th><th>Cargo</th><th>Abono</th><th>Saldo</th><th>Estado</th><th>Diferencia</th></tr></thead>
+        <tbody id="tb-cartola">
+<tr><td class="td-mono">001</td><td>2026-06-02</td><td class="td-mono">CARGO</td><td>Pago remuneraciones temporeros 1ª quincena junio</td><td class="td-muted">REM-06A</td><td class="td-mono">$930.000</td><td class="td-mono">—</td><td class="td-mono" style="font-weight:600">$1.339.000</td><td><span class="badge badge-green">Conciliado</span></td><td class="td-mono">—</td></tr>
+<tr><td class="td-mono">002</td><td>2026-06-03</td><td class="td-mono">ABONO</td><td>Transferencia Exportadora Del Monte Chile Ltda. — cobro FAC 2026-003</td><td class="td-muted">FAC 2026-003</td><td class="td-mono">—</td><td class="td-mono">$3.197.801</td><td class="td-mono" style="font-weight:600">$4.536.801</td><td><span class="badge badge-green">Conciliado</span></td><td class="td-mono">—</td></tr>
+<tr><td class="td-mono">003</td><td>2026-06-04</td><td class="td-mono">CARGO</td><td>Semillas del Sur Ltda. — fertilizantes y agroquímicos</td><td class="td-muted">F-001234</td><td class="td-mono">$468.000</td><td class="td-mono">—</td><td class="td-mono" style="font-weight:600">$4.068.801</td><td><span class="badge badge-green">Conciliado</span></td><td class="td-mono">—</td></tr>
+<tr><td class="td-mono">004</td><td>2026-06-08</td><td class="td-mono">ABONO</td><td>Supermercados Unimarc Quillota — cobro BOL 2026-007</td><td class="td-muted">BOL 2026-007</td><td class="td-mono">—</td><td class="td-mono">$576.000</td><td class="td-mono" style="font-weight:600">$4.644.801</td><td><span class="badge badge-green">Conciliado</span></td><td class="td-mono">—</td></tr>
+<tr><td class="td-mono">005</td><td>2026-06-08</td><td class="td-mono">CARGO</td><td>Transportes Valles Verdes E.I.R.L. — fletes junio</td><td class="td-muted">F-003445</td><td class="td-mono">$395.000</td><td class="td-mono">—</td><td class="td-mono" style="font-weight:600">$4.249.801</td><td><span class="badge badge-green">Conciliado</span></td><td class="td-mono">—</td></tr>
+<tr><td class="td-mono">006</td><td>2026-06-10</td><td class="td-mono">CARGO</td><td>Amortización crédito hipotecario BancoEstado</td><td class="td-muted">CRED-0612</td><td class="td-mono">$450.000</td><td class="td-mono">—</td><td class="td-mono" style="font-weight:600">$3.799.801</td><td><span class="badge badge-green">Conciliado</span></td><td class="td-mono">—</td></tr>
+<tr><td class="td-mono">007</td><td>2026-06-12</td><td class="td-mono">ABONO</td><td>Arriendo de maquinaria agrícola a predio vecino</td><td class="td-muted">REC-0088</td><td class="td-mono">—</td><td class="td-mono">$140.000</td><td class="td-mono" style="font-weight:600">$3.939.801</td><td><span class="badge badge-green">Conciliado</span></td><td class="td-mono">—</td></tr>
+<tr><td class="td-mono">008</td><td>2026-06-12</td><td class="td-mono">CARGO</td><td>Envases y Embalajes Quilpué S.A. — cajas de cartón</td><td class="td-muted">F-004012</td><td class="td-mono">$286.000</td><td class="td-mono">—</td><td class="td-mono" style="font-weight:600">$3.653.801</td><td><span class="badge badge-green">Conciliado</span></td><td class="td-mono">—</td></tr>
+<tr><td class="td-mono">009</td><td>2026-06-15</td><td class="td-mono">ABONO</td><td>Exportadora Del Monte Chile Ltda. — cobro exportación en USD</td><td class="td-muted">FAC 2026-005</td><td class="td-mono">—</td><td class="td-mono">$2.122.199</td><td class="td-mono" style="font-weight:600">$5.776.000</td><td><span class="badge badge-red">Diferencia</span></td><td class="td-mono">$142.300</td></tr>
+<tr><td class="td-mono">010</td><td>2026-06-16</td><td class="td-mono">CARGO</td><td>Pago remuneraciones temporeros 2ª quincena junio</td><td class="td-muted">REM-06B</td><td class="td-mono">$930.000</td><td class="td-mono">—</td><td class="td-mono" style="font-weight:600">$4.846.000</td><td><span class="badge badge-green">Conciliado</span></td><td class="td-mono">—</td></tr>
+<tr><td class="td-mono">011</td><td>2026-06-17</td><td class="td-mono">ABONO</td><td>Central de Frutas Santiago Ltda. — anticipo pedido junio</td><td class="td-muted">ANT-0031</td><td class="td-mono">—</td><td class="td-mono">$890.000</td><td class="td-mono" style="font-weight:600">$5.736.000</td><td><span class="badge badge-green">Conciliado</span></td><td class="td-mono">—</td></tr>
+<tr><td class="td-mono">012</td><td>2026-06-18</td><td class="td-mono">CARGO</td><td>Honorarios Juan Pérez González — asesoría contable</td><td class="td-muted">BH-0045</td><td class="td-mono">$280.000</td><td class="td-mono">—</td><td class="td-mono" style="font-weight:600">$5.456.000</td><td><span class="badge badge-green">Conciliado</span></td><td class="td-mono">—</td></tr>
+<tr><td class="td-mono">013</td><td>2026-06-20</td><td class="td-mono">CARGO</td><td>Declaración F29 mayo 2026 — IVA y PPM</td><td class="td-muted">F29-052026</td><td class="td-mono">$241.000</td><td class="td-mono">—</td><td class="td-mono" style="font-weight:600">$5.215.000</td><td><span class="badge badge-red">Diferencia</span></td><td class="td-mono">$14.700</td></tr>
+<tr><td class="td-mono">014</td><td>2026-06-22</td><td class="td-mono">ABONO</td><td>Agrícola Los Leones Ltda. — abono FAC 2026-004</td><td class="td-muted">FAC 2026-004</td><td class="td-mono">—</td><td class="td-mono">$620.000</td><td class="td-mono" style="font-weight:600">$5.835.000</td><td><span class="badge badge-green">Conciliado</span></td><td class="td-mono">—</td></tr>
+<tr><td class="td-mono">015</td><td>2026-06-25</td><td class="td-mono">CARGO</td><td>Retiro de socios según acta de junta</td><td class="td-muted">ACT-2026-02</td><td class="td-mono">$1.256.700</td><td class="td-mono">—</td><td class="td-mono" style="font-weight:600">$4.578.300</td><td><span class="badge badge-green">Conciliado</span></td><td class="td-mono">—</td></tr>
+<tr><td class="td-mono">016</td><td>2026-06-26</td><td class="td-mono">ABONO</td><td>Ventas al contado feria mayorista La Calera</td><td class="td-muted">—</td><td class="td-mono">—</td><td class="td-mono">$234.000</td><td class="td-mono" style="font-weight:600">$4.812.300</td><td><span class="badge badge-red">Diferencia</span></td><td class="td-mono">$29.400</td></tr>
+          <tr style="font-weight:700;border-top:2px solid var(--border)"><td colspan="5">TOTALES CARTOLA CT-006</td><td class="td-mono">$5.236.700</td><td class="td-mono">$7.780.000</td><td class="td-mono">$4.812.300</td><td></td><td class="td-mono">$186.400</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-card">
+      <div class="table-header"><div class="table-title">Cuadratura de la cartola</div></div>
+      <table>
+        <tbody>
+          <tr><td>Saldo inicial al 01-06-2026</td><td class="td-mono" style="text-align:right">$2.269.000</td></tr>
+          <tr><td>(+) Abonos del período — 7 movimientos</td><td class="td-mono" style="text-align:right">$7.780.000</td></tr>
+          <tr><td>(−) Cargos del período — 9 movimientos</td><td class="td-mono" style="text-align:right">(5.236.700)</td></tr>
+          <tr style="font-weight:700;border-top:2px solid var(--border)"><td>Saldo final según cartola al 30-06-2026</td><td class="td-mono" style="text-align:right">$4.812.300</td></tr>
+          <tr><td>Saldo según libro de banco (Balance General)</td><td class="td-mono" style="text-align:right">$4.812.300</td></tr>
+          <tr style="font-weight:700;border-top:2px solid var(--border)"><td>DIFERENCIA DE SALDO</td><td class="td-mono" style="text-align:right;color:var(--accent2)">$0 ✓ Cuadrado</td></tr>
+          <tr><td colspan="2" style="padding-top:14px;font-size:12px;color:var(--muted)">3 movimientos presentan diferencia por un total de $186.400: diferencia de cambio en el cobro de exportación de Del Monte ($142.300), venta al contado sin documento de respaldo ($29.400) y diferencia entre monto declarado y pagado en el F29 de mayo ($14.700).</td></tr>
+        </tbody>
+      </table>
     </div>
     <div class="rep-pie">Emitido por em.conta · Fundo Puertas Coloradas SpA · Datos al 30-06-2026</div>
   </div>
